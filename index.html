@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>SizeCheck — Convertisseur de pointures entre marques</title>
+  <meta name="description" content="Trouve ta pointure Nike, Adidas, Converse, New Balance, Birkenstock, Salomon, Crocs ou Vans en quelques secondes. Comparaison fiable par la méthode des centimètres.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sizecheck.fr/">
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Open Graph -->
+  <meta property="og:title"        content="SizeCheck — Ta vraie pointure entre marques">
+  <meta property="og:description"  content="Convertis ta pointure entre Nike, Adidas, Converse et 5 autres marques. Méthode des centimètres, résultat instantané.">
+  <meta property="og:type"         content="website">
+  <meta property="og:url"          content="https://sizecheck.fr/">
+  <meta property="og:image"        content="https://sizecheck.fr/og-image.png">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card"        content="summary_large_image">
+
+  <!-- JSON-LD : FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Comment convertir sa pointure entre différentes marques de chaussures ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La méthode des centimètres consiste à trouver la longueur de pied en cm correspondant à sa pointure dans la marque actuelle, puis à localiser la pointure la plus proche dans le tableau de la marque cible. SizeCheck automatise cette conversion pour 8 marques : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Est-ce qu'Adidas taille petit ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, Adidas taille petit. Les pointures Adidas sont généralement ½ à 1 pointure en dessous des tailles standard. Par exemple, un EU 44 Adidas correspond à 27,1 cm, contre 28,0 cm pour un EU 44 Nike standard. Il est conseillé de prendre une demi-pointure à une pointure au-dessus de sa taille habituelle chez Adidas."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Converse taille-t-il grand ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, Converse taille grand. Il est généralement recommandé de prendre ½ à 1 pointure en dessous de sa taille habituelle. Un EU 43 Converse correspond à 28,0 cm, ce qui équivaut à un EU 44 dans une marque standard comme Nike ou New Balance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Birkenstock taille-t-il grand ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, Birkenstock taille très grand. Il est recommandé de prendre 1 pointure en dessous de sa taille habituelle. La raison : Birkenstock conçoit ses sandales pour que les orteils reposent exactement au bord du contrefort, ce qui donne des longueurs intérieures nettement plus généreuses qu'une chaussure fermée."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Est-ce que Nike taille standard ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, Nike taille standard. Les pointures Nike correspondent aux tailles EU conventionnelles. Un EU 44 Nike correspond à une longueur de pied de 28,0 cm, valeur standard pour cette pointure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Vans taille-t-il grand ou petit ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Vans taille légèrement grand. Il est généralement conseillé de prendre ½ pointure en dessous de sa taille habituelle, notamment pour les modèles classiques comme l'Old Skool ou l'Authentic."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD : WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SizeCheck",
+    "url": "https://sizecheck.fr",
+    "description": "Convertisseur de pointures entre marques de chaussures par la méthode des centimètres",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .slide-up { animation: slideUp 0.26s ease-out both; }
+    .chip-btn { transition: all 0.13s ease; }
+    .chip-btn:active { transform: scale(0.95); }
+    details summary::-webkit-details-marker { display: none; }
+    details > summary { list-style: none; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;">
+
+  <div class="max-w-md mx-auto px-4 pb-16">
+
+    <!-- Header -->
+    <div class="pt-10 pb-5 text-center">
+      <p class="text-3xl mb-1">👟</p>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight">SizeCheck</h1>
+      <p class="text-slate-400 text-sm mt-0.5">Trouve ta vraie pointure entre marques</p>
+    </div>
+
+    <!-- Gender toggle -->
+    <div class="flex items-center gap-1 bg-gray-100 rounded-2xl p-1 mb-4">
+      <button id="btn-homme" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">Homme</button>
+      <button id="btn-femme" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">Femme</button>
+    </div>
+
+    <!-- Step 1 — always visible -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 mb-3">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
+          <span class="text-white text-xs font-bold leading-none">1</span>
+        </div>
+        <span class="text-sm font-semibold text-slate-700">Ma marque actuelle</span>
+      </div>
+      <div id="brands-source" class="grid grid-cols-2 gap-2"></div>
+    </div>
+
+    <!-- Step 2 — revealed after step 1 -->
+    <div id="step2" class="hidden bg-white rounded-2xl shadow-sm p-5 mb-3">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
+          <span class="text-white text-xs font-bold leading-none">2</span>
+        </div>
+        <span class="text-sm font-semibold text-slate-700">Ma pointure actuelle</span>
+      </div>
+      <div id="sizes-container" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <!-- Multi-brand result — revealed after step 2 -->
+    <div id="result" class="hidden mb-3"></div>
+
+    <!-- SEO + crédibilité -->
+    <div class="mt-4 space-y-3">
+      <details class="bg-white rounded-2xl shadow-sm overflow-hidden group">
+        <summary class="flex items-center justify-between px-5 py-4 cursor-pointer text-sm font-semibold text-slate-600">
+          Comment ça marche ?
+          <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="px-5 pb-5 text-xs text-slate-500 leading-relaxed space-y-2 border-t border-gray-50">
+          <p class="pt-3"><strong class="text-slate-600">La méthode des centimètres</strong> : chaque pointure EU correspond à une longueur de pied précise selon le tableau officiel de chaque marque. SizeCheck compare ces valeurs pour trouver la correspondance la plus précise entre tes marques.</p>
+          <p>Les données proviennent des guides des tailles officiels de Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans. <strong class="text-slate-600">Vérifiées et mises à jour en juin 2026.</strong></p>
+          <p class="text-slate-400">Note : certains modèles spécifiques (ex. Air Force 1, Jordan) peuvent varier légèrement par rapport au tableau standard de la marque.</p>
+        </div>
+      </details>
+
+      <p class="text-xs text-slate-400 text-center leading-relaxed px-2">
+        SizeCheck compare gratuitement les pointures Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans — sans publicité, par la méthode des centimètres.
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    /* ============================================================
+       DATA
+    ============================================================ */
+    const SIZE_RANGES = {
+      homme: [38, 39, 40, 41, 42, 43, 44, 45, 46],
+      femme: [35, 36, 37, 38, 39, 40, 41, 42]
+    };
+
+    const BRANDS = {
+      nike: {
+        name: 'Nike', emoji: '🟠', logo: 'https://www.google.com/s2/favicons?domain=nike.com&sz=128',
+        fit: 'standard', tip: null,
+        cm: { 35:22.0, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:30.0 }
+      },
+      adidas: {
+        name: 'Adidas', emoji: '🔵', logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=128',
+        fit: 'small',
+        tip: 'Adidas taille petit — prends généralement ½ à 1 pointure au-dessus de ta taille habituelle.',
+        cm: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 }
+      },
+      newbalance: {
+        name: 'New Balance', emoji: '🟢', logo: 'https://www.google.com/s2/favicons?domain=newbalance.com&sz=128',
+        fit: 'standard', tip: null,
+        cm: { 35:22.0, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:30.0 }
+      },
+      converse: {
+        name: 'Converse', emoji: '⭐', logo: 'https://www.google.com/s2/favicons?domain=converse.com&sz=128',
+        fit: 'large',
+        tip: 'Converse taille grand — prends généralement ½ à 1 pointure en dessous.',
+        cm: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:25.0, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+      },
+      birkenstock: {
+        name: 'Birkenstock', emoji: '🟤', logo: 'https://www.google.com/s2/favicons?domain=birkenstock.com&sz=128',
+        fit: 'very-large',
+        tip: 'Birkenstock taille grand — prends généralement 1 pointure en dessous de ta taille habituelle.',
+        cm: { 35:23.0, 36:23.5, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.5, 43:28.0, 44:29.0, 45:30.0, 46:30.5 }
+      },
+      salomon: {
+        name: 'Salomon', emoji: '⚡', logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=128',
+        fit: 'small',
+        tip: 'Salomon taille petit — prends généralement ½ pointure au-dessus.',
+        cm: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.7, 41:25.3, 42:26.0, 43:26.7, 44:27.3, 45:28.0, 46:28.7 }
+      },
+      crocs: {
+        name: 'Crocs', emoji: '🟡', logo: 'https://www.google.com/s2/favicons?domain=crocs.com&sz=128',
+        fit: 'standard', tip: null,
+        cm: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 }
+      },
+      vans: {
+        name: 'Vans', emoji: '🔴', logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=128',
+        fit: 'large',
+        tip: 'Vans taille grand — prends généralement ½ à 1 pointure en dessous.',
+        cm: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+      }
+    };
+
+    const FIT = {
+      standard:     { label: 'Taille standard',  icon: '✓',  bg: '#ecfdf5', text: '#065f46', border: '#6ee7b7' },
+      small:        { label: 'Taille petit',      icon: '↑',  bg: '#fffbeb', text: '#92400e', border: '#fcd34d' },
+      large:        { label: 'Taille grand',      icon: '↓',  bg: '#fff7ed', text: '#9a3412', border: '#fdba74' },
+      'very-large': { label: 'Taille très grand', icon: '↓↓', bg: '#fef2f2', text: '#991b1b', border: '#fca5a5' }
+    };
+
+    /* ============================================================
+       STATE + PERSISTENCE
+    ============================================================ */
+    const STORAGE_KEY = 'sizecheck_v3';
+    const S = { gender: 'homme', sourceBrand: null, sourceSize: null };
+
+    function saveState() {
+      if (!S.sourceBrand || S.sourceSize === null) return;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          gender: S.gender, sourceBrand: S.sourceBrand, sourceSize: S.sourceSize
+        }));
+      } catch (e) {}
+    }
+
+    function clearState() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      history.replaceState({}, '', location.pathname);
+    }
+
+    function loadSavedState() {
+      try {
+        // URL params take priority (for shared links)
+        const p = new URLSearchParams(location.search);
+        const g = p.get('g'), from = p.get('from'), size = parseInt(p.get('size'));
+        if (g && from && !isNaN(size) && BRANDS[from] && (SIZE_RANGES[g] || []).includes(size)) {
+          return { gender: g, sourceBrand: from, sourceSize: size };
+        }
+        // Fallback: localStorage
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+      return null;
+    }
+
+    function updateURL() {
+      if (!S.sourceBrand || S.sourceSize === null) return;
+      const p = new URLSearchParams({ g: S.gender, from: S.sourceBrand, size: S.sourceSize });
+      history.replaceState({}, '', '?' + p.toString());
+    }
+
+    /* ============================================================
+       HELPERS
+    ============================================================ */
+    function reveal(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('hidden', 'slide-up');
+      void el.offsetWidth;
+      el.classList.add('slide-up');
+    }
+    function conceal(id) {
+      const el = document.getElementById(id);
+      el.classList.add('hidden');
+      el.classList.remove('slide-up');
+    }
+
+    function updateGenderToggle() {
+      const base = 'flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200';
+      document.getElementById('btn-homme').className =
+        base + (S.gender === 'homme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
+      document.getElementById('btn-femme').className =
+        base + (S.gender === 'femme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
+    }
+
+    function setGender(g) {
+      if (S.gender === g) return;
+      S.gender = g;
+      S.sourceBrand = null;
+      S.sourceSize = null;
+      updateGenderToggle();
+      renderSourceBrands();
+      conceal('step2');
+      conceal('result');
+      clearState();
+    }
+
+    function makeBrandBtn(key, selected) {
+      const b = BRANDS[key];
+      const btn = document.createElement('button');
+      btn.className = 'chip-btn flex items-center gap-2.5 px-3 py-3 rounded-2xl border-2 text-sm font-semibold w-full ' +
+        (selected
+          ? 'border-blue-600 bg-blue-600 text-white shadow-md'
+          : 'border-gray-100 bg-gray-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50');
+
+      const wrap = document.createElement('div');
+      wrap.className = 'w-8 h-8 rounded-xl overflow-hidden bg-white flex items-center justify-center shrink-0 border border-gray-100 p-1';
+
+      const img = document.createElement('img');
+      img.src = b.logo;
+      img.alt = b.name;
+      img.className = 'w-full h-full object-contain';
+      img.onerror = function () {
+        wrap.innerHTML = `<span class="text-base leading-none">${b.emoji}</span>`;
+      };
+      wrap.appendChild(img);
+
+      const lbl = document.createElement('span');
+      lbl.textContent = b.name;
+
+      btn.appendChild(wrap);
+      btn.appendChild(lbl);
+      return btn;
+    }
+
+    /* ============================================================
+       RENDER
+    ============================================================ */
+    function renderSourceBrands() {
+      const c = document.getElementById('brands-source');
+      c.innerHTML = '';
+      Object.keys(BRANDS).forEach(key => {
+        const btn = makeBrandBtn(key, S.sourceBrand === key);
+        btn.addEventListener('click', () => {
+          S.sourceBrand = key;
+          S.sourceSize = null;
+          renderSourceBrands();
+          renderSizes();
+          reveal('step2');
+          conceal('result');
+        });
+        c.appendChild(btn);
+      });
+    }
+
+    function renderSizes() {
+      const c = document.getElementById('sizes-container');
+      c.innerHTML = '';
+      if (!S.sourceBrand) return;
+      const brandCm = BRANDS[S.sourceBrand].cm;
+      SIZE_RANGES[S.gender].forEach(sz => {
+        if (!(sz in brandCm)) return;
+        const btn = document.createElement('button');
+        btn.className = 'chip-btn w-12 h-12 rounded-xl border-2 text-sm font-bold flex items-center justify-center ' +
+          (S.sourceSize === sz
+            ? 'border-blue-600 bg-blue-600 text-white shadow-md'
+            : 'border-gray-100 bg-gray-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50');
+        btn.textContent = sz;
+        btn.addEventListener('click', () => {
+          S.sourceSize = sz;
+          renderSizes();
+          computeAllResults();
+          saveState();
+          updateURL();
+        });
+        c.appendChild(btn);
+      });
+    }
+
+    /* ============================================================
+       COMPUTE + RENDER ALL BRANDS
+    ============================================================ */
+    function computeAllResults() {
+      const el = document.getElementById('result');
+      if (!S.sourceBrand || S.sourceSize === null) { conceal('result'); return; }
+
+      const srcCm = BRANDS[S.sourceBrand].cm[S.sourceSize];
+      const srcN  = BRANDS[S.sourceBrand].name;
+
+      const rows = Object.entries(BRANDS)
+        .filter(([key]) => key !== S.sourceBrand)
+        .map(([key, b]) => {
+          let bestEu = null, bestDiff = Infinity;
+          Object.entries(b.cm).forEach(([eu, cm]) => {
+            const d = Math.abs(cm - srcCm);
+            if (d < bestDiff) { bestDiff = d; bestEu = parseInt(eu); }
+          });
+          const tgtCm  = b.cm[bestEu];
+          const delta  = parseFloat((tgtCm - srcCm).toFixed(1));
+          const fit    = FIT[b.fit];
+          return { key, b, bestEu, tgtCm, delta, fit };
+        });
+
+      // Build brand cards HTML
+      const cardsHTML = rows.map(({ b, bestEu, tgtCm, delta, fit }) => {
+        const exact    = Math.abs(delta) < 0.2;
+        const deltaLbl = exact ? '' : (delta > 0 ? `+${delta} cm` : `${delta} cm`);
+        return `
+          <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 p-1">
+              <img src="${b.logo}" alt="${b.name}" class="w-full h-full object-contain"
+                   onerror="this.parentElement.innerHTML='<span class=&quot;text-lg leading-none&quot;>${b.emoji}</span>'">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-bold text-slate-800 leading-tight">${b.name}</p>
+              <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold"
+                      style="background:${fit.bg};color:${fit.text};border:1px solid ${fit.border}">
+                  ${fit.icon} ${fit.label}
+                </span>
+                ${deltaLbl ? `<span class="text-xs text-slate-400">${deltaLbl}</span>` : ''}
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <p class="text-3xl font-black text-blue-600 leading-none">${bestEu}</p>
+              <p class="text-xs text-slate-400 mt-0.5">${tgtCm} cm</p>
+            </div>
+          </div>`;
+      }).join('');
+
+      // Tips accordion (only if any target brand has a tip)
+      const tipsRows = rows.filter(r => r.b.tip);
+      const tipsHTML = tipsRows.length ? `
+        <details class="bg-blue-50 rounded-2xl border border-blue-100 overflow-hidden group">
+          <summary class="flex items-center gap-2 px-4 py-3.5 cursor-pointer text-xs font-semibold text-blue-700">
+            <span>💡</span> Conseils par marque
+            <svg class="w-3.5 h-3.5 text-blue-400 ml-auto transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="px-4 pb-4 space-y-2 border-t border-blue-100">
+            ${tipsRows.map(r => `
+              <p class="text-xs text-blue-700 leading-relaxed pt-2"><strong>${r.b.name}</strong> — ${r.b.tip}</p>
+            `).join('')}
+          </div>
+        </details>` : '';
+
+      el.innerHTML = `
+        <div>
+          <!-- Summary header -->
+          <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-3">
+            <div class="bg-blue-600 px-5 py-4">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-0.5">Tu portes</p>
+                  <p class="text-white font-black text-lg leading-tight">
+                    ${srcN} EU ${S.sourceSize}
+                    <span class="text-blue-300 text-sm font-normal"> · ${srcCm} cm</span>
+                  </p>
+                </div>
+                <button id="share-btn"
+                  class="bg-white bg-opacity-20 text-white text-xs font-semibold px-3 py-2 rounded-xl hover:bg-opacity-30 active:scale-95 transition-all shrink-0">
+                  Partager 🔗
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Brand comparison cards -->
+          <div class="space-y-2 mb-3">
+            ${cardsHTML}
+          </div>
+
+          ${tipsHTML}
+        </div>`;
+
+      // Share button handler
+      document.getElementById('share-btn').addEventListener('click', () => {
+        const url  = location.href;
+        const text = `Ma pointure ${srcN} EU ${S.sourceSize} sur SizeCheck`;
+        if (navigator.share) {
+          navigator.share({ title: 'SizeCheck', text, url }).catch(() => {});
+        } else {
+          navigator.clipboard.writeText(url).then(() => {
+            const btn = document.getElementById('share-btn');
+            if (btn) { btn.textContent = '✓ Lien copié !'; setTimeout(() => { if (btn) btn.textContent = 'Partager 🔗'; }, 2000); }
+          }).catch(() => {});
+        }
+      });
+
+      reveal('result');
+    }
+
+    /* ============================================================
+       INIT
+    ============================================================ */
+    document.getElementById('btn-homme').addEventListener('click', () => setGender('homme'));
+    document.getElementById('btn-femme').addEventListener('click', () => setGender('femme'));
+    updateGenderToggle();
+    renderSourceBrands();
+
+    // Restore from URL params or localStorage
+    const saved = loadSavedState();
+    if (saved && BRANDS[saved.sourceBrand]) {
+      S.gender      = saved.gender;
+      S.sourceBrand = saved.sourceBrand;
+      S.sourceSize  = saved.sourceSize;
+      updateGenderToggle();
+      renderSourceBrands();
+      renderSizes();
+      reveal('step2');
+      computeAllResults();
+    }
+  </script>
+</body>
+</html>
