@@ -10,7 +10,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.sizecheck.fr/">
   <meta name="theme-color" content="#2563eb">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👟</text></svg>">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
   <!-- Open Graph -->
   <meta property="og:title"        content="SizeCheck — Ta vraie pointure entre marques">
@@ -166,6 +166,16 @@
       <p class="text-xs text-slate-400 text-center leading-relaxed px-2">
         SizeCheck compare gratuitement les pointures Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans par la méthode des centimètres.
       </p>
+    </div>
+
+    <!-- Bandeau extension Chrome — desktop uniquement -->
+    <div class="hidden md:flex mt-6 items-center gap-3 bg-white rounded-2xl shadow-sm px-5 py-4 border border-blue-100">
+      <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 text-lg">👟</div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-bold text-slate-800 leading-tight">Extension Chrome — Bientôt disponible</p>
+        <p class="text-xs text-slate-400 mt-0.5">Convertis ta pointure directement sur Nike, Zalando, Adidas et plus encore.</p>
+      </div>
+      <span class="shrink-0 text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 rounded-full px-3 py-1">Bientôt</span>
     </div>
 
     <!-- Footer cookies -->
@@ -417,7 +427,8 @@
           const delta  = parseFloat((tgtCm - srcCm).toFixed(1));
           const fit    = FIT[b.fit];
           return { key, b, bestEu, tgtCm, delta, fit };
-        });
+        })
+        .sort((a, b) => Math.abs(b.bestEu - S.sourceSize) - Math.abs(a.bestEu - S.sourceSize));
 
       // Build brand cards HTML
       const cardsHTML = rows.map(({ b, bestEu, tgtCm, delta, fit }) => {
