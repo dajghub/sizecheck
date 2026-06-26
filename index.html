@@ -514,21 +514,30 @@
       computeAllResults();
     }
   </script>
-<div id="privacy-content" style="display:none;">
-        <h1>Politique de confidentialité</h1>
-        <p>Le site sizecheck.fr utilise Google Analytics pour mesurer son audience.</p>
+<div id="privacy-content" class="hidden">
+    <div class="p-8 max-w-lg mx-auto bg-white rounded-3xl shadow-2xl">
+        <h2 class="text-2xl font-black text-slate-800 mb-4">Politique de confidentialité</h2>
+        <div class="text-slate-600 text-sm leading-relaxed space-y-4">
+            <p>Le site <strong>sizecheck.fr</strong> utilise Google Analytics pour mesurer son audience et nous aider à comprendre quelles marques sont les plus recherchées par nos utilisateurs.</p>
+            <p>Nous ne collectons aucune donnée personnelle identifiable (noms, emails, etc.). Les données sont traitées de manière anonyme.</p>
+            <p>Vous pouvez modifier vos préférences à tout moment en cliquant sur l'icône de réglages en bas de l'écran.</p>
+        </div>
+        <button onclick="tarteaucitron.userInterface.closePanel()" 
+                class="mt-8 w-full py-3 bg-slate-800 text-white font-bold rounded-2xl hover:bg-slate-900 transition-all">
+            Fermer
+        </button>
     </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/tarteaucitronjs@1.16.0/tarteaucitron.js"></script>
 
-    <script>
-        tarteaucitron.init({
-            "privacyUrl": "#privacy-content",
-            "googleConsentMode": true,
-            "orientation": "bottom",       /* Affiche le bandeau en bas de page au lieu du centre */
-            "showAlertSmall": false,       /* Désactive la petite icône si vous préférez */
-            "cookieslist": false           /* Masque la liste des cookies pour épurer le bandeau */
-        });
+<script>
+    tarteaucitron.init({
+        "privacyUrl": "#privacy-content",
+        "googleConsentMode": true,
+        "orientation": "bottom",
+        "groupServices": true
+    });
 
         tarteaucitron.user.gtagUa = 'G-X3S5MS25P0';
         (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
