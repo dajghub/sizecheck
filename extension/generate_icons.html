@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>SizeCheck — Générateur d'icônes</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f1f5f9; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 24px; margin: 0; }
+    h1 { font-size: 20px; color: #1e293b; margin: 0; }
+    p { color: #64748b; font-size: 14px; margin: 0; text-align: center; }
+    .icons { display: flex; gap: 24px; align-items: flex-end; }
+    .icon-box { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    canvas { border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); image-rendering: pixelated; }
+    a.dl {
+      background: #1d4ed8; color: white; border-radius: 8px; padding: 7px 14px;
+      font-size: 12px; font-weight: 700; text-decoration: none; display: inline-block;
+    }
+    a.dl:hover { background: #1e40af; }
+    label { font-size: 11px; color: #94a3b8; font-weight: 600; }
+    .steps { background: white; border-radius: 16px; padding: 20px 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); max-width: 420px; }
+    .steps ol { padding-left: 18px; color: #475569; font-size: 13px; line-height: 2; }
+    .steps code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+  <h1>👟 SizeCheck — Générateur d'icônes</h1>
+  <p>Télécharge les 3 fichiers PNG puis place-les dans le dossier <code>extension/icons/</code>.</p>
+
+  <div class="icons" id="icons"></div>
+
+  <div class="steps">
+    <ol>
+      <li>Clique sur chaque bouton <strong>Télécharger</strong> ci-dessus</li>
+      <li>Déplace les fichiers dans <code>sizecheck/extension/icons/</code></li>
+      <li>Dans Chrome → <code>chrome://extensions</code> → recharge l'extension ↺</li>
+    </ol>
+  </div>
+
+  <script>
+    const SIZES = [
+      { size: 16,  name: 'icon16.png',  label: '16×16' },
+      { size: 48,  name: 'icon48.png',  label: '48×48' },
+      { size: 128, name: 'icon128.png', label: '128×128' }
+    ];
+
+    const BLUE = '#1d4ed8';
+
+    function drawIcon(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // Arrondi proportionnel
+      const r = size * 0.22;
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(size - r, 0);
+      ctx.quadraticCurveTo(size, 0, size, r);
+      ctx.lineTo(size, size - r);
+      ctx.quadraticCurveTo(size, size, size - r, size);
+      ctx.lineTo(r, size);
+      ctx.quadraticCurveTo(0, size, 0, size - r);
+      ctx.lineTo(0, r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.closePath();
+      ctx.fillStyle = BLUE;
+      ctx.fill();
+
+      // Emoji centré
+      const fontSize = Math.round(size * 0.65);
+      ctx.font = `${fontSize}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('👟', size / 2, size / 2 + size * 0.03);
+
+      return canvas;
+    }
+
+    const container = document.getElementById('icons');
+
+    SIZES.forEach(({ size, name, label }) => {
+      const canvas = drawIcon(size);
+      // Afficher à taille lisible
+      const displaySize = Math.max(size, 64);
+      canvas.style.width = displaySize + 'px';
+      canvas.style.height = displaySize + 'px';
+
+      const link = document.createElement('a');
+      link.className = 'dl';
+      link.textContent = 'Télécharger';
+      link.download = name;
+      link.href = canvas.toDataURL('image/png');
+
+      const box = document.createElement('div');
+      box.className = 'icon-box';
+      box.appendChild(canvas);
+
+      const lbl = document.createElement('label');
+      lbl.textContent = label;
+      box.appendChild(lbl);
+      box.appendChild(link);
+
+      container.appendChild(box);
+    });
+  </script>
+</body>
+</html>
