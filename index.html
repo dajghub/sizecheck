@@ -105,18 +105,6 @@
     details summary::-webkit-details-marker { display: none; }
     details > summary { list-style: none; }
   </style>
-  <script src="https://tarteaucitron.io/init.js"></script>
-    <script>
-        tarteaucitron.init({
-            "privacyUrl": "#privacy-content",
-            "bodyPowered": true,
-            "cookieslist": true,
-            "googleConsentMode": true
-        });
-
-        tarteaucitron.user.gtagUa = 'G-X3S5MS25P0';
-        (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
-    </script>
 </head>
 <body class="bg-gray-50 min-h-screen" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;">
 
@@ -526,12 +514,26 @@
       computeAllResults();
     }
   </script>
+<!-- ... le reste de votre contenu HTML (votre application) ... -->
+    <!-- Le bloc de confidentialité que vous avez copié -->
     <div id="privacy-content" style="display:none;">
         <h1>Politique de confidentialité</h1>
         <p>Le site sizecheck.fr utilise Google Analytics pour mesurer son audience.</p>
         <p>Vous pouvez gérer vos préférences à tout moment via le bandeau en bas de page.</p>
     </div>
-</body>
-</html>
+
+    <!-- Le script Tarteaucitron qui "appelle" ce bloc -->
+    <script src="https://tarteaucitron.io/init.js"></script>
+    <script>
+        tarteaucitron.init({
+            "privacyUrl": "#privacy-content",
+            "bodyPowered": true,
+            "cookieslist": true,
+            "googleConsentMode": true
+        });
+
+        tarteaucitron.user.gtagUa = 'G-X3S5MS25P0';
+        (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+    </script>
 </body>
 </html>
