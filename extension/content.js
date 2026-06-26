@@ -4,7 +4,6 @@
 (function () {
   'use strict';
 
-  // Éviter une double-injection (SPA navigation)
   if (document.getElementById('__sizecheck_ext__')) return;
 
   /* ══════════════════════════════════════════
@@ -45,7 +44,6 @@
       if (lower.includes(b.name.toLowerCase())) return key;
     }
 
-    // Breadcrumbs
     const crumb = document.querySelector('[aria-label*="breadcrumb" i], .breadcrumb, [class*="breadcrumb" i]');
     if (crumb) {
       const t = crumb.textContent.toLowerCase();
@@ -57,7 +55,6 @@
   }
 
   function isProductPage() {
-    // JSON-LD Product schema (signal le plus fiable)
     for (const el of document.querySelectorAll('script[type="application/ld+json"]')) {
       try {
         const d = JSON.parse(el.textContent);
@@ -65,9 +62,7 @@
         if (nodes.some(n => n['@type'] === 'Product')) return true;
       } catch { /* ignore */ }
     }
-    // Patterns d'URL courants
     if (/\/(product|products|p\/|chaussures|shoes|sneakers|trainers)/i.test(location.pathname)) return true;
-    // Présence de sélecteurs de taille (signal fort)
     const sizeEls = document.querySelectorAll(
       '[data-size], [data-eu], [class*="SizeSelector"], [class*="size-selector"], ' +
       '[aria-label*="size" i], [aria-label*="taille" i]'
@@ -76,10 +71,9 @@
   }
 
   const detectedBrand = detectBrandFromDomain() || detectBrandFromPage();
-  const host = location.hostname.replace(/^www\./, '');
-  const isMultiBrand = MULTI_BRAND_HOSTS.some(m => host.includes(m));
+  const pageHost = location.hostname.replace(/^www\./, '');
+  const isMultiBrand = MULTI_BRAND_HOSTS.some(m => pageHost.includes(m));
 
-  // Sur les sites multi-marques, n'afficher que sur les pages produit
   if (isMultiBrand && !isProductPage()) return;
 
   /* ══════════════════════════════════════════
@@ -87,14 +81,14 @@
   ══════════════════════════════════════════ */
 
   const state = {
-    gender: 'homme',
     sourceBrand: null,
     sourceSize: null,
-    open: false
+    open: false,
+    showAll: false   // true = afficher toutes les marques, false = focus marque détectée
   };
 
   /* ══════════════════════════════════════════
-     SHADOW DOM HOST
+     SHADOW DOM
   ══════════════════════════════════════════ */
 
   const hostEl = document.createElement('div');
@@ -102,10 +96,6 @@
   document.body.appendChild(hostEl);
 
   const shadow = hostEl.attachShadow({ mode: 'open' });
-
-  /* ══════════════════════════════════════════
-     CSS (shadow DOM — isolé de la page)
-  ══════════════════════════════════════════ */
 
   const css = `
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -128,7 +118,7 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     }
 
-    /* ── Bouton flottant ── */
+    /* ── FAB ── */
     .sc-fab {
       background: #1d4ed8;
       color: #fff;
@@ -148,7 +138,6 @@
       line-height: 1;
     }
     .sc-fab:hover { transform: scale(1.04); box-shadow: 0 6px 26px rgba(29,78,216,0.5); }
-    .sc-fab-icon { font-size: 16px; }
 
     /* ── Panel ── */
     .sc-panel {
@@ -159,7 +148,7 @@
       overflow: hidden;
       display: none;
       flex-direction: column;
-      max-height: min(540px, calc(100vh - 90px));
+      max-height: min(520px, calc(100vh - 90px));
     }
     .sc-panel.open { display: flex; }
 
@@ -196,12 +185,11 @@
       justify-content: center;
       font-size: 12px;
       color: #64748b;
-      line-height: 1;
       transition: background .15s;
     }
     .sc-close-btn:hover { background: #e2e8f0; color: #334155; }
 
-    /* ── Contenu scrollable ── */
+    /* ── Body ── */
     .sc-body {
       overflow-y: auto;
       padding: 12px;
@@ -212,7 +200,6 @@
       scrollbar-color: #cbd5e1 transparent;
     }
 
-    /* ── Label section ── */
     .sc-section-label {
       font-size: 10px;
       font-weight: 700;
@@ -222,34 +209,7 @@
       margin-bottom: 5px;
     }
 
-    /* ── Tabs genre ── */
-    .sc-tabs {
-      display: flex;
-      background: #e2e8f0;
-      border-radius: 12px;
-      padding: 3px;
-      gap: 3px;
-    }
-    .sc-tab {
-      flex: 1;
-      padding: 7px 0;
-      border: none;
-      border-radius: 10px;
-      background: transparent;
-      font-size: 12px;
-      font-weight: 700;
-      color: #64748b;
-      cursor: pointer;
-      transition: all .15s;
-      letter-spacing: -.01em;
-    }
-    .sc-tab.active {
-      background: #fff;
-      color: #1d4ed8;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-
-    /* ── Grille marques ── */
+    /* ── Brand grid ── */
     .sc-brand-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -271,16 +231,16 @@
     .sc-brand-btn:hover { border-color: #bfdbfe; }
     .sc-brand-btn.active { border-color: #1d4ed8; background: #eff6ff; }
     .sc-brand-btn img { width: 22px; height: 22px; object-fit: contain; border-radius: 3px; }
-    .sc-brand-btn .sc-brand-name {
+    .sc-brand-btn .sc-bname {
       font-size: 8.5px;
       font-weight: 700;
       color: #64748b;
       text-align: center;
       line-height: 1.2;
     }
-    .sc-brand-btn.active .sc-brand-name { color: #1d4ed8; }
+    .sc-brand-btn.active .sc-bname { color: #1d4ed8; }
 
-    /* ── Grille pointures ── */
+    /* ── Size grid ── */
     .sc-size-grid { display: flex; flex-wrap: wrap; gap: 4px; }
     .sc-size-btn {
       padding: 6px 9px;
@@ -298,7 +258,63 @@
     .sc-size-btn:hover { border-color: #93c5fd; }
     .sc-size-btn.active { border-color: #1d4ed8; background: #1d4ed8; color: #fff; }
 
-    /* ── Résultats ── */
+    /* ── Résultat focus (marque détectée) ── */
+    .sc-focus-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      border: 2px solid #1d4ed8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .sc-focus-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .sc-focus-brand img { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; }
+    .sc-focus-size {
+      font-size: 38px;
+      font-weight: 900;
+      color: #1d4ed8;
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+    .sc-focus-label { font-size: 11px; color: #94a3b8; }
+
+    /* ── Fit tag ── */
+    .sc-fit-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .sc-fit-tag.standard { background: #ecfdf5; color: #065f46; }
+    .sc-fit-tag.small    { background: #fffbeb; color: #92400e; }
+    .sc-fit-tag.large    { background: #fff7ed; color: #9a3412; }
+    .sc-fit-tag.very-large { background: #fef2f2; color: #991b1b; }
+
+    /* ── Toggle "voir toutes les marques" ── */
+    .sc-toggle-all {
+      background: none;
+      border: none;
+      font-size: 11px;
+      color: #1d4ed8;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      padding: 2px 0;
+      letter-spacing: -.01em;
+    }
+    .sc-toggle-all:hover { text-decoration: underline; }
+
+    /* ── Résultats liste (mode "toutes marques") ── */
     .sc-results { display: flex; flex-direction: column; gap: 5px; }
     .sc-result {
       background: #fff;
@@ -314,26 +330,17 @@
     .sc-result-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
     .sc-result-name { font-size: 12px; font-weight: 700; color: #1e293b; flex: 1; }
     .sc-result-size { font-size: 14px; font-weight: 800; color: #1d4ed8; flex-shrink: 0; }
-    .sc-page-tag {
-      font-size: 8px;
-      font-weight: 800;
-      background: #1d4ed8;
-      color: #fff;
-      padding: 2px 6px;
-      border-radius: 20px;
-      flex-shrink: 0;
-    }
-    .sc-fit-tag {
+    .sc-result-fit {
       font-size: 8px;
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 20px;
       flex-shrink: 0;
     }
-    .sc-fit-tag.standard { display: none; }
-    .sc-fit-tag.small    { background: #fffbeb; color: #92400e; }
-    .sc-fit-tag.large    { background: #fff7ed; color: #9a3412; }
-    .sc-fit-tag.very-large { background: #fef2f2; color: #991b1b; }
+    .sc-result-fit.standard { display: none; }
+    .sc-result-fit.small    { background: #fffbeb; color: #92400e; }
+    .sc-result-fit.large    { background: #fff7ed; color: #9a3412; }
+    .sc-result-fit.very-large { background: #fef2f2; color: #991b1b; }
 
     /* ── Tip ── */
     .sc-tip {
@@ -369,42 +376,77 @@
      RENDER
   ══════════════════════════════════════════ */
 
-  function renderResults() {
+  function renderResultsSection() {
     const cm = scGetCm(state.sourceBrand, state.sourceSize);
     if (!cm) return '';
 
-    return Object.entries(SC_BRANDS).map(([key, b]) => {
-      const targetSize = scFindBestSize(key, cm);
-      const isPage = key === detectedBrand;
-      const fitClass = b.fit;
+    // Mode focus : marque détectée en vedette
+    if (detectedBrand && !state.showAll) {
+      const b = SC_BRANDS[detectedBrand];
+      const targetSize = scFindBestSize(detectedBrand, cm);
       const fitLabel = SC_FIT[b.fit].label;
 
+      return `
+        <div>
+          <div class="sc-section-label">Ta taille sur cette page</div>
+          <div class="sc-focus-card">
+            <div class="sc-focus-brand">
+              <img src="${b.logo}" alt="${b.name}" loading="lazy">
+              <span>${b.name}</span>
+            </div>
+            <div class="sc-focus-size">EU ${targetSize}</div>
+            <span class="sc-fit-tag ${b.fit}">${fitLabel}</span>
+            ${b.tip ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
+          </div>
+          <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
+            Voir toutes les marques →
+          </button>
+        </div>
+      `;
+    }
+
+    // Mode toutes marques
+    const rows = Object.entries(SC_BRANDS).map(([key, b]) => {
+      const targetSize = scFindBestSize(key, cm);
+      const isPage = key === detectedBrand;
       return `
         <div class="sc-result ${isPage ? 'highlight' : ''}">
           <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
           <span class="sc-result-name">${b.name}</span>
-          ${isPage ? '<span class="sc-page-tag">Cette page</span>' : ''}
           <span class="sc-result-size">EU ${targetSize}</span>
-          <span class="sc-fit-tag ${fitClass}">${fitLabel}</span>
+          <span class="sc-result-fit ${b.fit}">${SC_FIT[b.fit].label}</span>
         </div>
       `;
     }).join('');
+
+    return `
+      <div>
+        <div class="sc-section-label">Toutes les marques</div>
+        <div class="sc-results">${rows}</div>
+        ${detectedBrand ? `
+          <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
+            ← Retour
+          </button>
+        ` : ''}
+      </div>
+    `;
   }
 
   function render() {
     const pageBrand = detectedBrand ? SC_BRANDS[detectedBrand] : null;
-    const srcBrand = state.sourceBrand ? SC_BRANDS[state.sourceBrand] : null;
 
     const brandsHTML = Object.entries(SC_BRANDS).map(([key, b]) => `
       <button class="sc-brand-btn ${state.sourceBrand === key ? 'active' : ''}" data-action="brand" data-value="${key}">
         <img src="${b.logo}" alt="${b.name}" loading="lazy">
-        <span class="sc-brand-name">${b.name}</span>
+        <span class="sc-bname">${b.name}</span>
       </button>
     `).join('');
 
-    const sizesHTML = state.sourceBrand ? SC_SIZE_RANGES[state.gender].map(s => `
-      <button class="sc-size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>
-    `).join('') : '';
+    const sizesHTML = state.sourceBrand
+      ? SC_ALL_SIZES.map(s => `
+          <button class="sc-size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>
+        `).join('')
+      : '';
 
     wrap.innerHTML = `
       <div class="sc-panel ${state.open ? 'open' : ''}" id="sc-panel">
@@ -418,44 +460,30 @@
         </div>
 
         <div class="sc-body">
-          <!-- Genre -->
-          <div>
-            <div class="sc-section-label">Genre</div>
-            <div class="sc-tabs">
-              <button class="sc-tab ${state.gender === 'homme' ? 'active' : ''}" data-action="gender" data-value="homme">Homme</button>
-              <button class="sc-tab ${state.gender === 'femme' ? 'active' : ''}" data-action="gender" data-value="femme">Femme</button>
-            </div>
-          </div>
 
-          <!-- Marque habituelle -->
           <div>
             <div class="sc-section-label">Ma marque habituelle</div>
             <div class="sc-brand-grid">${brandsHTML}</div>
           </div>
 
           ${state.sourceBrand ? `
-          <!-- Pointure habituelle -->
           <div>
             <div class="sc-section-label">Ma pointure habituelle</div>
             <div class="sc-size-grid">${sizesHTML}</div>
           </div>
           ` : ''}
 
-          ${state.sourceBrand && state.sourceSize ? `
-          <!-- Résultats -->
-          <div>
-            <div class="sc-section-label">Équivalences EU</div>
-            <div class="sc-results">${renderResults()}</div>
-          </div>
-          ${srcBrand?.tip ? `<div class="sc-tip">💡 ${srcBrand.tip}</div>` : ''}
-          ` : ''}
+          ${state.sourceBrand && state.sourceSize ? renderResultsSection() : ''}
 
-          <div class="sc-footer"><a href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr</a></div>
+          <div class="sc-footer">
+            <a href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr</a>
+          </div>
+
         </div>
       </div>
 
       <button class="sc-fab" data-action="toggle">
-        <span class="sc-fab-icon">👟</span>
+        <span>👟</span>
         <span>SizeCheck${pageBrand ? ' · ' + pageBrand.name : ''}</span>
       </button>
     `;
@@ -464,15 +492,14 @@
   }
 
   /* ══════════════════════════════════════════
-     EVENTS (délégation sur le shadow root)
+     EVENTS
   ══════════════════════════════════════════ */
 
   function bindEvents() {
     wrap.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-action]');
       if (!btn) return;
-      const action = btn.dataset.action;
-      const value = btn.dataset.value;
+      const { action, value } = btn.dataset;
 
       switch (action) {
         case 'toggle':
@@ -485,39 +512,37 @@
           wrap.querySelector('#sc-panel').classList.remove('open');
           break;
 
-        case 'gender':
-          state.gender = value;
-          state.sourceSize = null;
-          chrome.storage.local.set({ sc_gender: value });
-          render();
-          break;
-
         case 'brand':
           state.sourceBrand = value;
           state.sourceSize = null;
+          state.showAll = false;
           chrome.storage.local.set({ sc_source_brand: value });
           render();
           break;
 
         case 'size':
           state.sourceSize = parseInt(value);
+          state.showAll = false;
           render();
-          // Scroll vers les résultats
           setTimeout(() => {
             const body = wrap.querySelector('.sc-body');
             if (body) body.scrollTop = body.scrollHeight;
           }, 50);
           break;
+
+        case 'toggleAll':
+          state.showAll = !state.showAll;
+          render();
+          break;
       }
-    }, { capture: false });
+    });
   }
 
   /* ══════════════════════════════════════════
-     INIT — charger les préférences sauvegardées
+     INIT
   ══════════════════════════════════════════ */
 
-  chrome.storage.local.get(['sc_gender', 'sc_source_brand'], (data) => {
-    if (data.sc_gender) state.gender = data.sc_gender;
+  chrome.storage.local.get(['sc_source_brand'], (data) => {
     if (data.sc_source_brand) state.sourceBrand = data.sc_source_brand;
     render();
   });

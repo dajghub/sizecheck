@@ -62,6 +62,9 @@ const SC_SIZE_RANGES = {
   femme: [35, 36, 37, 38, 39, 40, 41, 42]
 };
 
+// Range unifié sans distinction de genre (méthode CM = gender-agnostic)
+const SC_ALL_SIZES = [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
+
 const SC_FIT = {
   standard:     { label: 'Standard',    bg: '#ecfdf5', text: '#065f46', border: '#6ee7b7' },
   small:        { label: 'Taille petit', bg: '#fffbeb', text: '#92400e', border: '#fcd34d' },

@@ -9,7 +9,7 @@
 
     body {
       width: 340px;
-      min-height: 200px;
+      min-height: 160px;
       background: #f1f5f9;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
       color: #1e293b;
@@ -28,111 +28,43 @@
     .header-left { display: flex; align-items: center; gap: 8px; }
     .header-logo { font-size: 20px; }
     .header-title { font-weight: 800; font-size: 16px; letter-spacing: -.02em; }
-    .header-link {
-      font-size: 10px;
-      color: #94a3b8;
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .header-link { font-size: 10px; color: #94a3b8; text-decoration: none; font-weight: 600; }
     .header-link:hover { color: #1d4ed8; }
 
     /* Content */
-    .content {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .content { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 
     /* Card */
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 13px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
+    .card { background: #fff; border-radius: 16px; padding: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 
-    /* Section label */
+    /* Label */
     .label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 8px;
-    }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      background: #e2e8f0;
-      border-radius: 12px;
-      padding: 3px;
-      gap: 3px;
-    }
-    .tab {
-      flex: 1;
-      padding: 8px 0;
-      border: none;
-      border-radius: 9px;
-      background: transparent;
-      font-size: 13px;
-      font-weight: 700;
-      color: #64748b;
-      cursor: pointer;
-      transition: all .15s;
-      letter-spacing: -.01em;
-    }
-    .tab.active {
-      background: #fff;
-      color: #1d4ed8;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      font-size: 10px; font-weight: 700; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
     }
 
     /* Brand grid */
-    .brand-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-    }
+    .brand-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .brand-btn {
-      background: #f8fafc;
-      border: 2px solid transparent;
-      border-radius: 12px;
-      padding: 8px 3px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      transition: all .15s;
+      background: #f8fafc; border: 2px solid transparent; border-radius: 12px;
+      padding: 8px 3px; cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; gap: 4px; transition: all .15s;
     }
     .brand-btn:hover { border-color: #bfdbfe; background: #eff6ff; }
     .brand-btn.active { border-color: #1d4ed8; background: #eff6ff; }
     .brand-btn img { width: 24px; height: 24px; object-fit: contain; border-radius: 4px; }
     .brand-btn .bname {
-      font-size: 8.5px;
-      font-weight: 700;
-      color: #64748b;
-      text-align: center;
-      line-height: 1.2;
+      font-size: 8.5px; font-weight: 700; color: #64748b;
+      text-align: center; line-height: 1.2;
     }
     .brand-btn.active .bname { color: #1d4ed8; }
 
     /* Size grid */
     .size-grid { display: flex; flex-wrap: wrap; gap: 5px; }
     .size-btn {
-      padding: 7px 10px;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      background: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      color: #475569;
-      cursor: pointer;
-      transition: all .15s;
-      min-width: 38px;
-      text-align: center;
+      padding: 7px 10px; border: 2px solid #e2e8f0; border-radius: 10px;
+      background: #fff; font-size: 12px; font-weight: 700; color: #475569;
+      cursor: pointer; transition: all .15s; min-width: 38px; text-align: center;
     }
     .size-btn:hover { border-color: #93c5fd; }
     .size-btn.active { border-color: #1d4ed8; background: #1d4ed8; color: #fff; }
@@ -140,25 +72,14 @@
     /* Results */
     .results { display: flex; flex-direction: column; gap: 5px; }
     .result-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 11px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 2px solid transparent;
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 11px; background: #f8fafc;
+      border-radius: 12px; border: 2px solid transparent;
     }
-    .result-row.highlight { border-color: #1d4ed8; background: #eff6ff; }
     .result-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
     .result-name { font-size: 12px; font-weight: 700; color: #1e293b; flex: 1; }
     .result-size { font-size: 14px; font-weight: 800; color: #1d4ed8; flex-shrink: 0; }
-    .fit-tag {
-      font-size: 8px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 20px;
-      flex-shrink: 0;
-    }
+    .fit-tag { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 20px; flex-shrink: 0; }
     .fit-tag.standard { display: none; }
     .fit-tag.small    { background: #fffbeb; color: #92400e; }
     .fit-tag.large    { background: #fff7ed; color: #9a3412; }
@@ -166,21 +87,9 @@
 
     /* Tip */
     .tip {
-      font-size: 11px;
-      color: #64748b;
-      line-height: 1.5;
-      background: #fffbeb;
-      border-radius: 10px;
-      padding: 9px 11px;
+      font-size: 11px; color: #64748b; line-height: 1.5;
+      background: #fffbeb; border-radius: 10px; padding: 9px 11px;
       border-left: 3px solid #fcd34d;
-    }
-
-    /* Empty state */
-    .hint {
-      text-align: center;
-      color: #94a3b8;
-      font-size: 12px;
-      padding: 8px 0;
     }
   </style>
 </head>
@@ -195,16 +104,6 @@
   </div>
 
   <div class="content">
-
-    <!-- Genre -->
-    <div class="card">
-      <div class="label">Genre</div>
-      <div class="tabs">
-        <button class="tab active" data-action="gender" data-value="homme">Homme</button>
-        <button class="tab" data-action="gender" data-value="femme">Femme</button>
-      </div>
-    </div>
-
     <!-- Marque habituelle -->
     <div class="card">
       <div class="label">Ma marque habituelle</div>
@@ -213,7 +112,6 @@
 
     <!-- Pointure + Résultats (injectés par JS) -->
     <div id="step2"></div>
-
   </div>
 
   <script src="sizes.js"></script>
