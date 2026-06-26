@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SizeCheck — Convertisseur de pointures",
   "short_name": "SizeCheck",
-  "description": "Convertisseur de pointures Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans. Détecte automatiquement la marque sur les pages produit.",
+  "description": "Convertis ta pointure entre Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans. Détection sur pages produit.",
   "version": "1.0.0",
   "action": {
     "default_popup": "popup.html",
