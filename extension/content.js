@@ -384,6 +384,7 @@
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
       const targetSize = scFindBestSize(detectedBrand, cm);
+      const sizesDiffer = targetSize !== state.sourceSize;
       const fitLabel = SC_FIT[b.fit].label;
 
       return `
@@ -395,8 +396,8 @@
               <span>${b.name}</span>
             </div>
             <div class="sc-focus-size">EU ${targetSize}</div>
-            <span class="sc-fit-tag ${b.fit}">${fitLabel}</span>
-            ${b.tip ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
+            ${sizesDiffer ? `<span class="sc-fit-tag ${b.fit}">${fitLabel}</span>` : ''}
+            ${b.tip && sizesDiffer ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
           <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
             Voir toutes les marques →
@@ -409,12 +410,13 @@
     const rows = Object.entries(SC_BRANDS).map(([key, b]) => {
       const targetSize = scFindBestSize(key, cm);
       const isPage = key === detectedBrand;
+      const sizesDiffer = targetSize !== state.sourceSize;
       return `
         <div class="sc-result ${isPage ? 'highlight' : ''}">
           <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
           <span class="sc-result-name">${b.name}</span>
           <span class="sc-result-size">EU ${targetSize}</span>
-          <span class="sc-result-fit ${b.fit}">${SC_FIT[b.fit].label}</span>
+          ${sizesDiffer ? `<span class="sc-result-fit ${b.fit}">${SC_FIT[b.fit].label}</span>` : ''}
         </div>
       `;
     }).join('');
