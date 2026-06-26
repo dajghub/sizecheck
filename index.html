@@ -514,14 +514,11 @@
       computeAllResults();
     }
   </script>
-<div id="privacy-content" style="display:none;">
-    <div class="p-8 max-w-lg mx-auto bg-white rounded-3xl shadow-2xl">
-        <h2 class="text-2xl font-black text-slate-800 mb-4">Politique de confidentialité</h2>
-        <div class="text-slate-600 text-sm leading-relaxed space-y-4">
-            <p>Le site <strong>sizecheck.fr</strong> utilise Google Analytics pour mesurer son audience et nous aider à comprendre quelles marques sont les plus recherchées par nos utilisateurs.</p>
-            <p>Nous ne collectons aucune donnée personnelle identifiable (noms, emails, etc.). Les données sont traitées de manière anonyme.</p>
-            <p>Vous pouvez modifier vos préférences à tout moment en cliquant sur l'icône de réglages en bas de l'écran.</p>
-        </div>
+<div class="mt-8 mb-4 text-center">
+    <button type="button" onclick="tarteaucitron.userInterface.openPanel();" class="text-xs text-slate-400 hover:text-slate-600 underline transition-colors">
+        Paramètres des cookies & Politique de confidentialité
+    </button>
+</div>
         <button onclick="tarteaucitron.userInterface.closePanel()" 
                 class="mt-8 w-full py-3 bg-slate-800 text-white font-bold rounded-2xl hover:bg-slate-900 transition-all">
             Fermer
@@ -533,7 +530,6 @@
 
 <script>
     tarteaucitron.init({
-        "privacyUrl": "#privacy-content",
         "googleConsentMode": true,
         "orientation": "bottom",
         "groupServices": true
