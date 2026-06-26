@@ -54,7 +54,6 @@ function renderStep2() {
         <div class="label">Équivalences EU</div>
         <div class="results">${resultsHTML}</div>
       </div>
-      ${srcBrand.tip ? `<div class="tip">💡 ${srcBrand.tip}</div>` : ''}
     ` : ''}
   `;
 }
