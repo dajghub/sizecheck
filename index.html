@@ -514,24 +514,30 @@
       computeAllResults();
     }
   </script>
-<!-- ... le reste de votre contenu HTML (votre application) ... -->
-    <!-- Le bloc de confidentialité que vous avez copié -->
 <div id="privacy-content" style="display:none;">
         <h1>Politique de confidentialité</h1>
         <p>Le site sizecheck.fr utilise Google Analytics pour mesurer son audience.</p>
     </div>
-
     <script src="https://tarteaucitron.io/tarteaucitron.js"></script>
     <script>
-        tarteaucitron.init({
-            "privacyUrl": "#privacy-content",
-            "bodyPowered": true,
-            "cookieslist": true,
-            "googleConsentMode": true
-        });
+        // Cette petite fonction vérifie que Tarteaucitron est bien chargé avant de lancer l'init
+        function initTarteaucitron() {
+            if (typeof tarteaucitron !== 'undefined') {
+                tarteaucitron.init({
+                    "privacyUrl": "#privacy-content",
+                    "bodyPowered": true,
+                    "cookieslist": true,
+                    "googleConsentMode": true
+                });
 
-        tarteaucitron.user.gtagUa = 'G-X3S5MS25P0';
-        (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+                tarteaucitron.user.gtagUa = 'G-X3S5MS25P0';
+                (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+            } else {
+                // Si pas chargé, on réessaie dans 100 millisecondes
+                setTimeout(initTarteaucitron, 100);
+            }
+        }
+        initTarteaucitron();
     </script>
 </body>
 </html>
