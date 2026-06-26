@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "SizeCheck — Convertisseur de pointures",
+  "short_name": "SizeCheck",
+  "description": "Convertisseur de pointures Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans. Détecte automatiquement la marque sur les pages produit.",
+  "version": "1.0.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "SizeCheck"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.nike.com/*", "*://*.nike.fr/*",
+        "*://*.adidas.com/*", "*://*.adidas.fr/*",
+        "*://*.newbalance.com/*", "*://*.newbalance.fr/*",
+        "*://*.converse.com/*", "*://*.converse.fr/*",
+        "*://*.birkenstock.com/*", "*://*.birkenstock.fr/*",
+        "*://*.salomon.com/*", "*://*.salomon.fr/*",
+        "*://*.crocs.com/*", "*://*.crocs.fr/*",
+        "*://*.vans.com/*", "*://*.vans.fr/*",
+        "*://*.jdsports.fr/*",
+        "*://*.zalando.fr/*",
+        "*://*.footlocker.fr/*",
+        "*://*.courir.com/*",
+        "*://*.sizeer.com/*"
+      ],
+      "js": ["sizes.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage"],
+  "web_accessible_resources": []
+}
