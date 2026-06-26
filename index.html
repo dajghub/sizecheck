@@ -516,14 +516,12 @@
   </script>
 <!-- ... le reste de votre contenu HTML (votre application) ... -->
     <!-- Le bloc de confidentialité que vous avez copié -->
-    <div id="privacy-content" style="display:none;">
+<div id="privacy-content" style="display:none;">
         <h1>Politique de confidentialité</h1>
         <p>Le site sizecheck.fr utilise Google Analytics pour mesurer son audience.</p>
-        <p>Vous pouvez gérer vos préférences à tout moment via le bandeau en bas de page.</p>
     </div>
 
-    <!-- Le script Tarteaucitron qui "appelle" ce bloc -->
-    <script src="https://tarteaucitron.io/init.js"></script>
+    <script src="https://tarteaucitron.io/tarteaucitron.js"></script>
     <script>
         tarteaucitron.init({
             "privacyUrl": "#privacy-content",
