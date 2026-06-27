@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SizeCheck — Convertisseur de pointures",
   "short_name": "SizeCheck",
-  "description": "Convertis ta pointure entre 14 marques : Nike, Adidas, Vans, ON Running, HOKA, Dr. Martens et plus. Détection sur pages produit.",
+  "description": "Trouvez votre pointure dans n'importe quelle marque de chaussures. Détection automatique sur les pages produit.",
   "version": "1.0.0",
   "action": {
     "default_popup": "popup.html",
