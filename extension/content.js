@@ -301,10 +301,8 @@
       padding: 3px 9px;
       border-radius: 20px;
     }
-    .sc-fit-tag.standard { background: #ecfdf5; color: #065f46; }
-    .sc-fit-tag.small    { background: #fffbeb; color: #92400e; }
-    .sc-fit-tag.large    { background: #fff7ed; color: #9a3412; }
-    .sc-fit-tag.very-large { background: #fef2f2; color: #991b1b; }
+    .sc-fit-tag.up   { background: #ecfdf5; color: #065f46; }
+    .sc-fit-tag.down { background: #fff7ed; color: #9a3412; }
 
     /* ── Toggle "voir toutes les marques" ── */
     .sc-toggle-all {
@@ -346,9 +344,8 @@
       flex-shrink: 0;
     }
     .sc-result-fit.none { visibility: hidden; }
-    .sc-result-fit.small    { background: #fffbeb; color: #92400e; }
-    .sc-result-fit.large    { background: #fff7ed; color: #9a3412; }
-    .sc-result-fit.very-large { background: #fef2f2; color: #991b1b; }
+    .sc-result-fit.up   { background: #ecfdf5; color: #065f46; }
+    .sc-result-fit.down { background: #fff7ed; color: #9a3412; }
 
     /* ── Tip ── */
     .sc-tip {
@@ -392,9 +389,9 @@
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
       const targetSize = scFindBestSize(detectedBrand, cm);
-      const fitLabel = SC_FIT[b.fit].label;
-      const showBadge = (b.fit === 'small' && targetSize > state.sourceSize) ||
-                        ((b.fit === 'large' || b.fit === 'very-large') && targetSize < state.sourceSize);
+      const delta = targetSize - state.sourceSize;
+      const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
+      const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : '';
 
       return `
         <div>
@@ -405,8 +402,8 @@
               <span>${b.name}</span>
             </div>
             <div class="sc-focus-size">EU ${targetSize}</div>
-            ${showBadge ? `<span class="sc-fit-tag ${b.fit}">${fitLabel}</span>` : ''}
-            ${b.tip && showBadge ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
+            ${deltaLabel ? `<span class="sc-fit-tag ${deltaClass}">${deltaLabel}</span>` : ''}
+            ${b.tip && delta !== 0 ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
           <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
             Voir toutes les marques →
@@ -422,13 +419,14 @@
       .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
       .map(({ key, b, targetSize }) => {
         const isPage = key === detectedBrand;
-        const showBadge = (b.fit === 'small' && targetSize > state.sourceSize) ||
-                          ((b.fit === 'large' || b.fit === 'very-large') && targetSize < state.sourceSize);
+        const delta = targetSize - state.sourceSize;
+        const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
+        const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : 'none';
         return `
           <div class="sc-result ${isPage ? 'highlight' : ''}">
             <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
             <span class="sc-result-name">${b.name}</span>
-            <span class="sc-result-fit ${showBadge ? b.fit : 'none'}">${showBadge ? SC_FIT[b.fit].label : ''}</span>
+            <span class="sc-result-fit ${deltaClass}">${deltaLabel}</span>
             <span class="sc-result-size">EU ${targetSize}</span>
           </div>
         `;

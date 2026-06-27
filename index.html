@@ -464,10 +464,10 @@
 
       // Build brand cards HTML
       const cardsHTML = rows.map(({ b, bestEu, tgtCm, delta, fit }) => {
-        const exact      = Math.abs(delta) < 0.2;
-        const deltaLbl   = exact ? '' : (delta > 0 ? `+${delta} cm` : `${delta} cm`);
-        const showBadge  = (b.fit === 'small' && bestEu > S.sourceSize) ||
-                           ((b.fit === 'large' || b.fit === 'very-large') && bestEu < S.sourceSize);
+        const euDelta    = bestEu - S.sourceSize;
+        const deltaLbl   = euDelta > 0 ? `+${euDelta}` : euDelta < 0 ? `${euDelta}` : '';
+        const deltaBg    = euDelta > 0 ? '#ecfdf5' : '#fff7ed';
+        const deltaTxt   = euDelta > 0 ? '#065f46' : '#9a3412';
         return `
           <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 p-1">
@@ -477,11 +477,10 @@
             <div class="flex-1 min-w-0">
               <p class="text-sm font-bold text-slate-800 leading-tight">${b.name}</p>
               <div class="flex items-center gap-1.5 mt-1 flex-wrap">
-                ${showBadge ? `<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold"
-                      style="background:${fit.bg};color:${fit.text};border:1px solid ${fit.border}">
-                  ${fit.icon} ${fit.label}
+                ${deltaLbl ? `<span class="inline-flex px-2 py-0.5 rounded-full text-xs font-bold"
+                      style="background:${deltaBg};color:${deltaTxt}">
+                  ${deltaLbl}
                 </span>` : ''}
-                ${deltaLbl ? `<span class="text-xs text-slate-400">${deltaLbl}</span>` : ''}
               </div>
             </div>
             <div class="text-right shrink-0">

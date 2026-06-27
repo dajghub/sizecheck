@@ -32,15 +32,14 @@ function renderStep2() {
         .map(([key, b]) => ({ key, b, targetSize: scFindBestSize(key, cm) }))
         .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
         .map(({ key, b, targetSize }) => {
-          const showBadge = (b.fit === 'small' && targetSize > state.sourceSize) ||
-                          ((b.fit === 'large' || b.fit === 'very-large') && targetSize < state.sourceSize);
-          const fitClass = showBadge ? b.fit : 'none';
-          const fitLabel = showBadge ? SC_FIT[b.fit].label : '';
+          const delta = targetSize - state.sourceSize;
+          const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
+          const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : 'none';
           return `
             <div class="result-row">
               <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
               <span class="result-name">${b.name}</span>
-              <span class="fit-tag ${fitClass}">${fitLabel}</span>
+              <span class="fit-tag ${deltaClass}">${deltaLabel}</span>
               <span class="result-size">EU ${targetSize}</span>
             </div>
           `;
