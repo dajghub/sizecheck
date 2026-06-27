@@ -41,9 +41,13 @@ function renderStep2() {
     const cm = scGetCm(state.sourceBrand, state.sourceSize);
     if (cm) {
       resultsHTML = Object.entries(SC_BRANDS)
-        .filter(([key]) => key !== state.sourceBrand)
+        .filter(([key]) => key !== state.sourceBrand || key === state.pageBrand)
         .map(([key, b]) => ({ key, b, targetSize: scFindBestSize(key, cm) }))
-        .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
+        .sort((a, b) => {
+          if (a.key === state.pageBrand) return -1;
+          if (b.key === state.pageBrand) return 1;
+          return Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize);
+        })
         .map(({ key, b, targetSize }) => {
           const delta = targetSize - state.sourceSize;
           const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
