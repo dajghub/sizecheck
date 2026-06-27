@@ -3,16 +3,29 @@
 
 const state = {
   sourceBrand: null,
-  sourceSize: null
+  sourceSize: null,
+  pageBrand: null
 };
 
 function renderBrandGrid() {
+  const pageBrandName = state.pageBrand ? SC_BRANDS[state.pageBrand]?.name : null;
   document.getElementById('brand-grid').innerHTML = Object.entries(SC_BRANDS).map(([key, b]) => `
     <button class="brand-btn ${state.sourceBrand === key ? 'active' : ''}" data-action="brand" data-value="${key}">
       <img src="${b.logo}" alt="${b.name}" loading="lazy">
       <span class="bname">${b.name}</span>
     </button>
   `).join('');
+
+  if (pageBrandName) {
+    const existing = document.getElementById('page-brand-badge');
+    if (!existing) {
+      const badge = document.createElement('div');
+      badge.id = 'page-brand-badge';
+      badge.className = 'page-brand-badge';
+      badge.textContent = `Page détectée : ${pageBrandName}`;
+      document.getElementById('brand-grid').before(badge);
+    }
+  }
 }
 
 function renderStep2() {
@@ -35,10 +48,11 @@ function renderStep2() {
           const delta = targetSize - state.sourceSize;
           const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
           const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : 'none';
+          const isPage = key === state.pageBrand;
           return `
-            <div class="result-row">
+            <div class="result-row ${isPage ? 'page-result' : ''}">
               <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
-              <span class="result-name">${b.name}</span>
+              <span class="result-name">${b.name}${isPage ? ' <span class="on-page-tag">cette page</span>' : ''}</span>
               <span class="fit-tag ${deltaClass}">${deltaLabel}</span>
               <span class="result-size">EU ${targetSize}</span>
             </div>
@@ -86,8 +100,20 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Init
-chrome.storage.local.get(['sc_source_brand'], (data) => {
-  if (data.sc_source_brand) state.sourceBrand = data.sc_source_brand;
-  render();
+// Init — détecter la marque de la page active, puis rendre
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  try {
+    const host = new URL(tabs[0].url).hostname.replace(/^www\./, '');
+    for (const [domain, brand] of Object.entries(SC_DOMAIN_MAP)) {
+      if (host === domain || host.endsWith('.' + domain)) {
+        state.pageBrand = brand;
+        break;
+      }
+    }
+  } catch (e) {}
+
+  chrome.storage.local.get(['sc_source_brand'], (data) => {
+    if (data.sc_source_brand) state.sourceBrand = data.sc_source_brand;
+    render();
+  });
 });

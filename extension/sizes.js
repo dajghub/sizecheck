@@ -110,6 +110,23 @@ const SC_FIT = {
   'very-large': { label: 'Très grand',   bg: '#fef2f2', text: '#991b1b', border: '#fca5a5' }
 };
 
+const SC_DOMAIN_MAP = {
+  'nike.com': 'nike',           'nike.fr': 'nike',
+  'adidas.com': 'adidas',       'adidas.fr': 'adidas',
+  'newbalance.com': 'newbalance','newbalance.fr': 'newbalance',
+  'converse.com': 'converse',   'converse.fr': 'converse',
+  'birkenstock.com': 'birkenstock', 'birkenstock.fr': 'birkenstock',
+  'salomon.com': 'salomon',     'salomon.fr': 'salomon',
+  'crocs.com': 'crocs',         'crocs.fr': 'crocs',
+  'vans.com': 'vans',           'vans.fr': 'vans',
+  'on.com': 'on',               'on-running.com': 'on',
+  'asics.com': 'asics',         'asics.fr': 'asics',
+  'hoka.com': 'hoka',           'hoka.fr': 'hoka',
+  'saucony.com': 'saucony',     'saucony.fr': 'saucony',
+  'puma.com': 'puma',           'puma.fr': 'puma',
+  'drmartens.com': 'drmartens'
+};
+
 /** Trouver la pointure la plus proche dans une marque cible pour un CM donné */
 function scFindBestSize(targetBrand, cm) {
   const table = SC_BRANDS[targetBrand].cm;
