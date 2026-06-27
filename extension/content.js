@@ -18,7 +18,12 @@
     'birkenstock.com': 'birkenstock', 'birkenstock.fr': 'birkenstock',
     'salomon.com': 'salomon',  'salomon.fr': 'salomon',
     'crocs.com': 'crocs',      'crocs.fr': 'crocs',
-    'vans.com': 'vans',        'vans.fr': 'vans'
+    'vans.com': 'vans',        'vans.fr': 'vans',
+    'on.com': 'on',            'on-running.com': 'on',
+    'asics.com': 'asics',      'asics.fr': 'asics',
+    'hoka.com': 'hoka',        'hoka.fr': 'hoka',
+    'saucony.com': 'saucony',  'saucony.fr': 'saucony',
+    'puma.com': 'puma',        'puma.fr': 'puma'
   };
 
   const MULTI_BRAND_HOSTS = ['jdsports', 'zalando', 'footlocker', 'courir', 'sizeer'];

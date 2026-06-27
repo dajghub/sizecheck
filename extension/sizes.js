@@ -54,6 +54,37 @@ const SC_BRANDS = {
     fit: 'large',
     tip: 'Taille grand — prends ½ à 1 pointure en dessous.',
     cm: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+  },
+  on: {
+    name: 'ON Running', domain: 'on.com',
+    logo: 'https://www.google.com/s2/favicons?domain=on.com&sz=64',
+    fit: 'standard', tip: null,
+    cm: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+  },
+  asics: {
+    name: 'ASICS', domain: 'asics.com',
+    logo: 'https://www.google.com/s2/favicons?domain=asics.com&sz=64',
+    fit: 'standard', tip: null,
+    cm: { 35:22.0, 36:22.5, 37:23.0, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.0, 44:28.0, 45:28.5, 46:29.0 }
+  },
+  hoka: {
+    name: 'HOKA', domain: 'hoka.com',
+    logo: 'https://www.google.com/s2/favicons?domain=hoka.com&sz=64',
+    fit: 'standard', tip: null,
+    cm: { 35:21.5, 36:22.0, 37:23.0, 38:23.5, 39:24.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+  },
+  saucony: {
+    name: 'Saucony', domain: 'saucony.com',
+    logo: 'https://www.google.com/s2/favicons?domain=saucony.com&sz=64',
+    fit: 'standard', tip: null,
+    cm: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+  },
+  puma: {
+    name: 'Puma', domain: 'puma.com',
+    logo: 'https://www.google.com/s2/favicons?domain=puma.com&sz=64',
+    fit: 'large',
+    tip: 'Taille grand — prends ½ pointure en dessous.',
+    cm: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
   }
 };
 
