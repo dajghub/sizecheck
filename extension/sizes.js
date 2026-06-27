@@ -85,6 +85,13 @@ const SC_BRANDS = {
     fit: 'large',
     tip: 'Taille grand — prends ½ pointure en dessous.',
     cm: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+  },
+  drmartens: {
+    name: 'Dr. Martens', domain: 'drmartens.com',
+    logo: 'https://www.google.com/s2/favicons?domain=drmartens.com&sz=64',
+    fit: 'small',
+    tip: 'Taille petit à partir du 41 — prends ½ à 1 pointure au-dessus.',
+    cm: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 }
   }
 };
 

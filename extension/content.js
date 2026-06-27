@@ -23,7 +23,8 @@
     'asics.com': 'asics',      'asics.fr': 'asics',
     'hoka.com': 'hoka',        'hoka.fr': 'hoka',
     'saucony.com': 'saucony',  'saucony.fr': 'saucony',
-    'puma.com': 'puma',        'puma.fr': 'puma'
+    'puma.com': 'puma',        'puma.fr': 'puma',
+    'drmartens.com': 'drmartens'
   };
 
   const MULTI_BRAND_HOSTS = ['jdsports', 'zalando', 'footlocker', 'courir', 'sizeer'];

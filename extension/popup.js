@@ -29,13 +29,15 @@ function renderStep2() {
     if (cm) {
       resultsHTML = Object.entries(SC_BRANDS).map(([key, b]) => {
         const targetSize = scFindBestSize(key, cm);
-        const sizesDiffer = targetSize !== state.sourceSize;
+        const showBadge = targetSize !== state.sourceSize && b.fit !== 'standard';
+        const fitClass = showBadge ? b.fit : 'none';
+        const fitLabel = showBadge ? SC_FIT[b.fit].label : '';
         return `
           <div class="result-row">
             <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
             <span class="result-name">${b.name}</span>
+            <span class="fit-tag ${fitClass}">${fitLabel}</span>
             <span class="result-size">EU ${targetSize}</span>
-            ${sizesDiffer ? `<span class="fit-tag ${b.fit}">${SC_FIT[b.fit].label}</span>` : ''}
           </div>
         `;
       }).join('');
