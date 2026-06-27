@@ -6,92 +6,134 @@ const SC_BRANDS = {
     name: 'Nike', domain: 'nike.com',
     logo: 'https://www.google.com/s2/favicons?domain=nike.com&sz=64',
     fit: 'standard', tip: null,
-    cm: { 35:22.0, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:30.0 }
+    cm: {
+      homme: { 35:21.6, 36:22.0, 37:22.7, 38:23.3, 39:24.1, 40:24.5, 41:25.4, 42:25.8, 43:26.7, 44:27.1, 45:27.9, 46:28.8 },
+      femme: { 35:21.6, 36:22.4, 37:23.1, 38:23.7, 39:24.5, 40:25.0, 41:25.8, 42:26.2, 43:27.1, 44:27.5, 45:28.3, 46:28.8 }
+    }
   },
   adidas: {
     name: 'Adidas', domain: 'adidas.com',
     logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=64',
     fit: 'small',
     tip: 'Taille petit — prends ½ à 1 pointure au-dessus.',
-    cm: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 }
+    cm: {
+      homme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 },
+      femme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 }
+    }
   },
   newbalance: {
     name: 'New Balance', domain: 'newbalance.com',
     logo: 'https://www.google.com/s2/favicons?domain=newbalance.com&sz=64',
     fit: 'standard', tip: null,
-    cm: { 35:22.0, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:30.0 }
+    cm: {
+      homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.0, 40:25.0, 41:25.5, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
+      femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:29.0, 45:29.5, 46:30.0 }
+    }
   },
   converse: {
     name: 'Converse', domain: 'converse.com',
     logo: 'https://www.google.com/s2/favicons?domain=converse.com&sz=64',
     fit: 'large',
     tip: 'Taille grand — prends ½ à 1 pointure en dessous.',
-    cm: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:25.0, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+    cm: {
+      homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
+      femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+    }
   },
   birkenstock: {
     name: 'Birkenstock', domain: 'birkenstock.com',
     logo: 'https://www.google.com/s2/favicons?domain=birkenstock.com&sz=64',
     fit: 'very-large',
     tip: 'Taille très grand — prends 1 pointure en dessous.',
-    cm: { 35:23.0, 36:23.5, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.5, 43:28.0, 44:29.0, 45:30.0, 46:30.5 }
+    cm: {
+      homme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 },
+      femme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 }
+    }
   },
   salomon: {
     name: 'Salomon', domain: 'salomon.com',
     logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=64',
     fit: 'small',
     tip: 'Taille petit — prends ½ pointure au-dessus.',
-    cm: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.7, 41:25.3, 42:26.0, 43:26.7, 44:27.3, 45:28.0, 46:28.7 }
+    cm: {
+      homme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 },
+      femme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 }
+    }
   },
   crocs: {
     name: 'Crocs', domain: 'crocs.com',
     logo: 'https://www.google.com/s2/favicons?domain=crocs.com&sz=64',
     fit: 'standard', tip: null,
-    cm: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 }
+    cm: {
+      homme: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 },
+      femme: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 }
+    }
   },
   vans: {
     name: 'Vans', domain: 'vans.com',
     logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=64',
     fit: 'large',
     tip: 'Taille grand — prends ½ à 1 pointure en dessous.',
-    cm: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+    cm: {
+      homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
+      femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+    }
   },
   on: {
     name: 'ON Running', domain: 'on.com',
     logo: 'https://www.google.com/s2/favicons?domain=on.com&sz=64',
     fit: 'standard', tip: null,
-    cm: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+    cm: {
+      homme: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
+      femme: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+    }
   },
   asics: {
     name: 'ASICS', domain: 'asics.com',
     logo: 'https://www.google.com/s2/favicons?domain=asics.com&sz=64',
     fit: 'standard', tip: null,
-    cm: { 35:22.0, 36:22.5, 37:23.0, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.0, 44:28.0, 45:28.5, 46:29.0 }
+    cm: {
+      homme: { 35:22.0, 36:22.5, 37:23.0, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.0, 44:28.0, 45:28.5, 46:29.0 },
+      femme: { 35:22.0, 36:22.5, 37:23.0, 38:24.0, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.0, 44:28.0, 45:28.5, 46:29.0 }
+    }
   },
   hoka: {
     name: 'HOKA', domain: 'hoka.com',
     logo: 'https://www.google.com/s2/favicons?domain=hoka.com&sz=64',
     fit: 'standard', tip: null,
-    cm: { 35:21.5, 36:22.0, 37:23.0, 38:23.5, 39:24.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+    cm: {
+      homme: { 35:21.5, 36:22.0, 37:23.0, 38:23.5, 39:24.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
+      femme: { 35:21.5, 36:22.0, 37:23.0, 38:23.5, 39:24.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+    }
   },
   saucony: {
     name: 'Saucony', domain: 'saucony.com',
     logo: 'https://www.google.com/s2/favicons?domain=saucony.com&sz=64',
     fit: 'standard', tip: null,
-    cm: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+    cm: {
+      homme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
+      femme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+    }
   },
   puma: {
     name: 'Puma', domain: 'puma.com',
     logo: 'https://www.google.com/s2/favicons?domain=puma.com&sz=64',
     fit: 'large',
     tip: 'Taille grand — prends ½ pointure en dessous.',
-    cm: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+    cm: {
+      homme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
+      femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
+    }
   },
   drmartens: {
     name: 'Dr. Martens', domain: 'drmartens.com',
     logo: 'https://www.google.com/s2/favicons?domain=drmartens.com&sz=64',
     fit: 'small',
     tip: 'Taille petit à partir du 41 — prends ½ à 1 pointure au-dessus.',
-    cm: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 }
+    cm: {
+      homme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 },
+      femme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 }
+    }
   }
 };
 
@@ -100,7 +142,6 @@ const SC_SIZE_RANGES = {
   femme: [35, 36, 37, 38, 39, 40, 41, 42]
 };
 
-// Range unifié sans distinction de genre (méthode CM = gender-agnostic)
 const SC_ALL_SIZES = [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
 
 const SC_FIT = {
@@ -127,18 +168,29 @@ const SC_DOMAIN_MAP = {
   'drmartens.com': 'drmartens'
 };
 
-/** Trouver la pointure la plus proche dans une marque cible pour un CM donné */
-function scFindBestSize(targetBrand, cm) {
-  const table = SC_BRANDS[targetBrand].cm;
-  let best = null, bestDiff = Infinity;
-  for (const [size, sizeCm] of Object.entries(table)) {
-    const diff = Math.abs(Number(sizeCm) - cm);
-    if (diff < bestDiff) { bestDiff = diff; best = parseInt(size); }
-  }
-  return best;
+/** Obtenir les CM pour une marque + pointure + genre donné */
+function scGetCm(brand, size, genre) {
+  const entry = SC_BRANDS[brand];
+  if (!entry) return null;
+  const table = entry.cm[genre] ?? entry.cm.homme;
+  return table?.[size] ?? null;
 }
 
-/** Obtenir les CM pour une marque + pointure donnée */
-function scGetCm(brand, size) {
-  return SC_BRANDS[brand]?.cm[size] ?? null;
+/** Trouver les N meilleures pointures dans une marque cible pour un CM donné */
+function scFindBestSizes(targetBrand, cm, genre, n) {
+  const entry = SC_BRANDS[targetBrand];
+  if (!entry) return [];
+  const table = entry.cm[genre] ?? entry.cm.homme;
+  if (!table) return [];
+  const candidates = [];
+  for (const [size, sizeCm] of Object.entries(table)) {
+    candidates.push({ size: parseInt(size), diff: Math.abs(Number(sizeCm) - cm) });
+  }
+  candidates.sort((a, b) => a.diff - b.diff || a.size - b.size);
+  return candidates.slice(0, n || 2).map(c => c.size);
+}
+
+/** Trouver la pointure la plus proche dans une marque cible pour un CM donné */
+function scFindBestSize(targetBrand, cm, genre) {
+  return scFindBestSizes(targetBrand, cm, genre, 1)[0] ?? null;
 }

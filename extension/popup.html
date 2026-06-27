@@ -78,7 +78,8 @@
     }
     .result-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
     .result-name { font-size: 12px; font-weight: 700; color: #1e293b; flex: 1; }
-    .result-size { font-size: 14px; font-weight: 800; color: #1d4ed8; flex-shrink: 0; }
+    .result-size { font-size: 14px; font-weight: 800; color: #1d4ed8; flex-shrink: 0; text-align: right; }
+    .result-second { display: block; font-size: 9px; font-weight: 600; color: #94a3b8; }
     .fit-tag { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 20px; flex-shrink: 0; min-width: 36px; text-align: center; }
     .fit-tag.none { visibility: hidden; }
     .fit-tag.up   { background: #ecfdf5; color: #065f46; }
@@ -115,6 +116,12 @@
   </div>
 
   <div class="content">
+    <!-- Toggle genre -->
+    <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
+      <button id="btn-homme" onclick="setGenre('homme')" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Homme</button>
+      <button id="btn-femme" onclick="setGenre('femme')" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:#64748b">Femme</button>
+    </div>
+
     <!-- Marque habituelle -->
     <div class="card">
       <div class="label">Ma marque habituelle</div>

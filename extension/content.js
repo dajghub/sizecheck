@@ -89,6 +89,7 @@
   const state = {
     sourceBrand: null,
     sourceSize: null,
+    genre: 'homme',
     open: false,
     showAll: false   // true = afficher toutes les marques, false = focus marque détectée
   };
@@ -382,14 +383,14 @@
   ══════════════════════════════════════════ */
 
   function renderResultsSection() {
-    const cm = scGetCm(state.sourceBrand, state.sourceSize);
+    const cm = scGetCm(state.sourceBrand, state.sourceSize, state.genre);
     if (!cm) return '';
 
     // Mode focus : marque détectée en vedette
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
-      const targetSize = scFindBestSize(detectedBrand, cm);
-      const delta = targetSize - state.sourceSize;
+      const [bestSize, secondSize] = scFindBestSizes(detectedBrand, cm, state.genre, 2);
+      const delta = bestSize - state.sourceSize;
       const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
       const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : '';
 
@@ -401,7 +402,8 @@
               <img src="${b.logo}" alt="${b.name}" loading="lazy">
               <span>${b.name}</span>
             </div>
-            <div class="sc-focus-size">EU ${targetSize}</div>
+            <div class="sc-focus-size">EU ${bestSize}</div>
+            ${secondSize ? `<div style="font-size:11px;color:#94a3b8">ou EU ${secondSize}</div>` : ''}
             ${deltaLabel ? `<span class="sc-fit-tag ${deltaClass}">${deltaLabel}</span>` : ''}
             ${b.tip && delta !== 0 ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
@@ -415,9 +417,12 @@
     // Mode toutes marques
     const rows = Object.entries(SC_BRANDS)
       .filter(([key]) => key !== state.sourceBrand)
-      .map(([key, b]) => ({ key, b, targetSize: scFindBestSize(key, cm) }))
+      .map(([key, b]) => {
+        const [bestSize, secondSize] = scFindBestSizes(key, cm, state.genre, 2);
+        return { key, b, targetSize: bestSize, secondSize };
+      })
       .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
-      .map(({ key, b, targetSize }) => {
+      .map(({ key, b, targetSize, secondSize }) => {
         const isPage = key === detectedBrand;
         const delta = targetSize - state.sourceSize;
         const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
@@ -427,7 +432,7 @@
             <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
             <span class="sc-result-name">${b.name}</span>
             <span class="sc-result-fit ${deltaClass}">${deltaLabel}</span>
-            <span class="sc-result-size">EU ${targetSize}</span>
+            <span class="sc-result-size">EU ${targetSize}${secondSize ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${secondSize}</span>` : ''}</span>
           </div>
         `;
       }).join('');
@@ -473,6 +478,11 @@
         </div>
 
         <div class="sc-body">
+
+          <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
+            <button data-action="genre" data-value="homme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${state.genre==='homme'?'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)':'background:transparent;color:#64748b'}">Homme</button>
+            <button data-action="genre" data-value="femme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${state.genre==='femme'?'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)':'background:transparent;color:#64748b'}">Femme</button>
+          </div>
 
           <div>
             <div class="sc-section-label">Ma marque habituelle</div>
@@ -523,6 +533,15 @@
         case 'close':
           state.open = false;
           wrap.querySelector('#sc-panel').classList.remove('open');
+          break;
+
+        case 'genre':
+          if (state.genre !== value) {
+            state.genre = value;
+            state.sourceSize = null;
+            state.showAll = false;
+            render();
+          }
           break;
 
         case 'brand':

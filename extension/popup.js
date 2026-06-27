@@ -4,7 +4,8 @@
 const state = {
   sourceBrand: null,
   sourceSize: null,
-  pageBrand: null
+  pageBrand: null,
+  genre: 'homme'
 };
 
 function renderBrandGrid() {
@@ -38,17 +39,20 @@ function renderStep2() {
 
   let resultsHTML = '';
   if (state.sourceSize) {
-    const cm = scGetCm(state.sourceBrand, state.sourceSize);
+    const cm = scGetCm(state.sourceBrand, state.sourceSize, state.genre);
     if (cm) {
       resultsHTML = Object.entries(SC_BRANDS)
         .filter(([key]) => key !== state.sourceBrand || key === state.pageBrand)
-        .map(([key, b]) => ({ key, b, targetSize: scFindBestSize(key, cm) }))
+        .map(([key, b]) => {
+          const [bestSize, secondSize] = scFindBestSizes(key, cm, state.genre, 2);
+          return { key, b, targetSize: bestSize, secondSize };
+        })
         .sort((a, b) => {
           if (a.key === state.pageBrand) return -1;
           if (b.key === state.pageBrand) return 1;
           return Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize);
         })
-        .map(({ key, b, targetSize }) => {
+        .map(({ key, b, targetSize, secondSize }) => {
           const delta = targetSize - state.sourceSize;
           const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
           const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : 'none';
@@ -58,7 +62,7 @@ function renderStep2() {
               <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
               <span class="result-name">${b.name}${isPage ? ' <span class="on-page-tag">cette page</span>' : ''}</span>
               <span class="fit-tag ${deltaClass}">${deltaLabel}</span>
-              <span class="result-size">EU ${targetSize}</span>
+              <span class="result-size">EU ${targetSize}${secondSize ? `<span class="result-second">ou ${secondSize}</span>` : ''}</span>
             </div>
           `;
         }).join('');
@@ -79,6 +83,17 @@ function renderStep2() {
       </div>
     ` : ''}
   `;
+}
+
+function setGenre(g) {
+  if (state.genre === g) return;
+  state.genre = g;
+  state.sourceSize = null;
+  const active = 'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)';
+  const inactive = 'background:transparent;color:#64748b';
+  document.getElementById('btn-homme').style.cssText = `flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;${g === 'homme' ? active : inactive}`;
+  document.getElementById('btn-femme').style.cssText = `flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;${g === 'femme' ? active : inactive}`;
+  render();
 }
 
 function render() {
