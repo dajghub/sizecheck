@@ -33,7 +33,7 @@
         "name": "Comment convertir sa pointure entre différentes marques de chaussures ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "La méthode des centimètres consiste à trouver la longueur de pied en cm correspondant à sa pointure dans la marque actuelle, puis à localiser la pointure la plus proche dans le tableau de la marque cible. SizeCheck automatise cette conversion pour 8 marques : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans."
+          "text": "La méthode des centimètres consiste à trouver la longueur de pied en cm correspondant à sa pointure dans la marque actuelle, puis à localiser la pointure la plus proche dans le tableau de la marque cible. SizeCheck automatise cette conversion pour 14 marques : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs, Vans, ON Running, ASICS, HOKA, Saucony, Puma et Dr. Martens. Un indicateur de précision (±Xmm) indique la fiabilité de chaque correspondance."
         }
       },
       {
@@ -41,7 +41,7 @@
         "name": "Est-ce qu'Adidas taille petit ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, Adidas taille petit. Les pointures Adidas sont généralement ½ à 1 pointure en dessous des tailles standard. Par exemple, un EU 44 Adidas correspond à 27,1 cm, contre 28,0 cm pour un EU 44 Nike standard. Il est conseillé de prendre une demi-pointure à une pointure au-dessus de sa taille habituelle chez Adidas."
+          "text": "Oui, Adidas taille petit, principalement en raison d'un chaussant plus étroit et d'une empeigne plus serrée que la norme. SizeCheck calcule la correspondance exacte en CM. Si vous avez le pied large, envisagez la pointure supérieure à celle recommandée."
         }
       },
       {
@@ -49,7 +49,7 @@
         "name": "Converse taille-t-il grand ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, Converse taille grand. Il est généralement recommandé de prendre ½ à 1 pointure en dessous de sa taille habituelle. Un EU 43 Converse correspond à 28,0 cm, ce qui équivaut à un EU 44 dans une marque standard comme Nike ou New Balance."
+          "text": "Oui, Converse taille grand. La semelle plate des Chuck Taylor libère de l'espace en longueur. Un EU 43 Converse correspond à 27,5 cm (homme), soit l'équivalent d'un EU 43 New Balance ou d'un EU 44 Nike. SizeCheck calcule automatiquement la correspondance exacte."
         }
       },
       {
@@ -65,7 +65,7 @@
         "name": "Est-ce que Nike taille standard ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, Nike taille standard. Les pointures Nike correspondent aux tailles EU conventionnelles. Un EU 44 Nike correspond à une longueur de pied de 28,0 cm, valeur standard pour cette pointure."
+          "text": "Oui, Nike taille standard. Les pointures Nike correspondent aux tailles EU conventionnelles. Un EU 44 Nike correspond à une longueur de pied de 27,1 cm (homme) selon le guide officiel Nike."
         }
       },
       {
@@ -157,8 +157,9 @@
           <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
         </summary>
         <div class="px-5 pb-5 text-xs text-slate-500 leading-relaxed space-y-2 border-t border-gray-50">
-          <p class="pt-3"><strong class="text-slate-600">La méthode des centimètres</strong> : chaque pointure EU correspond à une longueur de pied précise selon le tableau officiel de chaque marque. SizeCheck compare ces valeurs pour trouver la correspondance la plus précise entre tes marques.</p>
-          <p>Les données proviennent des guides des tailles officiels de Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans. <strong class="text-slate-600">Vérifiées et mises à jour en juin 2026.</strong></p>
+          <p class="pt-3"><strong class="text-slate-600">La méthode des centimètres</strong> : chaque pointure EU correspond à une longueur de pied précise selon le tableau officiel de chaque marque. SizeCheck compare ces valeurs pour trouver la correspondance la plus proche, et affiche l'écart en mm pour indiquer la fiabilité du résultat.</p>
+          <p><strong class="text-slate-600">L'indicateur de précision</strong> : <span style="background:#ecfdf5;color:#065f46;padding:1px 6px;border-radius:20px;font-weight:700">Exact / ±1-2mm</span> = correspondance quasi parfaite · <span style="background:#fffbeb;color:#92400e;padding:1px 6px;border-radius:20px;font-weight:700">±3-6mm</span> = demi-pointure d'écart possible · <span style="background:#fef2f2;color:#991b1b;padding:1px 6px;border-radius:20px;font-weight:700">±7mm+</span> = essayage recommandé.</p>
+          <p>Les données proviennent des guides de tailles officiels de <strong class="text-slate-600">14 marques</strong> : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs, Vans, ON Running, ASICS, HOKA, Saucony, Puma et Dr. Martens. <strong class="text-slate-600">Vérifiées et mises à jour en juin 2026.</strong></p>
           <p class="text-slate-400">Note : certains modèles spécifiques (ex. Air Force 1, Jordan) peuvent varier légèrement par rapport au tableau standard de la marque.</p>
         </div>
       </details>
@@ -214,7 +215,7 @@
       adidas: {
         name: 'Adidas', emoji: '🔵', logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=128',
         fit: 'small',
-        tip: 'Adidas taille petit — prends généralement ½ à 1 pointure au-dessus de ta taille habituelle.',
+        tip: 'Adidas taille petit — chaussant plus étroit que la norme. Si tu as le pied large, prends la pointure supérieure à celle recommandée.',
         cm: {
           homme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 },
           femme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 }
@@ -231,7 +232,7 @@
       converse: {
         name: 'Converse', emoji: '⭐', logo: '/assets/converse.svg',
         fit: 'large',
-        tip: 'Converse taille grand — prends généralement ½ à 1 pointure en dessous.',
+        tip: 'Converse taille grand — la semelle plate des Chuck Taylor libère de l\'espace en longueur. Si ton pied est étroit, la pointure recommandée devrait convenir sans descendre.',
         cm: {
           homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
           femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
@@ -240,7 +241,7 @@
       birkenstock: {
         name: 'Birkenstock', emoji: '🟤', logo: 'https://www.google.com/s2/favicons?domain=birkenstock.com&sz=128',
         fit: 'very-large',
-        tip: 'Birkenstock taille grand — prends généralement 1 pointure en dessous de ta taille habituelle.',
+        tip: 'Birkenstock taille très grand — les CM correspondent à la longueur intérieure de la semelle liège, conçue pour que les orteils touchent presque le bord. La pointure recommandée intègre déjà cette référence spécifique.',
         cm: {
           homme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 },
           femme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 }
@@ -249,7 +250,7 @@
       salomon: {
         name: 'Salomon', emoji: '⚡', logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=128',
         fit: 'small',
-        tip: 'Salomon taille petit — prends généralement ½ pointure au-dessus.',
+        tip: 'Salomon taille petit — fit trail enveloppant conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prends la supérieure.',
         cm: {
           homme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 },
           femme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 }
@@ -266,7 +267,7 @@
       vans: {
         name: 'Vans', emoji: '🔴', logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=128',
         fit: 'large',
-        tip: 'Vans taille grand — prends généralement ½ à 1 pointure en dessous.',
+        tip: 'Vans taille grand — les modèles classiques (Old Skool, Authentic) ont un last long et généreux, surtout en largeur. Idéal pour les pieds larges.',
         cm: {
           homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
           femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
@@ -307,7 +308,7 @@
       puma: {
         name: 'Puma', emoji: '🐆', logo: 'https://www.google.com/s2/favicons?domain=puma.com&sz=128',
         fit: 'large',
-        tip: 'Puma taille grand — prends généralement ½ pointure en dessous.',
+        tip: 'Puma taille grand — last EU plus généreux que la norme, particulièrement sur les modèles lifestyle comme le Suede ou le RS-X.',
         cm: {
           homme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
           femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
@@ -316,7 +317,7 @@
       drmartens: {
         name: 'Dr. Martens', emoji: '🥾', logo: 'https://www.google.com/s2/favicons?domain=drmartens.com&sz=128',
         fit: 'small',
-        tip: 'Dr. Martens taille petit à partir du 41 — prends généralement ½ à 1 pointure au-dessus.',
+        tip: 'Dr. Martens taille petit à partir du 41 — le cuir épais et dur réduit l\'espace interne. Le fit s\'améliore significativement après quelques semaines de rodage.',
         cm: {
           homme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 },
           femme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 }
@@ -508,10 +509,10 @@
 
       // Build brand cards HTML
       const cardsHTML = rows.map(({ b, bestEu, secondEu, tgtCm, delta, fit }) => {
-        const euDelta    = bestEu - S.sourceSize;
-        const deltaLbl   = euDelta > 0 ? `+${euDelta}` : euDelta < 0 ? `${euDelta}` : '';
-        const deltaBg    = euDelta > 0 ? '#ecfdf5' : '#fff7ed';
-        const deltaTxt   = euDelta > 0 ? '#065f46' : '#9a3412';
+        const diffMm     = Math.round(Math.abs(delta) * 10);
+        const deltaLbl   = diffMm === 0 ? 'Exact' : `±${diffMm}mm`;
+        const deltaBg    = diffMm <= 2 ? '#ecfdf5' : diffMm <= 6 ? '#fffbeb' : '#fef2f2';
+        const deltaTxt   = diffMm <= 2 ? '#065f46' : diffMm <= 6 ? '#92400e' : '#991b1b';
         const secondLbl  = secondEu ? `<span class="text-xs text-slate-400 mt-0.5 block">ou ${secondEu}</span>` : '';
         return `
           <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3">
@@ -522,10 +523,8 @@
             <div class="flex-1 min-w-0">
               <p class="text-sm font-bold text-slate-800 leading-tight">${b.name}</p>
               <div class="flex items-center gap-1.5 mt-1 flex-wrap">
-                ${deltaLbl ? `<span class="inline-flex px-2 py-0.5 rounded-full text-xs font-bold"
-                      style="background:${deltaBg};color:${deltaTxt}">
-                  ${deltaLbl}
-                </span>` : ''}
+                <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-bold"
+                      style="background:${deltaBg};color:${deltaTxt}">${deltaLbl}</span>
               </div>
             </div>
             <div class="text-right shrink-0">

@@ -53,9 +53,10 @@ function renderStep2() {
           return Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize);
         })
         .map(({ key, b, targetSize, secondSize }) => {
-          const delta = targetSize - state.sourceSize;
-          const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
-          const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : 'none';
+          const targetCm = scGetCm(key, targetSize, state.genre);
+          const diffMm = targetCm ? Math.round(Math.abs(targetCm - cm) * 10) : 0;
+          const deltaLabel = diffMm === 0 ? 'Exact' : `±${diffMm}mm`;
+          const deltaClass = diffMm <= 2 ? 'up' : diffMm <= 6 ? 'warn' : 'danger';
           const isPage = key === state.pageBrand;
           return `
             <div class="result-row ${isPage ? 'page-result' : ''}">

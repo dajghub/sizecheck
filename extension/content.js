@@ -302,8 +302,9 @@
       padding: 3px 9px;
       border-radius: 20px;
     }
-    .sc-fit-tag.up   { background: #ecfdf5; color: #065f46; }
-    .sc-fit-tag.down { background: #fff7ed; color: #9a3412; }
+    .sc-fit-tag.up     { background: #ecfdf5; color: #065f46; }
+    .sc-fit-tag.warn   { background: #fffbeb; color: #92400e; }
+    .sc-fit-tag.danger { background: #fef2f2; color: #991b1b; }
 
     /* ── Toggle "voir toutes les marques" ── */
     .sc-toggle-all {
@@ -344,9 +345,9 @@
       border-radius: 20px;
       flex-shrink: 0;
     }
-    .sc-result-fit.none { visibility: hidden; }
-    .sc-result-fit.up   { background: #ecfdf5; color: #065f46; }
-    .sc-result-fit.down { background: #fff7ed; color: #9a3412; }
+    .sc-result-fit.up     { background: #ecfdf5; color: #065f46; }
+    .sc-result-fit.warn   { background: #fffbeb; color: #92400e; }
+    .sc-result-fit.danger { background: #fef2f2; color: #991b1b; }
 
     /* ── Tip ── */
     .sc-tip {
@@ -390,9 +391,10 @@
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
       const [bestSize, secondSize] = scFindBestSizes(detectedBrand, cm, state.genre, 2);
-      const delta = bestSize - state.sourceSize;
-      const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
-      const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : '';
+      const targetCm = scGetCm(detectedBrand, bestSize, state.genre);
+      const diffMm = targetCm ? Math.round(Math.abs(targetCm - cm) * 10) : 0;
+      const deltaLabel = diffMm === 0 ? 'Exact' : `±${diffMm}mm`;
+      const deltaClass = diffMm <= 2 ? 'up' : diffMm <= 6 ? 'warn' : 'danger';
 
       return `
         <div>
@@ -404,8 +406,8 @@
             </div>
             <div class="sc-focus-size">EU ${bestSize}</div>
             ${secondSize ? `<div style="font-size:11px;color:#94a3b8">ou EU ${secondSize}</div>` : ''}
-            ${deltaLabel ? `<span class="sc-fit-tag ${deltaClass}">${deltaLabel}</span>` : ''}
-            ${b.tip && delta !== 0 ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
+            <span class="sc-fit-tag ${deltaClass}">${deltaLabel}</span>
+            ${b.tip ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
           <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
             Voir toutes les marques →
@@ -424,9 +426,10 @@
       .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
       .map(({ key, b, targetSize, secondSize }) => {
         const isPage = key === detectedBrand;
-        const delta = targetSize - state.sourceSize;
-        const deltaLabel = delta > 0 ? `+${delta}` : delta < 0 ? `${delta}` : '';
-        const deltaClass = delta > 0 ? 'up' : delta < 0 ? 'down' : 'none';
+        const targetCm = scGetCm(key, targetSize, state.genre);
+        const diffMm = targetCm ? Math.round(Math.abs(targetCm - cm) * 10) : 0;
+        const deltaLabel = diffMm === 0 ? 'Exact' : `±${diffMm}mm`;
+        const deltaClass = diffMm <= 2 ? 'up' : diffMm <= 6 ? 'warn' : 'danger';
         return `
           <div class="sc-result ${isPage ? 'highlight' : ''}">
             <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">

@@ -15,7 +15,7 @@ const SC_BRANDS = {
     name: 'Adidas', domain: 'adidas.com',
     logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=64',
     fit: 'small',
-    tip: 'Taille petit — prends ½ à 1 pointure au-dessus.',
+    tip: 'Chaussant étroit — si pied large, prends la pointure au-dessus de la recommandation.',
     cm: {
       homme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 },
       femme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 }
@@ -34,7 +34,7 @@ const SC_BRANDS = {
     name: 'Converse', domain: 'converse.com',
     logo: 'https://www.google.com/s2/favicons?domain=converse.com&sz=64',
     fit: 'large',
-    tip: 'Taille grand — prends ½ à 1 pointure en dessous.',
+    tip: 'Semelle plate qui libère de l\'espace en longueur. Si pied étroit, la taille recommandée convient sans descendre.',
     cm: {
       homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
       femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
@@ -44,7 +44,7 @@ const SC_BRANDS = {
     name: 'Birkenstock', domain: 'birkenstock.com',
     logo: 'https://www.google.com/s2/favicons?domain=birkenstock.com&sz=64',
     fit: 'very-large',
-    tip: 'Taille très grand — prends 1 pointure en dessous.',
+    tip: 'CM calibrés sur la semelle liège intérieure, conçue pour que les orteils touchent le bord. La recommandation intègre déjà cette référence.',
     cm: {
       homme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 },
       femme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 }
@@ -54,7 +54,7 @@ const SC_BRANDS = {
     name: 'Salomon', domain: 'salomon.com',
     logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=64',
     fit: 'small',
-    tip: 'Taille petit — prends ½ pointure au-dessus.',
+    tip: 'Fit trail enveloppant. En cas de doute entre deux pointures, prends la supérieure.',
     cm: {
       homme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 },
       femme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 }
@@ -73,7 +73,7 @@ const SC_BRANDS = {
     name: 'Vans', domain: 'vans.com',
     logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=64',
     fit: 'large',
-    tip: 'Taille grand — prends ½ à 1 pointure en dessous.',
+    tip: 'Last long et généreux, surtout en largeur sur les modèles classiques (Old Skool, Authentic).',
     cm: {
       homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
       femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
@@ -119,7 +119,7 @@ const SC_BRANDS = {
     name: 'Puma', domain: 'puma.com',
     logo: 'https://www.google.com/s2/favicons?domain=puma.com&sz=64',
     fit: 'large',
-    tip: 'Taille grand — prends ½ pointure en dessous.',
+    tip: 'Last EU plus généreux que la norme, surtout sur les modèles lifestyle (Suede, RS-X).',
     cm: {
       homme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
       femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
@@ -129,7 +129,7 @@ const SC_BRANDS = {
     name: 'Dr. Martens', domain: 'drmartens.com',
     logo: 'https://www.google.com/s2/favicons?domain=drmartens.com&sz=64',
     fit: 'small',
-    tip: 'Taille petit à partir du 41 — prends ½ à 1 pointure au-dessus.',
+    tip: 'Cuir épais et dur — réduit l\'espace interne. Le fit s\'améliore significativement après quelques semaines de rodage.',
     cm: {
       homme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 },
       femme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 }
