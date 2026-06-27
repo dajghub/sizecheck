@@ -27,20 +27,23 @@ function renderStep2() {
   if (state.sourceSize) {
     const cm = scGetCm(state.sourceBrand, state.sourceSize);
     if (cm) {
-      resultsHTML = Object.entries(SC_BRANDS).map(([key, b]) => {
-        const targetSize = scFindBestSize(key, cm);
-        const showBadge = targetSize !== state.sourceSize && b.fit !== 'standard';
-        const fitClass = showBadge ? b.fit : 'none';
-        const fitLabel = showBadge ? SC_FIT[b.fit].label : '';
-        return `
-          <div class="result-row">
-            <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
-            <span class="result-name">${b.name}</span>
-            <span class="fit-tag ${fitClass}">${fitLabel}</span>
-            <span class="result-size">EU ${targetSize}</span>
-          </div>
-        `;
-      }).join('');
+      resultsHTML = Object.entries(SC_BRANDS)
+        .filter(([key]) => key !== state.sourceBrand)
+        .map(([key, b]) => ({ key, b, targetSize: scFindBestSize(key, cm) }))
+        .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
+        .map(({ key, b, targetSize }) => {
+          const showBadge = targetSize !== state.sourceSize && b.fit !== 'standard';
+          const fitClass = showBadge ? b.fit : 'none';
+          const fitLabel = showBadge ? SC_FIT[b.fit].label : '';
+          return `
+            <div class="result-row">
+              <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
+              <span class="result-name">${b.name}</span>
+              <span class="fit-tag ${fitClass}">${fitLabel}</span>
+              <span class="result-size">EU ${targetSize}</span>
+            </div>
+          `;
+        }).join('');
     }
   }
 
