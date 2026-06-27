@@ -32,7 +32,8 @@ function renderStep2() {
         .map(([key, b]) => ({ key, b, targetSize: scFindBestSize(key, cm) }))
         .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
         .map(({ key, b, targetSize }) => {
-          const showBadge = targetSize !== state.sourceSize && b.fit !== 'standard';
+          const showBadge = (b.fit === 'small' && targetSize > state.sourceSize) ||
+                          ((b.fit === 'large' || b.fit === 'very-large') && targetSize < state.sourceSize);
           const fitClass = showBadge ? b.fit : 'none';
           const fitLabel = showBadge ? SC_FIT[b.fit].label : '';
           return `

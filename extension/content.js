@@ -339,11 +339,13 @@
     .sc-result-fit {
       font-size: 8px;
       font-weight: 700;
+      min-width: 72px;
+      text-align: center;
       padding: 2px 6px;
       border-radius: 20px;
       flex-shrink: 0;
     }
-    .sc-result-fit.standard { display: none; }
+    .sc-result-fit.none { visibility: hidden; }
     .sc-result-fit.small    { background: #fffbeb; color: #92400e; }
     .sc-result-fit.large    { background: #fff7ed; color: #9a3412; }
     .sc-result-fit.very-large { background: #fef2f2; color: #991b1b; }
@@ -390,8 +392,9 @@
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
       const targetSize = scFindBestSize(detectedBrand, cm);
-      const sizesDiffer = targetSize !== state.sourceSize;
       const fitLabel = SC_FIT[b.fit].label;
+      const showBadge = (b.fit === 'small' && targetSize > state.sourceSize) ||
+                        ((b.fit === 'large' || b.fit === 'very-large') && targetSize < state.sourceSize);
 
       return `
         <div>
@@ -402,8 +405,8 @@
               <span>${b.name}</span>
             </div>
             <div class="sc-focus-size">EU ${targetSize}</div>
-            ${sizesDiffer ? `<span class="sc-fit-tag ${b.fit}">${fitLabel}</span>` : ''}
-            ${b.tip && sizesDiffer ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
+            ${showBadge ? `<span class="sc-fit-tag ${b.fit}">${fitLabel}</span>` : ''}
+            ${b.tip && showBadge ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
           <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
             Voir toutes les marques →
@@ -413,19 +416,23 @@
     }
 
     // Mode toutes marques
-    const rows = Object.entries(SC_BRANDS).map(([key, b]) => {
-      const targetSize = scFindBestSize(key, cm);
-      const isPage = key === detectedBrand;
-      const sizesDiffer = targetSize !== state.sourceSize;
-      return `
-        <div class="sc-result ${isPage ? 'highlight' : ''}">
-          <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
-          <span class="sc-result-name">${b.name}</span>
-          <span class="sc-result-size">EU ${targetSize}</span>
-          ${sizesDiffer ? `<span class="sc-result-fit ${b.fit}">${SC_FIT[b.fit].label}</span>` : ''}
-        </div>
-      `;
-    }).join('');
+    const rows = Object.entries(SC_BRANDS)
+      .filter(([key]) => key !== state.sourceBrand)
+      .map(([key, b]) => ({ key, b, targetSize: scFindBestSize(key, cm) }))
+      .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
+      .map(({ key, b, targetSize }) => {
+        const isPage = key === detectedBrand;
+        const showBadge = (b.fit === 'small' && targetSize > state.sourceSize) ||
+                          ((b.fit === 'large' || b.fit === 'very-large') && targetSize < state.sourceSize);
+        return `
+          <div class="sc-result ${isPage ? 'highlight' : ''}">
+            <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
+            <span class="sc-result-name">${b.name}</span>
+            <span class="sc-result-fit ${showBadge ? b.fit : 'none'}">${showBadge ? SC_FIT[b.fit].label : ''}</span>
+            <span class="sc-result-size">EU ${targetSize}</span>
+          </div>
+        `;
+      }).join('');
 
     return `
       <div>
