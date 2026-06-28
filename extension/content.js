@@ -15,12 +15,10 @@
     'adidas.com': 'adidas',   'adidas.fr': 'adidas',
     'newbalance.com': 'newbalance', 'newbalance.fr': 'newbalance',
     'converse.com': 'converse', 'converse.fr': 'converse',
-    'birkenstock.com': 'birkenstock', 'birkenstock.fr': 'birkenstock',
     'salomon.com': 'salomon',  'salomon.fr': 'salomon',
     'vans.com': 'vans',        'vans.fr': 'vans',
     'asics.com': 'asics',      'asics.fr': 'asics',
-    'hoka.com': 'hoka',        'hoka.fr': 'hoka',
-    'saucony.com': 'saucony',  'saucony.fr': 'saucony'
+    'hoka.com': 'hoka',        'hoka.fr': 'hoka'
   };
 
   const MULTI_BRAND_HOSTS = ['jdsports', 'zalando', 'footlocker', 'courir', 'sizeer'];
