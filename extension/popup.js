@@ -127,6 +127,9 @@ document.addEventListener('click', (e) => {
   }
 });
 
+document.getElementById('btn-homme').addEventListener('click', () => setGenre('homme'));
+document.getElementById('btn-femme').addEventListener('click', () => setGenre('femme'));
+
 // Init — détecter la marque de la page active, puis rendre
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   try {
