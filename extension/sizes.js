@@ -5,7 +5,7 @@ const SC_BRANDS = {
   nike: {
     name: 'Nike', domain: 'nike.com',
     logo: 'https://www.google.com/s2/favicons?domain=nike.com&sz=64',
-    fit: 'standard', tip: null,
+    tip: null,
     cm: {
       homme: { 35:21.6, 36:22.0, 37:22.7, 38:23.3, 39:24.1, 40:24.5, 41:25.4, 42:25.8, 43:26.7, 44:27.1, 45:27.9, 46:28.8 },
       femme: { 35:21.6, 36:22.4, 37:23.1, 38:23.7, 39:24.5, 40:25.0, 41:25.8, 42:26.2, 43:27.1, 44:27.5, 45:28.3, 46:29.2 }
@@ -14,7 +14,6 @@ const SC_BRANDS = {
   adidas: {
     name: 'Adidas', domain: 'adidas.com',
     logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=64',
-    fit: 'small',
     tip: 'Chaussant étroit — si pied large, prends la pointure au-dessus de la recommandation.',
     cm: {
       homme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 },
@@ -24,7 +23,7 @@ const SC_BRANDS = {
   newbalance: {
     name: 'New Balance', domain: 'newbalance.com',
     logo: 'https://www.google.com/s2/favicons?domain=newbalance.com&sz=64',
-    fit: 'standard', tip: null,
+    tip: null,
     cm: {
       homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.0, 40:25.0, 41:25.5, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
       femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:29.0, 45:29.5, 46:30.0 }
@@ -33,7 +32,6 @@ const SC_BRANDS = {
   converse: {
     name: 'Converse', domain: 'converse.com',
     logo: 'https://www.google.com/s2/favicons?domain=converse.com&sz=64',
-    fit: 'large',
     tip: 'Semelle plate qui libère de l\'espace en longueur. Si pied étroit, la taille recommandée convient sans descendre. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
     cm: {
       homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:24.5, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
@@ -43,7 +41,6 @@ const SC_BRANDS = {
   birkenstock: {
     name: 'Birkenstock', domain: 'birkenstock.com',
     logo: 'https://www.google.com/s2/favicons?domain=birkenstock.com&sz=64',
-    fit: 'very-large',
     tip: 'CM calibrés sur la semelle liège intérieure, conçue pour que les orteils touchent le bord. La recommandation intègre déjà cette référence.',
     cm: {
       homme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 },
@@ -53,7 +50,6 @@ const SC_BRANDS = {
   salomon: {
     name: 'Salomon', domain: 'salomon.com',
     logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=64',
-    fit: 'small',
     tip: 'Fit trail enveloppant. En cas de doute entre deux pointures, prends la supérieure.',
     cm: {
       homme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 },
@@ -63,7 +59,6 @@ const SC_BRANDS = {
   vans: {
     name: 'Vans', domain: 'vans.com',
     logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=64',
-    fit: 'large',
     tip: 'Last long et généreux, surtout en largeur sur les modèles classiques (Old Skool, Authentic).',
     cm: {
       homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
@@ -73,7 +68,7 @@ const SC_BRANDS = {
   asics: {
     name: 'ASICS', domain: 'asics.com',
     logo: 'https://www.google.com/s2/favicons?domain=asics.com&sz=64',
-    fit: 'standard', tip: null,
+    tip: null,
     cm: {
       homme: { 35:22.0, 36:22.5, 37:23.0, 38:24.0, 39:24.5, 40:25.5, 41:26.0, 42:26.5, 43:27.0, 44:28.0, 45:28.5, 46:29.0 },
       femme: { 35:22.0, 36:23.0, 37:23.0, 38:24.0, 39:24.5, 40:25.5, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
@@ -82,7 +77,7 @@ const SC_BRANDS = {
   hoka: {
     name: 'HOKA', domain: 'hoka.com',
     logo: 'https://www.google.com/s2/favicons?domain=hoka.com&sz=64',
-    fit: 'standard', tip: null,
+    tip: null,
     cm: {
       homme: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.5, 41:25.5, 42:26.0, 43:26.5, 44:27.0, 45:28.0, 46:28.5 },
       femme: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.5, 41:25.5, 42:26.0, 43:26.5, 44:27.0, 45:28.0, 46:28.5 }
@@ -91,7 +86,7 @@ const SC_BRANDS = {
   saucony: {
     name: 'Saucony', domain: 'saucony.com',
     logo: 'https://www.google.com/s2/favicons?domain=saucony.com&sz=64',
-    fit: 'standard', tip: null,
+    tip: null,
     cm: {
       homme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
       femme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }

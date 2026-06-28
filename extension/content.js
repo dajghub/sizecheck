@@ -17,14 +17,10 @@
     'converse.com': 'converse', 'converse.fr': 'converse',
     'birkenstock.com': 'birkenstock', 'birkenstock.fr': 'birkenstock',
     'salomon.com': 'salomon',  'salomon.fr': 'salomon',
-    'crocs.com': 'crocs',      'crocs.fr': 'crocs',
     'vans.com': 'vans',        'vans.fr': 'vans',
-    'on.com': 'on',            'on-running.com': 'on',
     'asics.com': 'asics',      'asics.fr': 'asics',
     'hoka.com': 'hoka',        'hoka.fr': 'hoka',
-    'saucony.com': 'saucony',  'saucony.fr': 'saucony',
-    'puma.com': 'puma',        'puma.fr': 'puma',
-    'drmartens.com': 'drmartens'
+    'saucony.com': 'saucony',  'saucony.fr': 'saucony'
   };
 
   const MULTI_BRAND_HOSTS = ['jdsports', 'zalando', 'footlocker', 'courir', 'sizeer'];
@@ -424,14 +420,10 @@
     const hasSecond = allRows.some(r => r.secondSize);
     const rows = allRows.map(({ key, b, targetSize, secondSize }) => {
         const isPage = key === detectedBrand;
-        const fitInfo = SC_FIT[b.fit];
-        const fitClass = b.fit !== 'standard' ? b.fit : 'none';
-        const fitLabel = b.fit !== 'standard' ? fitInfo.label : '';
         return `
           <div class="sc-result ${isPage ? 'highlight' : ''}">
             <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
             <span class="sc-result-name">${b.name}</span>
-            <span class="sc-result-fit ${fitClass}">${fitLabel}</span>
             <span class="sc-result-size">EU ${targetSize}${secondSize ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${secondSize}</span>` : ''}</span>
           </div>
         `;

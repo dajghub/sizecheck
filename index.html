@@ -14,7 +14,7 @@
 
   <!-- Open Graph -->
   <meta property="og:title"        content="SizeCheck — Ta vraie pointure entre marques">
-  <meta property="og:description"  content="Convertis ta pointure entre Nike, Adidas, Converse et 5 autres marques. Méthode des centimètres, résultat instantané.">
+  <meta property="og:description"  content="Convertis ta pointure entre Nike, Adidas, Converse et 7 autres marques. Méthode des centimètres, résultat instantané.">
   <meta property="og:type"         content="website">
   <meta property="og:url"          content="https://www.sizecheck.fr/">
   <meta property="og:image"        content="https://www.sizecheck.fr/assets/og-image.png">
@@ -205,7 +205,7 @@
     const BRANDS = {
       nike: {
         name: 'Nike', emoji: '🟠', logo: 'https://www.google.com/s2/favicons?domain=nike.com&sz=128',
-        fit: 'standard', tip: null,
+        tip: null,
         cm: {
           homme: { 35:21.6, 36:22.0, 37:22.7, 38:23.3, 39:24.1, 40:24.5, 41:25.4, 42:25.8, 43:26.7, 44:27.1, 45:27.9, 46:28.8 },
           femme: { 35:21.6, 36:22.4, 37:23.1, 38:23.7, 39:24.5, 40:25.0, 41:25.8, 42:26.2, 43:27.1, 44:27.5, 45:28.3, 46:29.2 }
@@ -213,7 +213,6 @@
       },
       adidas: {
         name: 'Adidas', emoji: '🔵', logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=128',
-        fit: 'small',
         tip: 'Adidas taille petit — chaussant plus étroit que la norme. Si tu as le pied large, prends la pointure supérieure à celle recommandée.',
         cm: {
           homme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 },
@@ -222,7 +221,7 @@
       },
       newbalance: {
         name: 'New Balance', emoji: '🟢', logo: 'https://www.google.com/s2/favicons?domain=newbalance.com&sz=128',
-        fit: 'standard', tip: null,
+        tip: null,
         cm: {
           homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.0, 40:25.0, 41:25.5, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
           femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:29.0, 45:29.5, 46:30.0 }
@@ -230,7 +229,6 @@
       },
       converse: {
         name: 'Converse', emoji: '⭐', logo: '/assets/converse.svg',
-        fit: 'large',
         tip: 'Converse taille grand — la semelle plate des Chuck Taylor libère de l\'espace en longueur. Si ton pied est étroit, la pointure recommandée devrait convenir sans descendre. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
         cm: {
           homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:24.5, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
@@ -239,7 +237,6 @@
       },
       birkenstock: {
         name: 'Birkenstock', emoji: '🟤', logo: 'https://www.google.com/s2/favicons?domain=birkenstock.com&sz=128',
-        fit: 'very-large',
         tip: 'Birkenstock taille très grand — les CM correspondent à la longueur intérieure de la semelle liège, conçue pour que les orteils touchent presque le bord. La pointure recommandée intègre déjà cette référence spécifique.',
         cm: {
           homme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 },
@@ -248,7 +245,6 @@
       },
       salomon: {
         name: 'Salomon', emoji: '⚡', logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=128',
-        fit: 'small',
         tip: 'Salomon taille petit — fit trail enveloppant conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prends la supérieure.',
         cm: {
           homme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 },
@@ -257,7 +253,6 @@
       },
       vans: {
         name: 'Vans', emoji: '🔴', logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=128',
-        fit: 'large',
         tip: 'Vans taille grand — les modèles classiques (Old Skool, Authentic) ont un last long et généreux, surtout en largeur. Idéal pour les pieds larges.',
         cm: {
           homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
@@ -266,7 +261,7 @@
       },
       asics: {
         name: 'ASICS', emoji: '🔷', logo: 'https://www.google.com/s2/favicons?domain=asics.com&sz=128',
-        fit: 'standard', tip: null,
+        tip: null,
         cm: {
           homme: { 35:22.0, 36:22.5, 37:23.0, 38:24.0, 39:24.5, 40:25.5, 41:26.0, 42:26.5, 43:27.0, 44:28.0, 45:28.5, 46:29.0 },
           femme: { 35:22.0, 36:23.0, 37:23.0, 38:24.0, 39:24.5, 40:25.5, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
@@ -274,7 +269,7 @@
       },
       hoka: {
         name: 'HOKA', emoji: '🟣', logo: 'https://www.google.com/s2/favicons?domain=hoka.com&sz=128',
-        fit: 'standard', tip: null,
+        tip: null,
         cm: {
           homme: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.5, 41:25.5, 42:26.0, 43:26.5, 44:27.0, 45:28.0, 46:28.5 },
           femme: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.5, 41:25.5, 42:26.0, 43:26.5, 44:27.0, 45:28.0, 46:28.5 }
@@ -282,7 +277,7 @@
       },
       saucony: {
         name: 'Saucony', emoji: '🟤', logo: 'https://www.google.com/s2/favicons?domain=saucony.com&sz=128',
-        fit: 'standard', tip: null,
+        tip: null,
         cm: {
           homme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
           femme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
