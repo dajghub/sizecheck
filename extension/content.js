@@ -421,6 +421,45 @@
     `;
   }
 
+  /* ── Mise à jour chirurgicale du genre toggle ── */
+  function patchGenreToggle() {
+    const active   = 'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)';
+    const inactive = 'background:transparent;color:#64748b';
+    wrap.querySelectorAll('[data-action="genre"]').forEach(btn => {
+      btn.style.cssText = `flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${btn.dataset.value === state.genre ? active : inactive}`;
+    });
+  }
+
+  /* ── Mise à jour chirurgicale de la brand grid ── */
+  function patchBrandGrid() {
+    wrap.querySelectorAll('.sc-brand-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.value === state.sourceBrand);
+    });
+  }
+
+  /* ── Mise à jour chirurgicale de la section tailles ── */
+  function patchSizeSection() {
+    const section = wrap.querySelector('#sc-size-section');
+    if (!state.sourceBrand) {
+      if (section) section.style.display = 'none';
+      return;
+    }
+    if (section) {
+      section.style.display = '';
+      section.querySelector('.sc-size-grid').innerHTML = SC_ALL_SIZES.map(s =>
+        `<button class="sc-size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>`
+      ).join('');
+    }
+  }
+
+  /* ── Mise à jour chirurgicale des résultats ── */
+  function patchResults() {
+    const el = wrap.querySelector('#sc-results-section');
+    if (!el) return;
+    el.innerHTML = (state.sourceBrand && state.sourceSize) ? renderResultsSection() : '';
+  }
+
+  /* ── Rendu initial complet (appelé une seule fois + changement de genre) ── */
   function render() {
     const pageBrand = detectedBrand ? SC_BRANDS[detectedBrand] : null;
 
@@ -431,11 +470,9 @@
       </button>
     `).join('');
 
-    const sizesHTML = state.sourceBrand
-      ? SC_ALL_SIZES.map(s => `
-          <button class="sc-size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>
-        `).join('')
-      : '';
+    const sizesHTML = SC_ALL_SIZES.map(s =>
+      `<button class="sc-size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>`
+    ).join('');
 
     wrap.innerHTML = `
       <div class="sc-panel ${state.open ? 'open' : ''}" id="sc-panel">
@@ -451,8 +488,8 @@
         <div class="sc-body">
 
           <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
-            <button data-action="genre" data-value="homme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${state.genre==='homme'?'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)':'background:transparent;color:#64748b'}">Homme</button>
-            <button data-action="genre" data-value="femme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${state.genre==='femme'?'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)':'background:transparent;color:#64748b'}">Femme</button>
+            <button data-action="genre" data-value="homme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Homme</button>
+            <button data-action="genre" data-value="femme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Femme</button>
           </div>
 
           <div>
@@ -460,14 +497,14 @@
             <div class="sc-brand-grid">${brandsHTML}</div>
           </div>
 
-          ${state.sourceBrand ? `
-          <div>
+          <div id="sc-size-section" style="${state.sourceBrand ? '' : 'display:none'}">
             <div class="sc-section-label">Ma pointure habituelle</div>
             <div class="sc-size-grid">${sizesHTML}</div>
           </div>
-          ` : ''}
 
-          ${state.sourceBrand && state.sourceSize ? renderResultsSection() : ''}
+          <div id="sc-results-section">
+            ${state.sourceBrand && state.sourceSize ? renderResultsSection() : ''}
+          </div>
 
           <div class="sc-footer">
             <a href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr</a>
@@ -482,11 +519,11 @@
       </button>
     `;
 
-    bindEvents();
+    patchGenreToggle();
   }
 
   /* ══════════════════════════════════════════
-     EVENTS
+     EVENTS — bindEvents() appelé une seule fois
   ══════════════════════════════════════════ */
 
   function bindEvents() {
@@ -511,7 +548,7 @@
             state.genre = value;
             state.sourceSize = null;
             state.showAll = false;
-            render();
+            render(); // wrap.innerHTML remplacé, mais le listener sur wrap survit
           }
           break;
 
@@ -520,13 +557,16 @@
           state.sourceSize = null;
           state.showAll = false;
           chrome.storage.local.set({ sc_source_brand: value });
-          render();
+          patchBrandGrid();
+          patchSizeSection();
+          patchResults();
           break;
 
         case 'size':
           state.sourceSize = parseInt(value);
           state.showAll = false;
-          render();
+          patchSizeSection();
+          patchResults();
           setTimeout(() => {
             const body = wrap.querySelector('.sc-body');
             if (body) body.scrollTop = body.scrollHeight;
@@ -535,7 +575,7 @@
 
         case 'toggleAll':
           state.showAll = !state.showAll;
-          render();
+          patchResults();
           break;
       }
     });
@@ -548,6 +588,7 @@
   chrome.storage.local.get(['sc_source_brand'], (data) => {
     if (data.sc_source_brand) state.sourceBrand = data.sc_source_brand;
     render();
+    bindEvents(); // une seule fois — le listener sur wrap survit aux render() suivants
   });
 
 })();
