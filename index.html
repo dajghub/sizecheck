@@ -458,7 +458,10 @@
           const delta    = parseFloat((tgtCm - srcCm).toFixed(1));
           return { key, b, bestEu, secondEu, tgtCm, delta };
         })
-        .sort((a, b) => Math.abs(a.delta) - Math.abs(b.delta));
+        .sort((a, b) => {
+          const POP = ['adidas','newbalance','converse','vans','hoka','salomon','asics','saucony','birkenstock'];
+          return (POP.indexOf(a.key) ?? 99) - (POP.indexOf(b.key) ?? 99);
+        });
 
       // Build brand cards HTML
       const hasSecond = rows.some(r => r.secondEu);
