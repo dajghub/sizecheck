@@ -60,15 +60,6 @@ const SC_BRANDS = {
       femme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 }
     }
   },
-  crocs: {
-    name: 'Crocs', domain: 'crocs.com',
-    logo: 'https://www.google.com/s2/favicons?domain=crocs.com&sz=64',
-    fit: 'standard', tip: null,
-    cm: {
-      homme: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 },
-      femme: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 }
-    }
-  },
   vans: {
     name: 'Vans', domain: 'vans.com',
     logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=64',
@@ -77,15 +68,6 @@ const SC_BRANDS = {
     cm: {
       homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
       femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
-    }
-  },
-  on: {
-    name: 'ON Running', domain: 'on.com',
-    logo: 'https://www.google.com/s2/favicons?domain=on.com&sz=64',
-    fit: 'standard', tip: null,
-    cm: {
-      homme: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
-      femme: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
     }
   },
   asics: {
@@ -114,26 +96,6 @@ const SC_BRANDS = {
       homme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
       femme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
     }
-  },
-  puma: {
-    name: 'Puma', domain: 'puma.com',
-    logo: 'https://www.google.com/s2/favicons?domain=puma.com&sz=64',
-    fit: 'large',
-    tip: 'Last EU plus généreux que la norme, surtout sur les modèles lifestyle (Suede, RS-X).',
-    cm: {
-      homme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
-      femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
-    }
-  },
-  drmartens: {
-    name: 'Dr. Martens', domain: 'drmartens.com',
-    logo: 'https://www.google.com/s2/favicons?domain=drmartens.com&sz=64',
-    fit: 'small',
-    tip: 'Cuir épais et dur — réduit l\'espace interne. Le fit s\'améliore significativement après quelques semaines de rodage.',
-    cm: {
-      homme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 },
-      femme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 }
-    }
   }
 };
 
@@ -158,14 +120,10 @@ const SC_DOMAIN_MAP = {
   'converse.com': 'converse',   'converse.fr': 'converse',
   'birkenstock.com': 'birkenstock', 'birkenstock.fr': 'birkenstock',
   'salomon.com': 'salomon',     'salomon.fr': 'salomon',
-  'crocs.com': 'crocs',         'crocs.fr': 'crocs',
   'vans.com': 'vans',           'vans.fr': 'vans',
-  'on.com': 'on',               'on-running.com': 'on',
   'asics.com': 'asics',         'asics.fr': 'asics',
   'hoka.com': 'hoka',           'hoka.fr': 'hoka',
-  'saucony.com': 'saucony',     'saucony.fr': 'saucony',
-  'puma.com': 'puma',           'puma.fr': 'puma',
-  'drmartens.com': 'drmartens'
+  'saucony.com': 'saucony',     'saucony.fr': 'saucony'
 };
 
 /** Obtenir les CM pour une marque + pointure + genre donné */

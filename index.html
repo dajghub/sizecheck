@@ -6,7 +6,7 @@
 
   <!-- SEO -->
   <title>SizeCheck — Convertisseur de pointures entre marques</title>
-  <meta name="description" content="Trouve ta pointure Nike, Adidas, Converse, New Balance, Birkenstock, Salomon, Crocs ou Vans en quelques secondes. Comparaison fiable par la méthode des centimètres.">
+  <meta name="description" content="Trouve ta pointure Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Vans, ASICS, HOKA ou Saucony en quelques secondes. Comparaison fiable par la méthode des centimètres.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.sizecheck.fr/">
   <meta name="theme-color" content="#2563eb">
@@ -33,7 +33,7 @@
         "name": "Comment convertir sa pointure entre différentes marques de chaussures ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "La méthode des centimètres consiste à trouver la longueur de pied en cm correspondant à sa pointure dans la marque actuelle, puis à localiser la pointure la plus proche dans le tableau de la marque cible. SizeCheck automatise cette conversion pour 14 marques : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs, Vans, ON Running, ASICS, HOKA, Saucony, Puma et Dr. Martens. Un indicateur de précision (±Xmm) indique la fiabilité de chaque correspondance."
+          "text": "La méthode des centimètres consiste à trouver la longueur de pied en cm correspondant à sa pointure dans la marque actuelle, puis à localiser la pointure la plus proche dans le tableau de la marque cible. SizeCheck automatise cette conversion pour 10 marques : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Vans, ASICS, HOKA et Saucony. Un indicateur de précision (±Xmm) indique la fiabilité de chaque correspondance."
         }
       },
       {
@@ -158,13 +158,13 @@
         </summary>
         <div class="px-5 pb-5 text-xs text-slate-500 leading-relaxed space-y-2 border-t border-gray-50">
           <p class="pt-3"><strong class="text-slate-600">La méthode des centimètres</strong> : chaque pointure EU correspond à une longueur de pied précise selon le tableau officiel de chaque marque. SizeCheck compare ces valeurs pour trouver la correspondance la plus proche, et affiche l'écart en mm pour indiquer la fiabilité du résultat.</p>
-          <p>Les données proviennent des guides de tailles officiels de <strong class="text-slate-600">14 marques</strong> : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs, Vans, ON Running, ASICS, HOKA, Saucony, Puma et Dr. Martens. <strong class="text-slate-600">Vérifiées et mises à jour en juin 2026.</strong></p>
+          <p>Les données proviennent des guides de tailles officiels de <strong class="text-slate-600">10 marques</strong> : Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Vans, ASICS, HOKA et Saucony. <strong class="text-slate-600">Vérifiées et mises à jour en juin 2026.</strong></p>
           <p class="text-slate-400">Note : certains modèles spécifiques (ex. Air Force 1, Jordan) peuvent varier légèrement par rapport au tableau standard de la marque.</p>
         </div>
       </details>
 
       <p class="text-xs text-slate-400 text-center leading-relaxed px-2">
-        SizeCheck compare gratuitement les pointures Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs et Vans par la méthode des centimètres.
+        SizeCheck compare gratuitement les pointures Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Vans, ASICS, HOKA et Saucony par la méthode des centimètres.
       </p>
     </div>
 
@@ -255,14 +255,6 @@
           femme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 }
         }
       },
-      crocs: {
-        name: 'Crocs', emoji: '🟡', logo: 'https://www.google.com/s2/favicons?domain=crocs.com&sz=128',
-        fit: 'standard', tip: null,
-        cm: {
-          homme: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 },
-          femme: { 35:21.8, 36:22.1, 37:22.9, 38:23.8, 39:24.6, 40:25.0, 41:25.5, 42:26.3, 43:27.2, 44:27.5, 45:28.0, 46:28.8 }
-        }
-      },
       vans: {
         name: 'Vans', emoji: '🔴', logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=128',
         fit: 'large',
@@ -270,14 +262,6 @@
         cm: {
           homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
           femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
-        }
-      },
-      on: {
-        name: 'ON Running', emoji: '⚪', logo: 'https://www.google.com/s2/favicons?domain=on.com&sz=128',
-        fit: 'standard', tip: null,
-        cm: {
-          homme: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
-          femme: { 35:21.5, 36:22.0, 37:23.0, 38:24.0, 39:25.0, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
         }
       },
       asics: {
@@ -304,24 +288,6 @@
           femme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
         }
       },
-      puma: {
-        name: 'Puma', emoji: '🐆', logo: 'https://www.google.com/s2/favicons?domain=puma.com&sz=128',
-        fit: 'large',
-        tip: 'Puma taille grand — last EU plus généreux que la norme, particulièrement sur les modèles lifestyle comme le Suede ou le RS-X.',
-        cm: {
-          homme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
-          femme: { 35:21.5, 36:22.5, 37:23.0, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
-        }
-      },
-      drmartens: {
-        name: 'Dr. Martens', emoji: '🥾', logo: 'https://www.google.com/s2/favicons?domain=drmartens.com&sz=128',
-        fit: 'small',
-        tip: 'Dr. Martens taille petit à partir du 41 — le cuir épais et dur réduit l\'espace interne. Le fit s\'améliore significativement après quelques semaines de rodage.',
-        cm: {
-          homme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 },
-          femme: { 35:22.5, 36:23.0, 37:23.5, 38:24.0, 39:24.5, 40:25.0, 41:25.5, 42:26.0, 43:27.0, 44:27.5, 45:28.0, 46:29.0 }
-        }
-      }
     };
 
     const FIT = {
