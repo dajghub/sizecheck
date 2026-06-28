@@ -292,13 +292,6 @@
     .sc-focus-label { font-size: 11px; color: #94a3b8; }
 
     /* ── Fit tag ── */
-    .sc-fit-tag {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 20px;
-    }
-
     /* ── Toggle "voir toutes les marques" ── */
     .sc-toggle-all {
       background: none;
@@ -329,20 +322,6 @@
     .sc-result-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
     .sc-result-name { font-size: 12px; font-weight: 700; color: #1e293b; flex: 1; }
     .sc-result-size { font-size: 14px; font-weight: 800; color: #1d4ed8; flex-shrink: 0; }
-    .sc-result-fit {
-      font-size: 8px;
-      font-weight: 700;
-      min-width: 72px;
-      text-align: center;
-      padding: 2px 6px;
-      border-radius: 20px;
-      flex-shrink: 0;
-    }
-    .sc-result-fit.none       { visibility: hidden; }
-    .sc-result-fit.small      { background: #fffbeb; color: #92400e; }
-    .sc-result-fit.large      { background: #fff7ed; color: #9a3412; }
-    .sc-result-fit.very-large { background: #fef2f2; color: #991b1b; }
-
     /* ── Tip ── */
     .sc-tip {
       font-size: 10.5px;
