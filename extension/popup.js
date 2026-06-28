@@ -41,32 +41,36 @@ function renderStep2() {
   if (state.sourceSize) {
     const cm = scGetCm(state.sourceBrand, state.sourceSize, state.genre);
     if (cm) {
-      resultsHTML = Object.entries(SC_BRANDS)
+      const allResults = Object.entries(SC_BRANDS)
         .filter(([key]) => key !== state.sourceBrand || key === state.pageBrand)
         .map(([key, b]) => {
           const [bestSize, secondSize] = scFindBestSizes(key, cm, state.genre, 2);
-          return { key, b, targetSize: bestSize, secondSize };
+          const targetCm = scGetCm(key, bestSize, state.genre);
+          const cmDiff = targetCm ? Math.abs(targetCm - cm) : 999;
+          return { key, b, targetSize: bestSize, secondSize, cmDiff };
         })
         .sort((a, b) => {
           if (a.key === state.pageBrand) return -1;
           if (b.key === state.pageBrand) return 1;
-          return Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize);
-        })
-        .map(({ key, b, targetSize, secondSize }) => {
-          const targetCm = scGetCm(key, targetSize, state.genre);
-          const diffMm = targetCm ? Math.round(Math.abs(targetCm - cm) * 10) : 0;
-          const deltaLabel = diffMm === 0 ? 'Exact' : `±${diffMm}mm`;
-          const deltaClass = diffMm <= 2 ? 'up' : diffMm <= 6 ? 'warn' : 'danger';
+          return a.cmDiff - b.cmDiff;
+        });
+
+      const hasSecond = allResults.some(r => r.secondSize);
+      resultsHTML = allResults.map(({ key, b, targetSize, secondSize }) => {
+          const fitInfo = SC_FIT[b.fit];
+          const fitTag = b.fit !== 'standard'
+            ? `<span class="fit-tag ${b.fit}">${fitInfo.label}</span>`
+            : '<span class="fit-tag none"></span>';
           const isPage = key === state.pageBrand;
           return `
             <div class="result-row ${isPage ? 'page-result' : ''}">
               <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
               <span class="result-name">${b.name}${isPage ? ' <span class="on-page-tag">cette page</span>' : ''}</span>
-              <span class="fit-tag ${deltaClass}">${deltaLabel}</span>
+              ${fitTag}
               <span class="result-size">EU ${targetSize}${secondSize ? `<span class="result-second">ou ${secondSize}</span>` : ''}</span>
             </div>
           `;
-        }).join('');
+        }).join('') + (hasSecond ? `<p class="between-sizes">Entre deux tailles — prends la plus grande.</p>` : '');
     }
   }
 

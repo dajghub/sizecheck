@@ -302,9 +302,6 @@
       padding: 3px 9px;
       border-radius: 20px;
     }
-    .sc-fit-tag.up     { background: #ecfdf5; color: #065f46; }
-    .sc-fit-tag.warn   { background: #fffbeb; color: #92400e; }
-    .sc-fit-tag.danger { background: #fef2f2; color: #991b1b; }
 
     /* ── Toggle "voir toutes les marques" ── */
     .sc-toggle-all {
@@ -345,9 +342,10 @@
       border-radius: 20px;
       flex-shrink: 0;
     }
-    .sc-result-fit.up     { background: #ecfdf5; color: #065f46; }
-    .sc-result-fit.warn   { background: #fffbeb; color: #92400e; }
-    .sc-result-fit.danger { background: #fef2f2; color: #991b1b; }
+    .sc-result-fit.none       { visibility: hidden; }
+    .sc-result-fit.small      { background: #fffbeb; color: #92400e; }
+    .sc-result-fit.large      { background: #fff7ed; color: #9a3412; }
+    .sc-result-fit.very-large { background: #fef2f2; color: #991b1b; }
 
     /* ── Tip ── */
     .sc-tip {
@@ -391,10 +389,6 @@
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
       const [bestSize, secondSize] = scFindBestSizes(detectedBrand, cm, state.genre, 2);
-      const targetCm = scGetCm(detectedBrand, bestSize, state.genre);
-      const diffMm = targetCm ? Math.round(Math.abs(targetCm - cm) * 10) : 0;
-      const deltaLabel = diffMm === 0 ? 'Exact' : `±${diffMm}mm`;
-      const deltaClass = diffMm <= 2 ? 'up' : diffMm <= 6 ? 'warn' : 'danger';
 
       return `
         <div>
@@ -406,7 +400,7 @@
             </div>
             <div class="sc-focus-size">EU ${bestSize}</div>
             ${secondSize ? `<div style="font-size:11px;color:#94a3b8">ou EU ${secondSize}</div>` : ''}
-            <span class="sc-fit-tag ${deltaClass}">${deltaLabel}</span>
+            ${secondSize ? `<div style="font-size:10px;color:#94a3b8;margin-top:2px">Entre deux tailles — prends la plus grande.</div>` : ''}
             ${b.tip ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
           <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
@@ -417,28 +411,31 @@
     }
 
     // Mode toutes marques
-    const rows = Object.entries(SC_BRANDS)
+    const allRows = Object.entries(SC_BRANDS)
       .filter(([key]) => key !== state.sourceBrand)
       .map(([key, b]) => {
         const [bestSize, secondSize] = scFindBestSizes(key, cm, state.genre, 2);
-        return { key, b, targetSize: bestSize, secondSize };
+        const targetCm = scGetCm(key, bestSize, state.genre);
+        const cmDiff = targetCm ? Math.abs(targetCm - cm) : 999;
+        return { key, b, targetSize: bestSize, secondSize, cmDiff };
       })
-      .sort((a, b) => Math.abs(b.targetSize - state.sourceSize) - Math.abs(a.targetSize - state.sourceSize))
-      .map(({ key, b, targetSize, secondSize }) => {
+      .sort((a, b) => a.cmDiff - b.cmDiff);
+
+    const hasSecond = allRows.some(r => r.secondSize);
+    const rows = allRows.map(({ key, b, targetSize, secondSize }) => {
         const isPage = key === detectedBrand;
-        const targetCm = scGetCm(key, targetSize, state.genre);
-        const diffMm = targetCm ? Math.round(Math.abs(targetCm - cm) * 10) : 0;
-        const deltaLabel = diffMm === 0 ? 'Exact' : `±${diffMm}mm`;
-        const deltaClass = diffMm <= 2 ? 'up' : diffMm <= 6 ? 'warn' : 'danger';
+        const fitInfo = SC_FIT[b.fit];
+        const fitClass = b.fit !== 'standard' ? b.fit : 'none';
+        const fitLabel = b.fit !== 'standard' ? fitInfo.label : '';
         return `
           <div class="sc-result ${isPage ? 'highlight' : ''}">
             <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
             <span class="sc-result-name">${b.name}</span>
-            <span class="sc-result-fit ${deltaClass}">${deltaLabel}</span>
+            <span class="sc-result-fit ${fitClass}">${fitLabel}</span>
             <span class="sc-result-size">EU ${targetSize}${secondSize ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${secondSize}</span>` : ''}</span>
           </div>
         `;
-      }).join('');
+      }).join('') + (hasSecond ? `<p style="font-size:9px;color:#94a3b8;text-align:center;padding:6px 0 0">Entre deux tailles — prends la plus grande.</p>` : '');
 
     return `
       <div>
