@@ -34,7 +34,7 @@ const SC_BRANDS = {
     name: 'Converse', domain: 'converse.com',
     logo: 'https://www.google.com/s2/favicons?domain=converse.com&sz=64',
     fit: 'large',
-    tip: 'Semelle plate qui libère de l\'espace en longueur. Si pied étroit, la taille recommandée convient sans descendre.',
+    tip: 'Semelle plate qui libère de l\'espace en longueur. Si pied étroit, la taille recommandée convient sans descendre. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
     cm: {
       homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
       femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:25.0, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
