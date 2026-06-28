@@ -23,7 +23,7 @@ function renderBrandGrid() {
       const badge = document.createElement('div');
       badge.id = 'page-brand-badge';
       badge.className = 'page-brand-badge';
-      badge.textContent = `Page détectée : ${pageBrandName}`;
+      badge.textContent = `Tu es sur ${pageBrandName} 📍`;
       document.getElementById('brand-grid').before(badge);
     }
   }
