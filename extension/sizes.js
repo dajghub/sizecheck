@@ -106,12 +106,6 @@ const SC_SIZE_RANGES = {
 
 const SC_ALL_SIZES = [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
 
-const SC_FIT = {
-  standard:     { label: 'Standard',    bg: '#ecfdf5', text: '#065f46', border: '#6ee7b7' },
-  small:        { label: 'Taille petit', bg: '#fffbeb', text: '#92400e', border: '#fcd34d' },
-  large:        { label: 'Taille grand', bg: '#fff7ed', text: '#9a3412', border: '#fdba74' },
-  'very-large': { label: 'Très grand',   bg: '#fef2f2', text: '#991b1b', border: '#fca5a5' }
-};
 
 const SC_DOMAIN_MAP = {
   'nike.com': 'nike',           'nike.fr': 'nike',

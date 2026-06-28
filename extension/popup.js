@@ -60,16 +60,11 @@ function renderStep2() {
 
       const hasSecond = allResults.some(r => r.secondSize);
       resultsHTML = allResults.map(({ key, b, targetSize, secondSize }) => {
-          const fitInfo = SC_FIT[b.fit];
-          const fitTag = b.fit !== 'standard'
-            ? `<span class="fit-tag ${b.fit}">${fitInfo.label}</span>`
-            : '<span class="fit-tag none"></span>';
           const isPage = key === state.pageBrand;
           return `
             <div class="result-row ${isPage ? 'page-result' : ''}">
               <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
               <span class="result-name">${b.name}${isPage ? ' <span class="on-page-tag">cette page</span>' : ''}</span>
-              ${fitTag}
               <span class="result-size">EU ${targetSize}${secondSize ? `<span class="result-second">ou ${secondSize}</span>` : ''}</span>
             </div>
           `;
