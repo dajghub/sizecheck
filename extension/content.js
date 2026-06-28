@@ -144,7 +144,7 @@
 
     /* ── Panel ── */
     .sc-panel {
-      width: 310px;
+      width: 330px;
       background: #f1f5f9;
       border-radius: 20px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05);
@@ -215,7 +215,7 @@
     /* ── Brand grid ── */
     .sc-brand-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 5px;
     }
     .sc-brand-btn {
@@ -283,7 +283,7 @@
     }
     .sc-focus-brand img { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; }
     .sc-focus-size {
-      font-size: 38px;
+      font-size: 32px;
       font-weight: 900;
       color: #1d4ed8;
       letter-spacing: -.03em;
