@@ -38,15 +38,6 @@ const SC_BRANDS = {
       femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:24.5, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
     }
   },
-  birkenstock: {
-    name: 'Birkenstock', domain: 'birkenstock.com',
-    logo: 'https://www.google.com/s2/favicons?domain=birkenstock.com&sz=128',
-    tip: 'CM calibrés sur la semelle liège intérieure, conçue pour que les orteils touchent le bord. La recommandation intègre déjà cette référence.',
-    cm: {
-      homme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 },
-      femme: { 35:22.5, 36:23.0, 37:24.0, 38:24.5, 39:25.0, 40:26.0, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.0, 46:30.0 }
-    }
-  },
   salomon: {
     name: 'Salomon', domain: 'salomon.com',
     logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=128',
@@ -83,15 +74,6 @@ const SC_BRANDS = {
       femme: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.5, 41:25.5, 42:26.0, 43:26.5, 44:27.0, 45:28.0, 46:28.5 }
     }
   },
-  saucony: {
-    name: 'Saucony', domain: 'saucony.com',
-    logo: 'https://www.google.com/s2/favicons?domain=saucony.com&sz=128',
-    tip: null,
-    cm: {
-      homme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
-      femme: { 35:21.0, 36:22.0, 37:22.5, 38:23.5, 39:24.5, 40:25.0, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
-    }
-  }
 };
 
 const SC_SIZE_RANGES = {
@@ -107,12 +89,10 @@ const SC_DOMAIN_MAP = {
   'adidas.com': 'adidas',       'adidas.fr': 'adidas',
   'newbalance.com': 'newbalance','newbalance.fr': 'newbalance',
   'converse.com': 'converse',   'converse.fr': 'converse',
-  'birkenstock.com': 'birkenstock', 'birkenstock.fr': 'birkenstock',
   'salomon.com': 'salomon',     'salomon.fr': 'salomon',
   'vans.com': 'vans',           'vans.fr': 'vans',
   'asics.com': 'asics',         'asics.fr': 'asics',
-  'hoka.com': 'hoka',           'hoka.fr': 'hoka',
-  'saucony.com': 'saucony',     'saucony.fr': 'saucony'
+  'hoka.com': 'hoka',           'hoka.fr': 'hoka'
 };
 
 /** Obtenir les CM pour une marque + pointure + genre donné */
