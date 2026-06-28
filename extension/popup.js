@@ -31,7 +31,10 @@ function renderBrandGrid() {
 
 function renderStep2() {
   const container = document.getElementById('step2');
-  if (!state.sourceBrand) { container.innerHTML = ''; return; }
+  if (!state.sourceBrand) {
+    container.innerHTML = '<p style="font-size:11px;color:#94a3b8;text-align:center;padding:6px 0 2px">Sélectionne ta marque habituelle ci-dessus</p>';
+    return;
+  }
 
   const sizesHTML = SC_ALL_SIZES.map(s => `
     <button class="size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>

@@ -132,7 +132,7 @@
         </div>
         <span class="text-sm font-semibold text-slate-700">Ma marque actuelle</span>
       </div>
-      <div id="brands-source" class="grid grid-cols-2 gap-2"></div>
+      <div id="brands-source" class="grid grid-cols-4 gap-2"></div>
     </div>
 
     <!-- Step 2 — revealed after step 1 -->
@@ -169,13 +169,13 @@
     </div>
 
     <!-- Bandeau extension Chrome — desktop uniquement -->
-    <div class="hidden md:flex mt-6 items-center gap-3 bg-white rounded-2xl shadow-sm px-5 py-4 border border-blue-100">
-      <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 text-lg">👟</div>
+    <div class="flex mt-6 items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl px-5 py-4">
+      <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 text-lg">👟</div>
       <div class="flex-1 min-w-0">
-        <p class="text-sm font-bold text-slate-800 leading-tight">Extension Chrome — Bientôt disponible</p>
-        <p class="text-xs text-slate-400 mt-0.5">Convertis ta pointure directement sur Nike, Zalando, Adidas et plus encore.</p>
+        <p class="text-sm font-bold text-white leading-tight">Extension Chrome — Bientôt disponible</p>
+        <p class="text-xs text-blue-100 mt-0.5">Convertis ta pointure directement sur Nike, Zalando, Adidas et plus.</p>
       </div>
-      <span class="shrink-0 text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 rounded-full px-3 py-1">Bientôt</span>
+      <span class="shrink-0 text-xs font-bold bg-white/20 text-white rounded-full px-3 py-1.5">Bientôt</span>
     </div>
 
     <!-- Footer cookies -->
@@ -398,11 +398,10 @@
     function setGender(g) {
       if (S.gender === g) return;
       S.gender = g;
-      S.sourceBrand = null;
       S.sourceSize = null;
       updateGenderToggle();
       renderSourceBrands();
-      conceal('step2');
+      if (S.sourceBrand) { renderSizes(); reveal('step2'); }
       conceal('result');
       clearState();
     }
@@ -410,13 +409,13 @@
     function makeBrandBtn(key, selected) {
       const b = BRANDS[key];
       const btn = document.createElement('button');
-      btn.className = 'chip-btn flex items-center gap-2.5 px-3 py-3 rounded-2xl border-2 text-sm font-semibold w-full ' +
+      btn.className = 'chip-btn flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 w-full ' +
         (selected
-          ? 'border-blue-600 bg-blue-600 text-white shadow-md'
-          : 'border-gray-100 bg-gray-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50');
+          ? 'border-blue-600 bg-blue-600 shadow-md'
+          : 'border-gray-100 bg-gray-50 hover:border-blue-200 hover:bg-blue-50');
 
       const wrap = document.createElement('div');
-      wrap.className = 'w-8 h-8 rounded-xl overflow-hidden bg-white flex items-center justify-center shrink-0 border border-gray-100 p-1';
+      wrap.className = 'w-9 h-9 rounded-xl overflow-hidden bg-white flex items-center justify-center shrink-0 border border-gray-100 p-1';
 
       const img = document.createElement('img');
       img.src = b.logo;
@@ -428,6 +427,7 @@
       wrap.appendChild(img);
 
       const lbl = document.createElement('span');
+      lbl.className = 'text-xs font-semibold text-center leading-tight ' + (selected ? 'text-white' : 'text-slate-600');
       lbl.textContent = b.name;
 
       btn.appendChild(wrap);
