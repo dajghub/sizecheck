@@ -42,5 +42,7 @@
     }
   ],
   "permissions": ["storage", "activeTab"],
-  "web_accessible_resources": []
+  "web_accessible_resources": [
+    { "resources": ["converse.svg"], "matches": ["<all_urls>"] }
+  ]
 }
