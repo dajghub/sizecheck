@@ -27,7 +27,7 @@ _Dernière mise à jour : 30 juin 2026 (fin de session)_
 
 ## 🔄 En cours / À faire
 
-- [ ] **git push** depuis le terminal (credentials HTTPS non configurés dans cet environnement)
+Rien — projet complet et déployé.
 
 ---
 
