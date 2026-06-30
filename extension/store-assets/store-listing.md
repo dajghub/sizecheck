@@ -4,7 +4,7 @@
 SizeCheck — Convertisseur de pointures
 
 ## Description courte (132 caractères max)
-Trouve ta taille Nike, Adidas, Converse et 5 autres marques en un clic. Détection automatique sur les pages produit.
+Trouvez votre pointure dans n'importe quelle marque de chaussures. Détection automatique sur les pages produit.
 
 ## Description longue
 

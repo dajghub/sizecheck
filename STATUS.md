@@ -20,6 +20,7 @@ _Dernière mise à jour : 30 juin 2026 (fin de session)_
   - `sizecheck-extension.zip` — build prêt à soumettre
 - **Section "Comment ça marche"** mise à jour (suppression référence obsolète à l'écart en mm)
 - **Extension Chrome Web Store** — soumise, examinée et **live**
+- **Description courte store** — sans noms de marques (version live : "Trouvez votre pointure dans n'importe quelle marque de chaussures.")
 - **RGPD** — tarteaucitron.js v1.16.0, Google Analytics `G-X3S5MS25P0`
 
 ---
