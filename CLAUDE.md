@@ -67,6 +67,12 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 
 ---
 
+## Suivi de session
+
+En fin de session, ou quand demandé explicitement, mettre à jour `STATUS.md` avec un résumé de l'avancement (fait / en cours / bloquant / prochaines étapes).
+
+---
+
 ## Améliorations en cours / à venir
 - [ ] Unifier les données de conversion (éviter la duplication entre `index.html` et `extension/sizes.js`)
 - [ ] Support SPA dans l'extension (MutationObserver sur changements d'URL)
