@@ -1,6 +1,6 @@
 # STATUS — SizeCheck
 
-_Dernière mise à jour : 30 juin 2026_
+_Dernière mise à jour : 30 juin 2026 (fin de session)_
 
 ---
 
@@ -19,21 +19,15 @@ _Dernière mise à jour : 30 juin 2026_
   - `store-listing.md` — description sans noms de marques (éviter rejet)
   - `sizecheck-extension.zip` — build prêt à soumettre
 - **Section "Comment ça marche"** mise à jour (suppression référence obsolète à l'écart en mm)
+- **Extension Chrome Web Store** — soumise, examinée et **live**
+- **Description courte store** — réécrite sans noms de marques
 - **RGPD** — tarteaucitron.js v1.16.0, Google Analytics `G-X3S5MS25P0`
 
 ---
 
 ## 🔄 En cours / À faire
 
-- [ ] **Soumettre l'extension** sur le Chrome Web Store (zip + assets prêts)
 - [ ] **git push** depuis le terminal (credentials HTTPS non configurés dans cet environnement)
-- [ ] **Corriger la description courte** dans `store-listing.md` (ligne 8 cite encore des noms de marques)
-
----
-
-## 🚧 Bloquant
-
-- `git push` doit être lancé manuellement depuis le terminal utilisateur (remote HTTPS, credentials non disponibles ici)
 
 ---
 
