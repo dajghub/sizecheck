@@ -3,7 +3,7 @@
 ## Vue d'ensemble
 SizeCheck est un outil gratuit de conversion de pointures de chaussures entre marques, basé sur la **méthode des centimètres** (EU → CM → EU). Il permet de trouver l'équivalent de sa pointure dans une autre marque en passant par la longueur de pied en cm.
 
-**8 marques supportées :** Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs, Vans.
+**8 marques supportées :** Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS, HOKA.
 
 **URL de production :** https://www.sizecheck.fr
 
@@ -43,11 +43,14 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 | `politique-de-confidentialite.html` | Page légale RGPD |
 | `sitemap.xml` | Sitemap soumis à Google Search Console |
 | `CNAME` | Domaine custom GitHub Pages |
-| `converse.svg` | Logo Converse (SVG local, source Wikipedia) |
+| `assets/converse.svg` | Logo Converse (SVG local, source Wikipedia) |
+| `assets/og-image.png` | Image Open Graph 1200×630 (prévisualisation WhatsApp/réseaux) |
+| `STATUS.md` | Suivi d'avancement par session |
 | `extension/sizes.js` | **Source unique des données de conversion** |
 | `extension/manifest.json` | Config extension Chrome |
 | `extension/content.js` | Widget injecté sur pages produit |
 | `extension/popup.html/js` | Popup fallback |
+| `extension/converse.svg` | Copie locale du logo Converse pour l'extension (web_accessible_resources) |
 
 ---
 
@@ -78,5 +81,4 @@ En fin de session, ou quand demandé explicitement, mettre à jour `STATUS.md` a
 - [ ] Support SPA dans l'extension (MutationObserver sur changements d'URL)
 - [ ] Widget draggable (repositionnable par l'utilisateur)
 - [ ] Publication de l'extension sur le Chrome Web Store
-- [ ] og:image (1200×630px) — actuellement manquant
 - [ ] Intégration Google AdSense (une fois approuvé)
