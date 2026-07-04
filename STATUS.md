@@ -1,10 +1,12 @@
 # STATUS — SizeCheck
 
-_Dernière mise à jour : 4 juillet 2026_
+_Dernière mise à jour : 4 juillet 2026 (soir)_
 
 ---
 
 ## ✅ Fait
+
+- **Vérification Salomon close** (4 juil. 2026, soir) : la plage basse EU 36–39⅓ (seul point non confirmé en direct) a été validée valeur par valeur sur la grille officielle « Chaussures unisexe » de salomon.com, qui liste explicitement les équivalents hommes (« 4 M ») dès EU 36 — conserver ces pointures en mode homme est légitime. Échelle EU→CM identique sur les 3 grilles officielles (homme/femme/unisexe). **Les 8 marques sont désormais 100 % vérifiées en direct sur les guides officiels.** Aucune modification de données nécessaire.
 
 - **P3 audit — croissance & dette technique** (4 juil. 2026) :
   - **28 pages SEO** `/comparaisons/{a}-vs-{b}.html` + index, générées par `tools/generate_pages.py` depuis les tables (tableaux H/F complets, FAQ JSON-LD calculée, maillage croisé) ; sitemap.xml régénéré ; lien interne depuis l'accueil
