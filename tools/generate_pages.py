@@ -127,20 +127,24 @@ def page_html(a, b):
 
     both_unisex = is_unisex(a) and is_unisex(b)
 
+    # CTA extension placé le plus haut possible sans couper le contenu utile :
+    # - paire à deux tableaux : entre le tableau homme et le tableau femme
+    #   (coupure naturelle entre deux sections, ~50 % de la page) ;
+    # - paire unisexe (un seul tableau) : juste après, la page étant courte.
+    cta = extension_cta_html(a, b)
+
     sections = []
     if both_unisex:
         sections.append('<h2>Tableau de correspondance (homme &amp; femme)</h2>')
         sections.append(f'<p class="note">💡 {na} et {nb} utilisent la même grille EU → cm pour les hommes et les femmes.</p>')
         sections.append(f'<div class="tables">{conversion_table(a, b, "homme")}{conversion_table(b, a, "homme")}</div>')
+        sections.append(cta)
     else:
         sections.append('<h2>Correspondance homme</h2>')
         sections.append(f'<div class="tables">{conversion_table(a, b, "homme")}{conversion_table(b, a, "homme")}</div>')
+        sections.append(cta)
         sections.append('<h2>Correspondance femme</h2>')
         sections.append(f'<div class="tables">{conversion_table(a, b, "femme")}{conversion_table(b, a, "femme")}</div>')
-
-    # CTA extension juste après les tableaux : pic d'intention (le visiteur
-    # a sa réponse et s'apprête à acheter), avant le contenu secondaire.
-    sections.append(extension_cta_html(a, b))
 
     tips = [(BRAND_NAMES[k], TIPS[k]) for k in (a, b) if k in TIPS]
     if tips:
