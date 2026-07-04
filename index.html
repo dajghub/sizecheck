@@ -86,7 +86,9 @@
   }
   </script>
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- CSS Tailwind précompilé (extrait du JIT — voir tools/README note dans STATUS.md).
+       Si de nouvelles classes utilitaires sont ajoutées, régénérer via le CDN puis re-extraire. -->
+  <link rel="stylesheet" href="/assets/tailwind.css">
   <style>
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(12px); }
@@ -184,6 +186,10 @@
       <p class="text-xs text-slate-500 text-center leading-relaxed px-2">
         SizeCheck compare gratuitement les pointures Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA par la méthode des centimètres.
       </p>
+
+      <p class="text-center">
+        <a href="/comparaisons/" class="text-xs font-semibold text-blue-700 hover:underline">Voir tous les tableaux de correspondance entre marques →</a>
+      </p>
     </div>
 
     <!-- Bandeau extension Chrome — desktop uniquement (pas d'extensions sur Chrome mobile) -->
@@ -247,7 +253,7 @@
 
     const BRANDS = {
       nike: {
-        name: 'Nike', emoji: '🟠', logo: 'https://www.google.com/s2/favicons?domain=nike.com&sz=128',
+        name: 'Nike', emoji: '🟠', logo: '/assets/logos/nike.png',
         tip: null,
         sizes: {
           homme: [
@@ -267,12 +273,12 @@
         }
       },
       adidas: {
-        name: 'Adidas', emoji: '🔵', logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=128',
+        name: 'Adidas', emoji: '🔵', logo: '/assets/logos/adidas.png',
         tip: 'Adidas taille petit — chaussant plus étroit que la norme. Si tu as le pied large, prends la pointure supérieure à celle recommandée.',
         sizes: { homme: ADIDAS_UNISEXE, femme: ADIDAS_UNISEXE }
       },
       newbalance: {
-        name: 'New Balance', emoji: '🟢', logo: 'https://www.google.com/s2/favicons?domain=newbalance.com&sz=128',
+        name: 'New Balance', emoji: '🟢', logo: '/assets/logos/newbalance.png',
         tip: null,
         sizes: {
           homme: [
@@ -296,17 +302,17 @@
         sizes: { homme: CONVERSE_UNISEXE, femme: CONVERSE_UNISEXE }
       },
       salomon: {
-        name: 'Salomon', emoji: '⚡', logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=128',
+        name: 'Salomon', emoji: '⚡', logo: '/assets/logos/salomon.png',
         tip: 'Salomon taille petit — fit trail enveloppant conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prends la supérieure.',
         sizes: { homme: SALOMON_UNISEXE, femme: SALOMON_UNISEXE }
       },
       vans: {
-        name: 'Vans', emoji: '🔴', logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=128',
+        name: 'Vans', emoji: '🔴', logo: '/assets/logos/vans.png',
         tip: 'Vans taille grand — les modèles classiques (Old Skool, Authentic) ont un last long et généreux, surtout en largeur. Idéal pour les pieds larges.',
         sizes: { homme: VANS_UNISEXE, femme: VANS_UNISEXE }
       },
       asics: {
-        name: 'ASICS', emoji: '🔷', logo: 'https://www.google.com/s2/favicons?domain=asics.com&sz=128',
+        name: 'ASICS', emoji: '🔷', logo: '/assets/logos/asics.png',
         tip: null,
         sizes: {
           homme: [
@@ -325,7 +331,7 @@
         }
       },
       hoka: {
-        name: 'HOKA', emoji: '🟣', logo: 'https://www.google.com/s2/favicons?domain=hoka.com&sz=128',
+        name: 'HOKA', emoji: '🟣', logo: '/assets/logos/hoka.png',
         tip: 'Sur les modèles femme récents (Clifton 10, Arahi 8, Challenger 8), HOKA conseille une demi-pointure en dessous de ta pointure HOKA habituelle.',
         sizes: {
           homme: [

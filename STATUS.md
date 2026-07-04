@@ -6,6 +6,12 @@ _Dernière mise à jour : 4 juillet 2026_
 
 ## ✅ Fait
 
+- **P3 audit — croissance & dette technique** (4 juil. 2026) :
+  - **28 pages SEO** `/comparaisons/{a}-vs-{b}.html` + index, générées par `tools/generate_pages.py` depuis les tables (tableaux H/F complets, FAQ JSON-LD calculée, maillage croisé) ; sitemap.xml régénéré ; lien interne depuis l'accueil
+  - **Tailwind précompilé** : CDN remplacé par `assets/tailwind.css` (13,7 KB, extrait du JIT, couverture des classes vérifiée par script)
+  - **Logos auto-hébergés** sur le site (`assets/logos/`) — extension inchangée (zip v1.1.0 figé)
+  - **`tools/check_sync.py`** : contrôle automatique synchro + monotonie des tables site ↔ extension
+  - CLAUDE.md mis à jour (nouveaux composants : comparaisons/, tools/, CSS statique)
 - **P2 audit — mode « longueur de pied en cm »** (4 juil. 2026) :
   - Second point d'entrée sur le site (tabs Marque / Pied (cm) dans l'étape 1) : saisie directe en cm + mini-guide de mesure, résultats sur les 8 marques, partage `?g=&cm=`
   - Widget + popup extension : toggle « Depuis ma marque / Depuis mon pied », mesure persistée (`sc_foot_cm`, `sc_mode`), FAB zéro-clic aussi depuis la mesure
@@ -56,12 +62,9 @@ _Dernière mise à jour : 4 juillet 2026_
 
 ## 📋 Prochaines étapes (backlog — issu de l'audit UX/UI du 4 juil. 2026)
 
-### P3 — Croissance & dette technique
-- [ ] Pages SEO statiques par paire de marques (générées depuis les tables)
-- [ ] Tailwind compilé en statique (remplacer le CDN)
-- [ ] Logos hébergés localement (site + extension)
-- [ ] Unifier les données entre `index.html` et `extension/sizes.js` (source encore dupliquée)
-- [ ] Évaluer Amazon/Decathlon pour l'extension ; tailles US/UK
-- [ ] Widget draggable (repositionnable par l'utilisateur)
+### Reste au backlog
+- [ ] **v1.2 extension** : logos embarqués localement, évaluer Amazon/Decathlon, tailles US/UK, widget draggable
+- [ ] Soumettre les nouvelles pages `/comparaisons/` à Google Search Console (sitemap déjà à jour)
 - [ ] Google AdSense (une fois approuvé)
 - [ ] og:image à mettre à jour si les marques supportées changent
+- [ ] Duplication des tables index.html ↔ sizes.js : conservée par choix (single-file), verrouillée par `tools/check_sync.py`

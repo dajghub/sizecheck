@@ -12,11 +12,17 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 ## Stack technique
 
 ### Site web (`index.html`)
-- Single-file HTML — Tailwind CSS via CDN + JavaScript Vanilla
+- Single-file HTML — Tailwind précompilé statique (`assets/tailwind.css`) + JavaScript Vanilla
 - Aucun framework, aucun bundler, aucun backend
 - Mobile-first (`max-w-md mx-auto px-4`)
 - tarteaucitron.js v1.16.0 pour le consentement cookies (RGPD)
 - Google Analytics via gtag `G-X3S5MS25P0` (activé après consentement)
+- Deux modes de conversion : depuis une marque, ou depuis la longueur de pied en cm
+
+### Pages SEO (`comparaisons/`)
+- 28 pages statiques générées (une par paire de marques) + index, via `tools/generate_pages.py`
+- CSS dédié `assets/pages.css` (indépendant de Tailwind)
+- **Ne jamais éditer ces pages à la main** — relancer le générateur après toute modification des tables
 
 ### Extension Chrome (`extension/`)
 - Manifest V3
@@ -41,10 +47,17 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 |---|---|
 | `index.html` | App web complète (V3) |
 | `politique-de-confidentialite.html` | Page légale RGPD |
-| `sitemap.xml` | Sitemap soumis à Google Search Console |
+| `sitemap.xml` | Sitemap (régénéré par `tools/generate_pages.py`) |
 | `CNAME` | Domaine custom GitHub Pages |
+| `comparaisons/` | Pages SEO générées par paire de marques (ne pas éditer à la main) |
+| `assets/tailwind.css` | CSS Tailwind précompilé du site (extrait du JIT) |
+| `assets/pages.css` | CSS des pages de comparaison |
+| `assets/logos/` | Logos de marques auto-hébergés (site) |
 | `assets/converse.svg` | Logo Converse (SVG local, source Wikipedia) |
 | `assets/og-image.png` | Image Open Graph 1200×630 (prévisualisation WhatsApp/réseaux) |
+| `tools/sizedata.py` | Lecture des tables (module partagé des scripts) |
+| `tools/check_sync.py` | Contrôle synchro/monotonie des tables site ↔ extension |
+| `tools/generate_pages.py` | Générateur des pages de comparaison + sitemap |
 | `STATUS.md` | Suivi d'avancement par session |
 | `extension/sizes.js` | **Source unique des données de conversion** |
 | `extension/manifest.json` | Config extension Chrome |
@@ -55,10 +68,11 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 ---
 
 ## Conventions à respecter
-- **Source unique pour les données :** toute modification des tables de correspondance CM doit se faire dans `extension/sizes.js` ET dans `index.html` (les deux sont encore séparés — une future tâche serait de les unifier)
-- Tout ajout de marque ou de système de tailles passe par ces deux fichiers
+- **Source unique pour les données :** toute modification des tables de correspondance doit se faire dans `extension/sizes.js` ET dans `index.html` (structure `[label, cm]` par marque/genre)
+- **Après toute modification des tables** : lancer `python3 tools/check_sync.py` (contrôle) puis `python3 tools/generate_pages.py` (régénère pages + sitemap)
+- Tout ajout de marque ou de système de tailles passe par ces deux fichiers + régénération
 - Mobile-first en priorité absolue
-- Single-file HTML pour le site web (pas de séparation CSS/JS)
+- Single-file HTML pour le site web (pas de séparation JS ; le CSS Tailwind est précompilé dans `assets/tailwind.css` — régénérer via le CDN si de nouvelles classes sont ajoutées)
 - Commits git clairs après chaque session de travail
 
 ---
@@ -77,8 +91,4 @@ En fin de session, ou quand demandé explicitement, mettre à jour `STATUS.md` a
 ---
 
 ## Améliorations en cours / à venir
-- [ ] Unifier les données de conversion (éviter la duplication entre `index.html` et `extension/sizes.js`)
-- [ ] Support SPA dans l'extension (MutationObserver sur changements d'URL)
-- [ ] Widget draggable (repositionnable par l'utilisateur)
-- [ ] Publication de l'extension sur le Chrome Web Store
-- [ ] Intégration Google AdSense (une fois approuvé)
+Voir le backlog dans `STATUS.md` (section « Prochaines étapes »).
