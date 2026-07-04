@@ -38,6 +38,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - **Domaine :** Infomaniak (registrar + DNS)
 - **CNAME :** `www.sizecheck.fr`
 - **Déploiement :** push sur `main` → GitHub Pages auto-deploy
+- **`.nojekyll`** : présent à la racine — désactive le traitement Jekyll (site 100 % statique). Ne pas supprimer : sans lui, les builds Pages échouaient par intermittence (« Page build failed »). Vérifier le déploiement avec `gh api repos/dajghub/sizecheck/pages/builds`.
 
 ---
 
