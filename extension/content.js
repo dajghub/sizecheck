@@ -91,12 +91,21 @@
   ══════════════════════════════════════════ */
 
   const state = {
+    mode: 'brand',   // 'brand' = depuis ma marque, 'cm' = depuis la longueur de mon pied
     sourceBrand: null,
     sourceSize: null,
+    footCm: null,
     genre: 'homme',
     open: false,
     showAll: false   // true = afficher toutes les marques, false = focus marque détectée
   };
+
+  /* CM de départ selon le mode actif (null si incomplet) */
+  function activeCm() {
+    if (state.mode === 'cm') return scIsValidCm(state.footCm) ? state.footCm : null;
+    if (!state.sourceBrand || !state.sourceSize) return null;
+    return scGetCm(state.sourceBrand, state.sourceSize, state.genre);
+  }
 
   /* ══════════════════════════════════════════
      SHADOW DOM
@@ -260,6 +269,22 @@
     }
     .sc-brand-btn.active .sc-bname { color: #1d4ed8; }
 
+    /* ── CM input ── */
+    .sc-cm-input {
+      flex: 1;
+      min-width: 0;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 10px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #1e293b;
+      outline: none;
+      font-family: inherit;
+    }
+    .sc-cm-input:focus { border-color: #1d4ed8; }
+
     /* ── Size grid ── */
     .sc-size-grid { display: flex; flex-wrap: wrap; gap: 4px; }
     .sc-size-btn {
@@ -378,8 +403,8 @@
   ══════════════════════════════════════════ */
 
   function renderResultsSection() {
-    const cm = scGetCm(state.sourceBrand, state.sourceSize, state.genre);
-    if (!cm) return '';
+    const cm = activeCm();
+    if (cm === null) return '';
 
     // Mode focus : marque détectée en vedette
     if (detectedBrand && !state.showAll) {
@@ -409,7 +434,7 @@
 
     // Mode toutes marques
     const allRows = Object.entries(SC_BRANDS)
-      .filter(([key]) => key !== state.sourceBrand)
+      .filter(([key]) => state.mode === 'cm' || key !== state.sourceBrand)
       .map(([key, b]) => {
         const matches = scFindBestMatches(key, cm, state.genre, 2);
         return { key, b, best: matches[0], second: scSecondIfTie(matches) };
@@ -444,9 +469,9 @@
   /* ── FAB : affiche directement la taille convertie quand le profil est connu ── */
   function fabHTML() {
     let label = 'SizeCheck' + (detectedBrand ? ' · ' + SC_BRANDS[detectedBrand].name : '');
-    if (detectedBrand && state.sourceBrand && state.sourceSize) {
-      const cm = scGetCm(state.sourceBrand, state.sourceSize, state.genre);
-      const best = cm !== null ? scFindBestMatches(detectedBrand, cm, state.genre, 1)[0] : null;
+    const cm = detectedBrand ? activeCm() : null;
+    if (cm !== null) {
+      const best = scFindBestMatches(detectedBrand, cm, state.genre, 1)[0];
       if (best) label = `Ta taille ici : EU ${best.label}`;
     }
     return `<span>👟</span><span>${label}</span><span class="sc-fab-hide" data-action="hide" title="Masquer SizeCheck sur cet onglet">✕</span>`;
@@ -457,15 +482,17 @@
     if (fab) fab.innerHTML = fabHTML();
   }
 
-  /* ── Mise à jour chirurgicale du genre toggle ── */
-  function patchGenreToggle() {
+  /* ── Mise à jour chirurgicale des toggles genre + mode ── */
+  function patchSegmented(action, current) {
     const active   = 'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)';
     const inactive = 'background:transparent;color:#64748b';
-    wrap.querySelectorAll('[data-action="genre"]').forEach(btn => {
-      btn.style.cssText = `flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${btn.dataset.value === state.genre ? active : inactive}`;
-      btn.setAttribute('aria-pressed', btn.dataset.value === state.genre);
+    wrap.querySelectorAll(`[data-action="${action}"]`).forEach(btn => {
+      btn.style.cssText = `flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${btn.dataset.value === current ? active : inactive}`;
+      btn.setAttribute('aria-pressed', btn.dataset.value === current);
     });
   }
+  function patchGenreToggle() { patchSegmented('genre', state.genre); }
+  function patchModeToggle()  { patchSegmented('mode', state.mode); }
 
   /* ── Mise à jour chirurgicale de la brand grid ── */
   function patchBrandGrid() {
@@ -479,7 +506,7 @@
   /* ── Mise à jour chirurgicale de la section tailles ── */
   function patchSizeSection() {
     const section = wrap.querySelector('#sc-size-section');
-    if (!state.sourceBrand) {
+    if (!state.sourceBrand || state.mode !== 'brand') {
       if (section) section.style.display = 'none';
       return;
     }
@@ -495,7 +522,7 @@
   function patchResults() {
     const el = wrap.querySelector('#sc-results-section');
     if (!el) return;
-    el.innerHTML = (state.sourceBrand && state.sourceSize) ? renderResultsSection() : '';
+    el.innerHTML = activeCm() !== null ? renderResultsSection() : '';
   }
 
   /* ── Rendu initial complet (appelé une seule fois + changement de genre) ── */
@@ -533,18 +560,32 @@
             <button data-action="genre" data-value="femme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Femme</button>
           </div>
 
-          <div>
+          <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
+            <button data-action="mode" data-value="brand" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Depuis ma marque</button>
+            <button data-action="mode" data-value="cm" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Depuis mon pied</button>
+          </div>
+
+          <div id="sc-brand-section" style="${state.mode === 'cm' ? 'display:none' : ''}">
             <div class="sc-section-label">Ma marque habituelle</div>
             <div class="sc-brand-grid">${brandsHTML}</div>
           </div>
 
-          <div id="sc-size-section" style="${state.sourceBrand ? '' : 'display:none'}">
+          <div id="sc-size-section" style="${state.mode === 'brand' && state.sourceBrand ? '' : 'display:none'}">
             <div class="sc-section-label">Ma pointure habituelle</div>
             <div class="sc-size-grid">${sizesHTML}</div>
           </div>
 
+          <div id="sc-cm-section" style="${state.mode === 'cm' ? '' : 'display:none'}">
+            <div class="sc-section-label">Longueur de mon pied</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input class="sc-cm-input" data-action="cmInput" type="number" inputmode="decimal" step="0.1" min="18" max="35" placeholder="26.5" value="${scIsValidCm(state.footCm) ? state.footCm : ''}" aria-label="Longueur du pied en centimètres">
+              <span style="font-size:12px;font-weight:700;color:#475569">cm</span>
+            </div>
+            <p style="font-size:9.5px;color:#64748b;margin-top:6px;line-height:1.45">📏 Talon contre un mur, mesure jusqu'à l'orteil le plus long, en fin de journée. Garde la plus grande mesure des deux pieds.</p>
+          </div>
+
           <div id="sc-results-section">
-            ${state.sourceBrand && state.sourceSize ? renderResultsSection() : ''}
+            ${activeCm() !== null ? renderResultsSection() : ''}
           </div>
 
           <div class="sc-footer">
@@ -558,6 +599,7 @@
     `;
 
     patchGenreToggle();
+    patchModeToggle();
   }
 
   /* ══════════════════════════════════════════
@@ -589,10 +631,23 @@
         case 'genre':
           if (state.genre !== value) {
             state.genre = value;
-            state.sourceSize = null;
             state.showAll = false;
-            chrome.storage.local.set({ sc_genre: value, sc_source_size: null });
+            if (state.mode === 'brand') {
+              state.sourceSize = null;
+              chrome.storage.local.set({ sc_genre: value, sc_source_size: null });
+            } else {
+              chrome.storage.local.set({ sc_genre: value });
+            }
             render(); // wrap.innerHTML remplacé, mais le listener sur wrap survit
+          }
+          break;
+
+        case 'mode':
+          if (state.mode !== value) {
+            state.mode = value;
+            state.showAll = false;
+            chrome.storage.local.set({ sc_mode: value });
+            render();
           }
           break;
 
@@ -626,19 +681,32 @@
           break;
       }
     });
+
+    // Saisie de la longueur de pied (mode cm)
+    wrap.addEventListener('input', (e) => {
+      if (e.target.dataset?.action !== 'cmInput') return;
+      const v = parseFloat(String(e.target.value).replace(',', '.'));
+      state.footCm = scIsValidCm(v) ? v : null;
+      state.showAll = false;
+      chrome.storage.local.set({ sc_foot_cm: state.footCm });
+      patchResults();
+      patchFab();
+    });
   }
 
   /* ══════════════════════════════════════════
      INIT
   ══════════════════════════════════════════ */
 
-  chrome.storage.local.get(['sc_source_brand', 'sc_source_size', 'sc_genre'], (data) => {
+  chrome.storage.local.get(['sc_source_brand', 'sc_source_size', 'sc_genre', 'sc_mode', 'sc_foot_cm'], (data) => {
     if (data.sc_genre === 'homme' || data.sc_genre === 'femme') state.genre = data.sc_genre;
     if (data.sc_source_brand && SC_BRANDS[data.sc_source_brand]) state.sourceBrand = data.sc_source_brand;
     if (state.sourceBrand && data.sc_source_size &&
         scGetCm(state.sourceBrand, data.sc_source_size, state.genre) !== null) {
       state.sourceSize = data.sc_source_size;
     }
+    if (scIsValidCm(data.sc_foot_cm)) state.footCm = data.sc_foot_cm;
+    if (data.sc_mode === 'cm' || data.sc_mode === 'brand') state.mode = data.sc_mode;
     render();
     bindEvents(); // une seule fois — le listener sur wrap survit aux render() suivants
     updateVisibility();

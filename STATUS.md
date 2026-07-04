@@ -6,6 +6,10 @@ _Dernière mise à jour : 4 juillet 2026_
 
 ## ✅ Fait
 
+- **P2 audit — mode « longueur de pied en cm »** (4 juil. 2026) :
+  - Second point d'entrée sur le site (tabs Marque / Pied (cm) dans l'étape 1) : saisie directe en cm + mini-guide de mesure, résultats sur les 8 marques, partage `?g=&cm=`
+  - Widget + popup extension : toggle « Depuis ma marque / Depuis mon pied », mesure persistée (`sc_foot_cm`, `sc_mode`), FAB zéro-clic aussi depuis la mesure
+  - Fiche store mise à jour (description longue + justification storage)
 - **P1 audit — friction utilisateur** (4 juil. 2026) :
   - Extension : pointure + genre persistés (`chrome.storage.local`), partagés entre widget et popup
   - Extension : le FAB affiche directement « Ta taille ici : EU X » quand le profil est connu (zéro clic)
@@ -51,9 +55,6 @@ _Dernière mise à jour : 4 juillet 2026_
 ---
 
 ## 📋 Prochaines étapes (backlog — issu de l'audit UX/UI du 4 juil. 2026)
-
-### P2 — Valeur ajoutée
-- [ ] Mode « longueur de pied en cm » (site + extension)
 
 ### P3 — Croissance & dette technique
 - [ ] Pages SEO statiques par paire de marques (générées depuis les tables)

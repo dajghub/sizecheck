@@ -188,6 +188,11 @@ function scFindBestSize(targetBrand, cm, genre) {
   return scFindBestMatches(targetBrand, cm, genre, 1)[0]?.label ?? null;
 }
 
+/** Longueur de pied plausible (mode « depuis mon pied ») */
+function scIsValidCm(v) {
+  return typeof v === 'number' && v >= 18 && v <= 35;
+}
+
 // Patch Converse logo avec le SVG local (même qualité que le site)
 if (typeof chrome !== 'undefined' && chrome.runtime?.getURL) {
   SC_BRANDS.converse.logo = chrome.runtime.getURL('converse.svg');

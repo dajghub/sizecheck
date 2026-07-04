@@ -122,9 +122,35 @@
         <div class="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
           <span class="text-white text-xs font-bold leading-none">1</span>
         </div>
-        <span class="text-sm font-semibold text-slate-700">Ma marque actuelle</span>
+        <span id="step1-label" class="text-sm font-semibold text-slate-700">Ma marque actuelle</span>
+        <div class="ml-auto flex gap-0.5 bg-gray-100 rounded-lg p-0.5" role="group" aria-label="Point de départ">
+          <button id="btn-mode-brand" class="text-xs font-bold px-2.5 py-1.5 rounded-md transition-all">Marque</button>
+          <button id="btn-mode-cm" class="text-xs font-bold px-2.5 py-1.5 rounded-md transition-all">Pied (cm)</button>
+        </div>
       </div>
       <div id="brands-source" class="grid grid-cols-4 gap-2"></div>
+      <div id="cm-wrap" class="hidden">
+        <div class="flex items-center gap-3">
+          <input id="cm-input" type="number" inputmode="decimal" step="0.1" min="18" max="35" placeholder="26.5"
+                 aria-label="Longueur du pied en centimètres"
+                 class="flex-1 min-w-0 text-2xl font-black text-slate-800 border-2 border-gray-100 bg-gray-50 rounded-xl px-4 py-3 focus:border-blue-600 focus:bg-white outline-none transition-colors">
+          <span class="text-slate-600 font-bold shrink-0">cm</span>
+        </div>
+        <details class="mt-3 group">
+          <summary class="flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-blue-700">
+            📏 Comment mesurer mon pied ?
+            <svg class="w-3.5 h-3.5 text-blue-400 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <ol class="mt-2 text-xs text-slate-500 leading-relaxed list-decimal list-inside space-y-1">
+            <li>Pose une feuille de papier au sol, contre un mur.</li>
+            <li>Debout sur la feuille, talon collé au mur.</li>
+            <li>Marque l'extrémité de ton orteil le plus long.</li>
+            <li>Mesure la distance mur → marque avec une règle.</li>
+            <li>Répète pour l'autre pied et garde la plus grande mesure.</li>
+          </ol>
+          <p class="mt-2 text-xs text-slate-500">💡 Mesure en fin de journée (le pied gonfle) et en chaussettes fines.</p>
+        </details>
+      </div>
     </div>
 
     <!-- Step 2 — revealed after step 1 -->
@@ -344,13 +370,21 @@
        STATE + PERSISTENCE
     ============================================================ */
     const STORAGE_KEY = 'sizecheck_v4';
-    const S = { gender: 'homme', sourceBrand: null, sourceSize: null };
+    const S = { gender: 'homme', mode: 'brand', sourceBrand: null, sourceSize: null, footCm: null };
+
+    /* CM de départ selon le mode actif (null si incomplet) */
+    function isValidCm(v) { return typeof v === 'number' && v >= 18 && v <= 35; }
+    function activeCm() {
+      if (S.mode === 'cm') return isValidCm(S.footCm) ? S.footCm : null;
+      if (!S.sourceBrand || S.sourceSize === null) return null;
+      return getSizes(S.sourceBrand, S.gender).find(([label]) => label === S.sourceSize)?.[1] ?? null;
+    }
 
     function saveState() {
-      if (!S.sourceBrand || S.sourceSize === null) return;
+      if (activeCm() === null) return;
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          gender: S.gender, sourceBrand: S.sourceBrand, sourceSize: S.sourceSize
+          gender: S.gender, mode: S.mode, sourceBrand: S.sourceBrand, sourceSize: S.sourceSize, footCm: S.footCm
         }));
       } catch (e) {}
     }
@@ -361,7 +395,9 @@
     }
 
     function isValidState(st) {
-      return st && BRANDS[st.sourceBrand] && ['homme', 'femme'].includes(st.gender) &&
+      if (!st || !['homme', 'femme'].includes(st.gender)) return false;
+      if (st.mode === 'cm') return isValidCm(st.footCm);
+      return BRANDS[st.sourceBrand] &&
         getSizes(st.sourceBrand, st.gender).some(([label]) => label === st.sourceSize);
     }
 
@@ -369,18 +405,22 @@
       try {
         // URL params take priority (for shared links)
         const p = new URLSearchParams(location.search);
-        const fromUrl = { gender: p.get('g'), sourceBrand: p.get('from'), sourceSize: p.get('size') };
+        const fromUrl = p.has('cm')
+          ? { gender: p.get('g'), mode: 'cm', sourceBrand: null, sourceSize: null, footCm: parseFloat(p.get('cm')) }
+          : { gender: p.get('g'), mode: 'brand', sourceBrand: p.get('from'), sourceSize: p.get('size'), footCm: null };
         if (isValidState(fromUrl)) return fromUrl;
         // Fallback: localStorage
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        if (isValidState(saved)) return saved;
+        if (isValidState(saved)) return { mode: 'brand', sourceBrand: null, sourceSize: null, footCm: null, ...saved };
       } catch (e) {}
       return null;
     }
 
     function updateURL() {
-      if (!S.sourceBrand || S.sourceSize === null) return;
-      const p = new URLSearchParams({ g: S.gender, from: S.sourceBrand, size: S.sourceSize });
+      if (activeCm() === null) return;
+      const p = S.mode === 'cm'
+        ? new URLSearchParams({ g: S.gender, cm: S.footCm })
+        : new URLSearchParams({ g: S.gender, from: S.sourceBrand, size: S.sourceSize });
       history.replaceState({}, '', '?' + p.toString());
     }
 
@@ -412,12 +452,52 @@
     function setGender(g) {
       if (S.gender === g) return;
       S.gender = g;
-      S.sourceSize = null;
       updateGenderToggle();
+      if (S.mode === 'cm') {
+        // La mesure du pied ne change pas : recalculer directement
+        computeAllResults();
+        saveState();
+        updateURL();
+        return;
+      }
+      S.sourceSize = null;
       renderSourceBrands();
       if (S.sourceBrand) { renderSizes(); reveal('step2'); }
       conceal('result');
       clearState();
+    }
+
+    function updateModeToggle() {
+      const base = 'text-xs font-bold px-2.5 py-1.5 rounded-md transition-all';
+      const btnB = document.getElementById('btn-mode-brand');
+      const btnC = document.getElementById('btn-mode-cm');
+      btnB.className = base + (S.mode === 'brand' ? ' bg-white text-blue-700 shadow-sm' : ' text-slate-500 hover:text-slate-700');
+      btnC.className = base + (S.mode === 'cm' ? ' bg-white text-blue-700 shadow-sm' : ' text-slate-500 hover:text-slate-700');
+      btnB.setAttribute('aria-pressed', S.mode === 'brand');
+      btnC.setAttribute('aria-pressed', S.mode === 'cm');
+    }
+
+    function setMode(m) {
+      if (S.mode === m) return;
+      S.mode = m;
+      updateModeToggle();
+      const isCm = m === 'cm';
+      document.getElementById('step1-label').textContent = isCm ? 'Mon pied' : 'Ma marque actuelle';
+      document.getElementById('brands-source').style.display = isCm ? 'none' : '';
+      document.getElementById('cm-wrap').classList.toggle('hidden', !isCm);
+      if (isCm) {
+        conceal('step2');
+      } else if (S.sourceBrand) {
+        renderSizes();
+        reveal('step2');
+      }
+      if (activeCm() !== null) {
+        computeAllResults();
+        saveState();
+        updateURL();
+      } else {
+        conceal('result');
+      }
     }
 
     function makeBrandBtn(key, selected) {
@@ -509,14 +589,11 @@
     ============================================================ */
     function computeAllResults() {
       const el = document.getElementById('result');
-      if (!S.sourceBrand || S.sourceSize === null) { conceal('result'); return; }
-
-      const srcCm = getSizes(S.sourceBrand, S.gender).find(([label]) => label === S.sourceSize)?.[1];
-      if (srcCm === undefined) { conceal('result'); return; }
-      const srcN = BRANDS[S.sourceBrand].name;
+      const srcCm = activeCm();
+      if (srcCm === null) { conceal('result'); return; }
 
       const rows = Object.entries(BRANDS)
-        .filter(([key]) => key !== S.sourceBrand)
+        .filter(([key]) => S.mode === 'cm' || key !== S.sourceBrand)
         .map(([key, b]) => {
           const matches = findBestMatches(key, srcCm, S.gender, 2);
           return { key, b, best: matches[0], second: secondIfTie(matches) };
@@ -559,6 +636,11 @@
           </div>
         </details>` : '';
 
+      const headerLabel = S.mode === 'cm' ? 'Ton pied' : 'Tu portes';
+      const headerValue = S.mode === 'cm'
+        ? `${srcCm} cm`
+        : `${BRANDS[S.sourceBrand].name} EU ${S.sourceSize} <span class="text-blue-100 text-sm font-normal"> · ${srcCm} cm</span>`;
+
       el.innerHTML = `
         <div>
           <!-- Summary header sticky -->
@@ -566,11 +648,8 @@
             <div class="bg-blue-600 px-5 py-4">
               <div class="flex items-center justify-between gap-3">
                 <div>
-                  <p class="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-0.5">Tu portes</p>
-                  <p class="text-white font-black text-lg leading-tight">
-                    ${srcN} EU ${S.sourceSize}
-                    <span class="text-blue-100 text-sm font-normal"> · ${srcCm} cm</span>
-                  </p>
+                  <p class="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-0.5">${headerLabel}</p>
+                  <p class="text-white font-black text-lg leading-tight">${headerValue}</p>
                 </div>
                 <button id="share-btn"
                   class="flex items-center gap-1.5 border border-white/40 text-white text-xs font-semibold px-3 py-2 rounded-xl hover:bg-white/10 active:scale-95 transition-all shrink-0">
@@ -592,7 +671,9 @@
       // Share button handler
       document.getElementById('share-btn').addEventListener('click', () => {
         const url  = location.href;
-        const text = `Ma pointure ${srcN} EU ${S.sourceSize} sur SizeCheck`;
+        const text = S.mode === 'cm'
+          ? `Mes équivalences de pointures pour ${srcCm} cm sur SizeCheck`
+          : `Ma pointure ${BRANDS[S.sourceBrand].name} EU ${S.sourceSize} sur SizeCheck`;
         if (navigator.share) {
           navigator.share({ title: 'SizeCheck', text, url }).catch(() => {});
         } else {
@@ -611,7 +692,37 @@
     ============================================================ */
     document.getElementById('btn-homme').addEventListener('click', () => setGender('homme'));
     document.getElementById('btn-femme').addEventListener('click', () => setGender('femme'));
+    document.getElementById('btn-mode-brand').addEventListener('click', () => setMode('brand'));
+    document.getElementById('btn-mode-cm').addEventListener('click', () => setMode('cm'));
+
+    const cmInput = document.getElementById('cm-input');
+    cmInput.addEventListener('input', () => {
+      const v = parseFloat(String(cmInput.value).replace(',', '.'));
+      if (isValidCm(v)) {
+        S.footCm = v;
+        computeAllResults();
+        saveState();
+        updateURL();
+      } else {
+        S.footCm = null;
+        conceal('result');
+      }
+    });
+    cmInput.addEventListener('change', () => {
+      if (activeCm() === null) return;
+      const res = document.getElementById('result');
+      if (res.getBoundingClientRect().top > window.innerHeight * 0.4) {
+        res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          if (res.getBoundingClientRect().top > window.innerHeight * 0.6) {
+            res.scrollIntoView({ block: 'start' });
+          }
+        }, 400);
+      }
+    });
+
     updateGenderToggle();
+    updateModeToggle();
     renderSourceBrands();
 
     // Restore from URL params or localStorage
@@ -620,11 +731,17 @@
       S.gender      = saved.gender;
       S.sourceBrand = saved.sourceBrand;
       S.sourceSize  = saved.sourceSize;
+      S.footCm      = saved.footCm ?? null;
       updateGenderToggle();
       renderSourceBrands();
-      renderSizes();
-      reveal('step2');
-      computeAllResults();
+      if (saved.mode === 'cm') {
+        cmInput.value = S.footCm;
+        setMode('cm'); // S.mode démarre à 'brand' : bascule + recalcul
+      } else {
+        renderSizes();
+        reveal('step2');
+        computeAllResults();
+      }
     }
   </script>
 

@@ -93,6 +93,15 @@
       background: #dbeafe; border-radius: 4px; padding: 1px 4px; margin-left: 4px;
     }
 
+    /* CM input */
+    .cm-input {
+      flex: 1; min-width: 0;
+      border: 2px solid #e2e8f0; border-radius: 10px; background: #fff;
+      padding: 9px 11px; font-size: 18px; font-weight: 800; color: #1e293b;
+      outline: none; font-family: inherit;
+    }
+    .cm-input:focus { border-color: #1d4ed8; }
+
     /* Tip */
     .tip {
       font-size: 11px; color: #64748b; line-height: 1.5;
@@ -118,8 +127,14 @@
       <button id="btn-femme" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:#64748b">Femme</button>
     </div>
 
+    <!-- Toggle mode (depuis ma marque / depuis mon pied) -->
+    <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
+      <button id="btn-mode-brand" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">Depuis ma marque</button>
+      <button id="btn-mode-cm" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">Depuis mon pied</button>
+    </div>
+
     <!-- Marque habituelle -->
-    <div class="card">
+    <div class="card" id="brand-card">
       <div class="label">Ma marque habituelle</div>
       <div class="brand-grid" id="brand-grid"><!-- JS --></div>
     </div>
