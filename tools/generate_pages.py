@@ -73,10 +73,12 @@ def extension_cta_html(a, b):
     domain_a, domain_b = f'{a}.com', f'{b}.com'
     return f'''
     <div class="ext-cta">
-      <span class="ext-cta-icon">🧩</span>
-      <div class="ext-cta-text">
-        <strong>Tu vas acheter sur {domain_a} ou {domain_b} ?</strong>
-        <p>L'extension Chrome SizeCheck affiche automatiquement ta pointure {na} ou {nb} directement sur la page produit — sans revenir ici.</p>
+      <div class="ext-cta-main">
+        <span class="ext-cta-icon">🧩</span>
+        <div class="ext-cta-text">
+          <strong>Tu vas acheter sur {domain_a} ou {domain_b} ?</strong>
+          <p>L'extension Chrome SizeCheck affiche automatiquement ta pointure {na} ou {nb} directement sur la page produit — sans revenir ici.</p>
+        </div>
       </div>
       <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener">Installer →</a>
     </div>'''
@@ -136,13 +138,15 @@ def page_html(a, b):
         sections.append('<h2>Correspondance femme</h2>')
         sections.append(f'<div class="tables">{conversion_table(a, b, "femme")}{conversion_table(b, a, "femme")}</div>')
 
+    # CTA extension juste après les tableaux : pic d'intention (le visiteur
+    # a sa réponse et s'apprête à acheter), avant le contenu secondaire.
+    sections.append(extension_cta_html(a, b))
+
     tips = [(BRAND_NAMES[k], TIPS[k]) for k in (a, b) if k in TIPS]
     if tips:
         sections.append('<h2>Comment taillent ces marques ?</h2>')
         for name, tip in tips:
             sections.append(f'<div class="tip"><strong>{name}</strong> — {html.escape(tip)}</div>')
-
-    sections.append(extension_cta_html(a, b))
 
     faq = faq_items(a, b)
     faq_html = ''.join(
