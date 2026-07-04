@@ -11,7 +11,7 @@ const state = {
 function renderBrandGrid() {
   const pageBrandName = state.pageBrand ? SC_BRANDS[state.pageBrand]?.name : null;
   document.getElementById('brand-grid').innerHTML = Object.entries(SC_BRANDS).map(([key, b]) => `
-    <button class="brand-btn ${state.sourceBrand === key ? 'active' : ''}" data-action="brand" data-value="${key}">
+    <button class="brand-btn ${state.sourceBrand === key ? 'active' : ''}" aria-pressed="${state.sourceBrand === key}" data-action="brand" data-value="${key}">
       <img src="${b.logo}" alt="${b.name}" loading="lazy">
       <span class="bname">${b.name}</span>
     </button>
@@ -37,7 +37,7 @@ function renderStep2() {
   }
 
   const sizesHTML = scGetSizes(state.sourceBrand, state.genre).map(([label]) => `
-    <button class="size-btn ${state.sourceSize === label ? 'active' : ''}" data-action="size" data-value="${label}">${label}</button>
+    <button class="size-btn ${state.sourceSize === label ? 'active' : ''}" aria-pressed="${state.sourceSize === label}" data-action="size" data-value="${label}">${label}</button>
   `).join('');
 
   let resultsHTML = '';
@@ -86,14 +86,23 @@ function renderStep2() {
   `;
 }
 
+function applyGenreStyles() {
+  const active = 'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)';
+  const inactive = 'background:transparent;color:#64748b';
+  const btnH = document.getElementById('btn-homme');
+  const btnF = document.getElementById('btn-femme');
+  btnH.style.cssText = `flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;${state.genre === 'homme' ? active : inactive}`;
+  btnF.style.cssText = `flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;${state.genre === 'femme' ? active : inactive}`;
+  btnH.setAttribute('aria-pressed', state.genre === 'homme');
+  btnF.setAttribute('aria-pressed', state.genre === 'femme');
+}
+
 function setGenre(g) {
   if (state.genre === g) return;
   state.genre = g;
   state.sourceSize = null;
-  const active = 'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)';
-  const inactive = 'background:transparent;color:#64748b';
-  document.getElementById('btn-homme').style.cssText = `flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;${g === 'homme' ? active : inactive}`;
-  document.getElementById('btn-femme').style.cssText = `flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;${g === 'femme' ? active : inactive}`;
+  chrome.storage.local.set({ sc_genre: g, sc_source_size: null });
+  applyGenreStyles();
   render();
 }
 
@@ -110,12 +119,13 @@ document.addEventListener('click', (e) => {
   if (action === 'brand') {
     state.sourceBrand = value;
     state.sourceSize = null;
-    chrome.storage.local.set({ sc_source_brand: value });
+    chrome.storage.local.set({ sc_source_brand: value, sc_source_size: null });
     render();
   }
 
   if (action === 'size') {
     state.sourceSize = value;
+    chrome.storage.local.set({ sc_source_size: value });
     render();
   }
 });
@@ -135,8 +145,14 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     }
   } catch (e) {}
 
-  chrome.storage.local.get(['sc_source_brand'], (data) => {
-    if (data.sc_source_brand) state.sourceBrand = data.sc_source_brand;
+  chrome.storage.local.get(['sc_source_brand', 'sc_source_size', 'sc_genre'], (data) => {
+    if (data.sc_genre === 'homme' || data.sc_genre === 'femme') state.genre = data.sc_genre;
+    if (data.sc_source_brand && SC_BRANDS[data.sc_source_brand]) state.sourceBrand = data.sc_source_brand;
+    if (state.sourceBrand && data.sc_source_size &&
+        scGetCm(state.sourceBrand, data.sc_source_size, state.genre) !== null) {
+      state.sourceSize = data.sc_source_size;
+    }
+    applyGenreStyles();
     render();
   });
 });

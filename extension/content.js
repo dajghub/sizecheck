@@ -70,11 +70,21 @@
     return sizeEls.length >= 2;
   }
 
-  const detectedBrand = detectBrandFromDomain() || detectBrandFromPage();
+  let detectedBrand = detectBrandFromDomain() || detectBrandFromPage();
   const pageHost = location.hostname.replace(/^www\./, '');
   const isMultiBrand = MULTI_BRAND_HOSTS.some(m => pageHost.includes(m));
 
-  if (isMultiBrand && !isProductPage()) return;
+  // Masqué via le ✕ du FAB — pour la durée de l'onglet
+  if (sessionStorage.getItem('__sizecheck_hidden__')) return;
+
+  // Le widget reste injecté mais caché hors contexte utile : il se ré-évalue
+  // à chaque navigation SPA (les multi-marques ne rechargent pas la page).
+  const CHECKOUT_RE = /(checkout|panier|cart|paiement|payment|commande|order)/i;
+  function shouldShow() {
+    if (CHECKOUT_RE.test(location.pathname)) return false;
+    if (isMultiBrand) return isProductPage();
+    return true;
+  }
 
   /* ══════════════════════════════════════════
      STATE
@@ -139,6 +149,15 @@
       line-height: 1;
     }
     .sc-fab:hover { transform: scale(1.04); box-shadow: 0 6px 26px rgba(29,78,216,0.5); }
+    .sc-fab-hide {
+      opacity: .55;
+      font-size: 10px;
+      padding: 3px 5px;
+      margin-left: 2px;
+      border-radius: 50%;
+      line-height: 1;
+    }
+    .sc-fab-hide:hover { opacity: 1; background: rgba(255,255,255,.18); }
 
     /* ── Panel ── */
     .sc-panel {
@@ -350,6 +369,10 @@
   wrap.className = 'sc-wrap';
   shadow.appendChild(wrap);
 
+  function updateVisibility() {
+    hostEl.style.setProperty('display', shouldShow() ? 'block' : 'none', 'important');
+  }
+
   /* ══════════════════════════════════════════
      RENDER
   ══════════════════════════════════════════ */
@@ -418,19 +441,38 @@
     `;
   }
 
+  /* ── FAB : affiche directement la taille convertie quand le profil est connu ── */
+  function fabHTML() {
+    let label = 'SizeCheck' + (detectedBrand ? ' · ' + SC_BRANDS[detectedBrand].name : '');
+    if (detectedBrand && state.sourceBrand && state.sourceSize) {
+      const cm = scGetCm(state.sourceBrand, state.sourceSize, state.genre);
+      const best = cm !== null ? scFindBestMatches(detectedBrand, cm, state.genre, 1)[0] : null;
+      if (best) label = `Ta taille ici : EU ${best.label}`;
+    }
+    return `<span>👟</span><span>${label}</span><span class="sc-fab-hide" data-action="hide" title="Masquer SizeCheck sur cet onglet">✕</span>`;
+  }
+
+  function patchFab() {
+    const fab = wrap.querySelector('.sc-fab');
+    if (fab) fab.innerHTML = fabHTML();
+  }
+
   /* ── Mise à jour chirurgicale du genre toggle ── */
   function patchGenreToggle() {
     const active   = 'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)';
     const inactive = 'background:transparent;color:#64748b';
     wrap.querySelectorAll('[data-action="genre"]').forEach(btn => {
       btn.style.cssText = `flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${btn.dataset.value === state.genre ? active : inactive}`;
+      btn.setAttribute('aria-pressed', btn.dataset.value === state.genre);
     });
   }
 
   /* ── Mise à jour chirurgicale de la brand grid ── */
   function patchBrandGrid() {
     wrap.querySelectorAll('.sc-brand-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.value === state.sourceBrand);
+      const active = btn.dataset.value === state.sourceBrand;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active);
     });
   }
 
@@ -444,7 +486,7 @@
     if (section) {
       section.style.display = '';
       section.querySelector('.sc-size-grid').innerHTML = scGetSizes(state.sourceBrand, state.genre).map(([label]) =>
-        `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" data-action="size" data-value="${label}">${label}</button>`
+        `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" aria-pressed="${state.sourceSize === label}" data-action="size" data-value="${label}">${label}</button>`
       ).join('');
     }
   }
@@ -461,7 +503,7 @@
     const pageBrand = detectedBrand ? SC_BRANDS[detectedBrand] : null;
 
     const brandsHTML = Object.entries(SC_BRANDS).map(([key, b]) => `
-      <button class="sc-brand-btn ${state.sourceBrand === key ? 'active' : ''}" data-action="brand" data-value="${key}">
+      <button class="sc-brand-btn ${state.sourceBrand === key ? 'active' : ''}" aria-pressed="${state.sourceBrand === key}" data-action="brand" data-value="${key}">
         <img src="${b.logo}" alt="${b.name}" loading="lazy">
         <span class="sc-bname">${b.name}</span>
       </button>
@@ -469,7 +511,7 @@
 
     const sizesHTML = state.sourceBrand
       ? scGetSizes(state.sourceBrand, state.genre).map(([label]) =>
-          `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" data-action="size" data-value="${label}">${label}</button>`
+          `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" aria-pressed="${state.sourceSize === label}" data-action="size" data-value="${label}">${label}</button>`
         ).join('')
       : '';
 
@@ -512,10 +554,7 @@
         </div>
       </div>
 
-      <button class="sc-fab" data-action="toggle">
-        <span>👟</span>
-        <span>SizeCheck${pageBrand ? ' · ' + pageBrand.name : ''}</span>
-      </button>
+      <button class="sc-fab" data-action="toggle">${fabHTML()}</button>
     `;
 
     patchGenreToggle();
@@ -542,11 +581,17 @@
           wrap.querySelector('#sc-panel').classList.remove('open');
           break;
 
+        case 'hide':
+          sessionStorage.setItem('__sizecheck_hidden__', '1');
+          hostEl.style.setProperty('display', 'none', 'important');
+          break;
+
         case 'genre':
           if (state.genre !== value) {
             state.genre = value;
             state.sourceSize = null;
             state.showAll = false;
+            chrome.storage.local.set({ sc_genre: value, sc_source_size: null });
             render(); // wrap.innerHTML remplacé, mais le listener sur wrap survit
           }
           break;
@@ -555,17 +600,20 @@
           state.sourceBrand = value;
           state.sourceSize = null;
           state.showAll = false;
-          chrome.storage.local.set({ sc_source_brand: value });
+          chrome.storage.local.set({ sc_source_brand: value, sc_source_size: null });
           patchBrandGrid();
           patchSizeSection();
           patchResults();
+          patchFab();
           break;
 
         case 'size':
           state.sourceSize = value;
           state.showAll = false;
+          chrome.storage.local.set({ sc_source_size: value });
           patchSizeSection();
           patchResults();
+          patchFab();
           setTimeout(() => {
             const body = wrap.querySelector('.sc-body');
             if (body) body.scrollTop = body.scrollHeight;
@@ -584,10 +632,37 @@
      INIT
   ══════════════════════════════════════════ */
 
-  chrome.storage.local.get(['sc_source_brand'], (data) => {
-    if (data.sc_source_brand) state.sourceBrand = data.sc_source_brand;
+  chrome.storage.local.get(['sc_source_brand', 'sc_source_size', 'sc_genre'], (data) => {
+    if (data.sc_genre === 'homme' || data.sc_genre === 'femme') state.genre = data.sc_genre;
+    if (data.sc_source_brand && SC_BRANDS[data.sc_source_brand]) state.sourceBrand = data.sc_source_brand;
+    if (state.sourceBrand && data.sc_source_size &&
+        scGetCm(state.sourceBrand, data.sc_source_size, state.genre) !== null) {
+      state.sourceSize = data.sc_source_size;
+    }
     render();
     bindEvents(); // une seule fois — le listener sur wrap survit aux render() suivants
+    updateVisibility();
   });
+
+  /* ── Navigation SPA : re-détecter marque et contexte à chaque changement d'URL ── */
+  function refreshDetection() {
+    const brand = detectBrandFromDomain() || detectBrandFromPage();
+    if (brand !== detectedBrand) {
+      detectedBrand = brand;
+      state.showAll = false;
+      render();
+    }
+    updateVisibility();
+  }
+
+  let lastHref = location.href;
+  const spaObserver = new MutationObserver(() => {
+    if (location.href === lastHref) return;
+    lastHref = location.href;
+    // Laisser la SPA rendre la nouvelle page avant de re-détecter
+    setTimeout(refreshDetection, 600);
+  });
+  spaObserver.observe(document.documentElement, { childList: true, subtree: true });
+  window.addEventListener('popstate', () => setTimeout(refreshDetection, 600));
 
 })();

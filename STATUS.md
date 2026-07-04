@@ -6,6 +6,14 @@ _Dernière mise à jour : 4 juillet 2026_
 
 ## ✅ Fait
 
+- **P1 audit — friction utilisateur** (4 juil. 2026) :
+  - Extension : pointure + genre persistés (`chrome.storage.local`), partagés entre widget et popup
+  - Extension : le FAB affiche directement « Ta taille ici : EU X » quand le profil est connu (zéro clic)
+  - Extension : support SPA (re-détection à chaque changement d'URL), FAB masqué sur panier/checkout, bouton ✕ pour masquer (session)
+  - Site : scroll automatique vers le résultat après sélection de la pointure (avec fallback reduced-motion)
+  - Site : bannière extension masquée sur mobile (`hidden md:flex`)
+  - Contraste AA (slate-400 → slate-500, blue-200/300 → blue-100) + `aria-pressed` sur tous les toggles (site + extension)
+  - Tri des résultats unifié : par proximité CM partout (P2.10 fait au passage)
 - **P0 audit — grilles officielles avec demi-pointures/tiers** (4 juil. 2026) :
   - Les 8 grilles re-relevées sur les guides officiels avec les pointures réellement vendues (Nike 42.5, Adidas 42⅔, Salomon/HOKA en tiers, ASICS en quarts de cm…)
   - Nouvelle structure de données `[label, cm]` par marque et par genre (site + extension synchronisés)
@@ -44,17 +52,8 @@ _Dernière mise à jour : 4 juillet 2026_
 
 ## 📋 Prochaines étapes (backlog — issu de l'audit UX/UI du 4 juil. 2026)
 
-### P1 — Friction utilisateur
-- [ ] Extension : persister pointure + genre (`chrome.storage`), afficher la taille convertie dans le FAB
-- [ ] Site mobile : scroll automatique vers le résultat après sélection de la pointure
-- [ ] Masquer la bannière extension sur mobile (`hidden md:flex`)
-- [ ] Extension : gating page-produit sur les sites de marque + support SPA (MutationObserver)
-- [ ] Contraste (`slate-400` → `slate-500+`) et `aria-pressed` sur les toggles
-
 ### P2 — Valeur ajoutée
 - [ ] Mode « longueur de pied en cm » (site + extension)
-- [ ] Unifier le tri des résultats (proximité CM partout — le site trie encore par popularité)
-- [ ] Option « masquer le FAB » dans l'extension
 
 ### P3 — Croissance & dette technique
 - [ ] Pages SEO statiques par paire de marques (générées depuis les tables)

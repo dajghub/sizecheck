@@ -107,7 +107,7 @@
     <div class="pt-10 pb-5 text-center">
       <p class="text-3xl mb-1">👟</p>
       <h1 class="text-2xl font-black text-slate-800 tracking-tight">SizeCheck</h1>
-      <p class="text-slate-400 text-sm mt-0.5">Trouve ta vraie pointure entre marques</p>
+      <p class="text-slate-500 text-sm mt-0.5">Trouve ta vraie pointure entre marques</p>
     </div>
 
     <!-- Gender toggle -->
@@ -151,17 +151,17 @@
         <div class="px-5 pb-5 text-xs text-slate-500 leading-relaxed space-y-2 border-t border-gray-50">
           <p class="pt-3"><strong class="text-slate-600">La méthode des centimètres</strong> : chaque pointure EU correspond à une longueur de pied précise selon le tableau officiel de chaque marque. SizeCheck compare ces valeurs pour trouver la correspondance la plus proche dans chaque marque cible.</p>
           <p>Les données proviennent des guides de tailles officiels de <strong class="text-slate-600">8 marques</strong> : Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA — avec les demi-pointures et tiers réels de chaque marque. <strong class="text-slate-600">Vérifiées et mises à jour en juillet 2026.</strong></p>
-          <p class="text-slate-400">Note : certains modèles spécifiques (ex. Air Force 1, Jordan) peuvent varier légèrement par rapport au tableau standard de la marque.</p>
+          <p class="text-slate-500">Note : certains modèles spécifiques (ex. Air Force 1, Jordan) peuvent varier légèrement par rapport au tableau standard de la marque.</p>
         </div>
       </details>
 
-      <p class="text-xs text-slate-400 text-center leading-relaxed px-2">
+      <p class="text-xs text-slate-500 text-center leading-relaxed px-2">
         SizeCheck compare gratuitement les pointures Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA par la méthode des centimètres.
       </p>
     </div>
 
-    <!-- Bandeau extension Chrome -->
-    <a href="https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_site" target="_blank" rel="noopener" class="flex mt-6 items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl px-5 py-4 hover:from-blue-500 hover:to-blue-400 transition-colors cursor-pointer no-underline">
+    <!-- Bandeau extension Chrome — desktop uniquement (pas d'extensions sur Chrome mobile) -->
+    <a href="https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_site" target="_blank" rel="noopener" class="hidden md:flex mt-6 items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl px-5 py-4 hover:from-blue-500 hover:to-blue-400 transition-colors cursor-pointer no-underline">
       <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 text-lg">🧩</div>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-bold text-white leading-tight">Extension Chrome disponible</p>
@@ -401,10 +401,12 @@
 
     function updateGenderToggle() {
       const base = 'flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200';
-      document.getElementById('btn-homme').className =
-        base + (S.gender === 'homme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
-      document.getElementById('btn-femme').className =
-        base + (S.gender === 'femme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
+      const btnH = document.getElementById('btn-homme');
+      const btnF = document.getElementById('btn-femme');
+      btnH.className = base + (S.gender === 'homme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
+      btnF.className = base + (S.gender === 'femme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
+      btnH.setAttribute('aria-pressed', S.gender === 'homme');
+      btnF.setAttribute('aria-pressed', S.gender === 'femme');
     }
 
     function setGender(g) {
@@ -425,6 +427,7 @@
         (selected
           ? 'border-blue-600 bg-blue-600 shadow-md'
           : 'border-gray-100 bg-gray-50 hover:border-blue-200 hover:bg-blue-50');
+      btn.setAttribute('aria-pressed', selected);
 
       const wrap = document.createElement('div');
       wrap.className = 'w-9 h-9 rounded-xl overflow-hidden bg-white flex items-center justify-center shrink-0 border border-gray-100 p-1';
@@ -477,6 +480,7 @@
           (S.sourceSize === label
             ? 'border-blue-600 bg-blue-600 text-white shadow-md'
             : 'border-gray-100 bg-gray-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50');
+        btn.setAttribute('aria-pressed', S.sourceSize === label);
         btn.textContent = label;
         btn.addEventListener('click', () => {
           S.sourceSize = label;
@@ -484,6 +488,17 @@
           computeAllResults();
           saveState();
           updateURL();
+          // Sur mobile le résultat est sous la ligne de flottaison : l'amener en vue
+          const res = document.getElementById('result');
+          if (res.getBoundingClientRect().top > window.innerHeight * 0.4) {
+            res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Fallback instantané si le smooth scroll est inactif (reduced motion…)
+            setTimeout(() => {
+              if (res.getBoundingClientRect().top > window.innerHeight * 0.6) {
+                res.scrollIntoView({ block: 'start' });
+              }
+            }, 400);
+          }
         });
         c.appendChild(btn);
       });
@@ -507,14 +522,11 @@
           return { key, b, best: matches[0], second: secondIfTie(matches) };
         })
         .filter(r => r.best)
-        .sort((a, b) => {
-          const POP = ['adidas','newbalance','converse','vans','hoka','salomon','asics'];
-          return (POP.indexOf(a.key) ?? 99) - (POP.indexOf(b.key) ?? 99);
-        });
+        .sort((a, b) => a.best.diff - b.best.diff);
 
       // Build brand cards HTML
       const cardsHTML = rows.map(({ b, best, second }) => {
-        const secondLbl = second ? `<span class="text-xs text-slate-400 mt-0.5 block">ou ${second.label}</span>` : '';
+        const secondLbl = second ? `<span class="text-xs text-slate-500 mt-0.5 block">ou ${second.label}</span>` : '';
         return `
           <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 p-1">
@@ -526,7 +538,7 @@
             </div>
             <div class="text-right shrink-0">
               <p class="text-3xl font-black text-blue-600 leading-none">${best.label}</p>
-              <p class="text-xs text-slate-400 mt-0.5">${best.cm} cm</p>
+              <p class="text-xs text-slate-500 mt-0.5">${best.cm} cm</p>
               ${secondLbl}
             </div>
           </div>`;
@@ -554,10 +566,10 @@
             <div class="bg-blue-600 px-5 py-4">
               <div class="flex items-center justify-between gap-3">
                 <div>
-                  <p class="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-0.5">Tu portes</p>
+                  <p class="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-0.5">Tu portes</p>
                   <p class="text-white font-black text-lg leading-tight">
                     ${srcN} EU ${S.sourceSize}
-                    <span class="text-blue-300 text-sm font-normal"> · ${srcCm} cm</span>
+                    <span class="text-blue-100 text-sm font-normal"> · ${srcCm} cm</span>
                   </p>
                 </div>
                 <button id="share-btn"
