@@ -18,6 +18,8 @@ SITE = 'https://www.sizecheck.fr'
 OUT = ROOT / 'comparaisons'
 TIE = 0.15  # seuil de quasi-égalité (identique au site/extension)
 UPDATED = 'juillet 2026'
+EXT_STORE_URL = ('https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/'
+                  'bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_comparaisons')
 LASTMOD = date.today().isoformat()
 
 TIPS = {
@@ -64,6 +66,20 @@ def conversion_table(a, b, genre):
         f'<thead><tr><th>{BRAND_NAMES[a]}</th><th>Pied</th><th>{BRAND_NAMES[b]}</th></tr></thead>'
         f'<tbody>{"".join(rows)}</tbody></table>'
     )
+
+
+def extension_cta_html(a, b):
+    na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
+    domain_a, domain_b = f'{a}.com', f'{b}.com'
+    return f'''
+    <div class="ext-cta">
+      <span class="ext-cta-icon">🧩</span>
+      <div class="ext-cta-text">
+        <strong>Tu vas acheter sur {domain_a} ou {domain_b} ?</strong>
+        <p>L'extension Chrome SizeCheck affiche automatiquement ta pointure {na} ou {nb} directement sur la page produit — sans revenir ici.</p>
+      </div>
+      <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener">Installer →</a>
+    </div>'''
 
 
 def faq_items(a, b):
@@ -125,6 +141,8 @@ def page_html(a, b):
         sections.append('<h2>Comment taillent ces marques ?</h2>')
         for name, tip in tips:
             sections.append(f'<div class="tip"><strong>{name}</strong> — {html.escape(tip)}</div>')
+
+    sections.append(extension_cta_html(a, b))
 
     faq = faq_items(a, b)
     faq_html = ''.join(
