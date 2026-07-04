@@ -361,7 +361,9 @@
     // Mode focus : marque détectée en vedette
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
-      const [bestSize, secondSize] = scFindBestSizes(detectedBrand, cm, state.genre, 2);
+      const matches = scFindBestMatches(detectedBrand, cm, state.genre, 2);
+      const best = matches[0];
+      const second = scSecondIfTie(matches);
 
       return `
         <div>
@@ -371,9 +373,8 @@
               <img src="${b.logo}" alt="${b.name}" loading="lazy">
               <span>${b.name}</span>
             </div>
-            <div class="sc-focus-size">EU ${bestSize}</div>
-            ${secondSize ? `<div style="font-size:11px;color:#94a3b8">ou EU ${secondSize}</div>` : ''}
-            ${secondSize ? `<div style="font-size:10px;color:#94a3b8;margin-top:2px">Entre deux tailles — prends la plus grande.</div>` : ''}
+            <div class="sc-focus-size">EU ${best.label}</div>
+            ${second ? `<div style="font-size:11px;color:#94a3b8">ou EU ${second.label}</div>` : ''}
             ${b.tip ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
           <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
@@ -387,24 +388,22 @@
     const allRows = Object.entries(SC_BRANDS)
       .filter(([key]) => key !== state.sourceBrand)
       .map(([key, b]) => {
-        const [bestSize, secondSize] = scFindBestSizes(key, cm, state.genre, 2);
-        const targetCm = scGetCm(key, bestSize, state.genre);
-        const cmDiff = targetCm ? Math.abs(targetCm - cm) : 999;
-        return { key, b, targetSize: bestSize, secondSize, cmDiff };
+        const matches = scFindBestMatches(key, cm, state.genre, 2);
+        return { key, b, best: matches[0], second: scSecondIfTie(matches) };
       })
-      .sort((a, b) => a.cmDiff - b.cmDiff);
+      .filter(r => r.best)
+      .sort((a, b) => a.best.diff - b.best.diff);
 
-    const hasSecond = allRows.some(r => r.secondSize);
-    const rows = allRows.map(({ key, b, targetSize, secondSize }) => {
+    const rows = allRows.map(({ key, b, best, second }) => {
         const isPage = key === detectedBrand;
         return `
           <div class="sc-result ${isPage ? 'highlight' : ''}">
             <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
             <span class="sc-result-name">${b.name}</span>
-            <span class="sc-result-size">EU ${targetSize}${secondSize ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${secondSize}</span>` : ''}</span>
+            <span class="sc-result-size">EU ${best.label}${second ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${second.label}</span>` : ''}</span>
           </div>
         `;
-      }).join('') + (hasSecond ? `<p style="font-size:9px;color:#94a3b8;text-align:center;padding:6px 0 0">Entre deux tailles — prends la plus grande.</p>` : '');
+      }).join('');
 
     return `
       <div>
@@ -444,8 +443,8 @@
     }
     if (section) {
       section.style.display = '';
-      section.querySelector('.sc-size-grid').innerHTML = SC_ALL_SIZES.map(s =>
-        `<button class="sc-size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>`
+      section.querySelector('.sc-size-grid').innerHTML = scGetSizes(state.sourceBrand, state.genre).map(([label]) =>
+        `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" data-action="size" data-value="${label}">${label}</button>`
       ).join('');
     }
   }
@@ -468,9 +467,11 @@
       </button>
     `).join('');
 
-    const sizesHTML = SC_ALL_SIZES.map(s =>
-      `<button class="sc-size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>`
-    ).join('');
+    const sizesHTML = state.sourceBrand
+      ? scGetSizes(state.sourceBrand, state.genre).map(([label]) =>
+          `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" data-action="size" data-value="${label}">${label}</button>`
+        ).join('')
+      : '';
 
     wrap.innerHTML = `
       <div class="sc-panel ${state.open ? 'open' : ''}" id="sc-panel">
@@ -561,7 +562,7 @@
           break;
 
         case 'size':
-          state.sourceSize = parseInt(value);
+          state.sourceSize = value;
           state.showAll = false;
           patchSizeSection();
           patchResults();

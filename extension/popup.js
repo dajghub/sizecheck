@@ -36,8 +36,8 @@ function renderStep2() {
     return;
   }
 
-  const sizesHTML = SC_ALL_SIZES.map(s => `
-    <button class="size-btn ${state.sourceSize === s ? 'active' : ''}" data-action="size" data-value="${s}">${s}</button>
+  const sizesHTML = scGetSizes(state.sourceBrand, state.genre).map(([label]) => `
+    <button class="size-btn ${state.sourceSize === label ? 'active' : ''}" data-action="size" data-value="${label}">${label}</button>
   `).join('');
 
   let resultsHTML = '';
@@ -47,28 +47,26 @@ function renderStep2() {
       const allResults = Object.entries(SC_BRANDS)
         .filter(([key]) => key !== state.sourceBrand || key === state.pageBrand)
         .map(([key, b]) => {
-          const [bestSize, secondSize] = scFindBestSizes(key, cm, state.genre, 2);
-          const targetCm = scGetCm(key, bestSize, state.genre);
-          const cmDiff = targetCm ? Math.abs(targetCm - cm) : 999;
-          return { key, b, targetSize: bestSize, secondSize, cmDiff };
+          const matches = scFindBestMatches(key, cm, state.genre, 2);
+          return { key, b, best: matches[0], second: scSecondIfTie(matches) };
         })
+        .filter(r => r.best)
         .sort((a, b) => {
           if (a.key === state.pageBrand) return -1;
           if (b.key === state.pageBrand) return 1;
-          return a.cmDiff - b.cmDiff;
+          return a.best.diff - b.best.diff;
         });
 
-      const hasSecond = allResults.some(r => r.secondSize);
-      resultsHTML = allResults.map(({ key, b, targetSize, secondSize }) => {
+      resultsHTML = allResults.map(({ key, b, best, second }) => {
           const isPage = key === state.pageBrand;
           return `
             <div class="result-row ${isPage ? 'page-result' : ''}">
               <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
               <span class="result-name">${b.name}${isPage ? ' <span class="on-page-tag">cette page</span>' : ''}</span>
-              <span class="result-size">EU ${targetSize}${secondSize ? `<span class="result-second">ou ${secondSize}</span>` : ''}</span>
+              <span class="result-size">EU ${best.label}${second ? `<span class="result-second">ou ${second.label}</span>` : ''}</span>
             </div>
           `;
-        }).join('') + (hasSecond ? `<p class="between-sizes">Entre deux tailles — prends la plus grande.</p>` : '');
+        }).join('');
     }
   }
 
@@ -117,7 +115,7 @@ document.addEventListener('click', (e) => {
   }
 
   if (action === 'size') {
-    state.sourceSize = parseInt(value);
+    state.sourceSize = value;
     render();
   }
 });

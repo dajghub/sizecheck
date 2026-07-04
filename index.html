@@ -49,7 +49,7 @@
         "name": "Converse taille-t-il grand ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, Converse taille grand. La semelle plate des Chuck Taylor libère de l'espace en longueur. Un EU 43 Converse correspond à 27,5 cm (homme), soit l'équivalent d'un EU 43 New Balance ou d'un EU 44 Nike. SizeCheck calcule automatiquement la correspondance exacte."
+          "text": "Oui, Converse taille grand. La semelle plate des Chuck Taylor libère de l'espace en longueur. Un EU 43 Converse correspond à 28 cm (homme), soit l'équivalent d'un EU 44 New Balance ou d'un EU 45 Nike. SizeCheck calcule automatiquement la correspondance exacte."
         }
       },
       {
@@ -150,7 +150,7 @@
         </summary>
         <div class="px-5 pb-5 text-xs text-slate-500 leading-relaxed space-y-2 border-t border-gray-50">
           <p class="pt-3"><strong class="text-slate-600">La méthode des centimètres</strong> : chaque pointure EU correspond à une longueur de pied précise selon le tableau officiel de chaque marque. SizeCheck compare ces valeurs pour trouver la correspondance la plus proche dans chaque marque cible.</p>
-          <p>Les données proviennent des guides de tailles officiels de <strong class="text-slate-600">8 marques</strong> : Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA. <strong class="text-slate-600">Vérifiées et mises à jour en juin 2026.</strong></p>
+          <p>Les données proviennent des guides de tailles officiels de <strong class="text-slate-600">8 marques</strong> : Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA — avec les demi-pointures et tiers réels de chaque marque. <strong class="text-slate-600">Vérifiées et mises à jour en juillet 2026.</strong></p>
           <p class="text-slate-400">Note : certains modèles spécifiques (ex. Air Force 1, Jordan) peuvent varier légèrement par rapport au tableau standard de la marque.</p>
         </div>
       </details>
@@ -188,84 +188,162 @@
   <script>
     /* ============================================================
        DATA
+       Grilles officielles relevées en juillet 2026 sur les guides des
+       tailles des marques, avec les demi-pointures et tiers réels.
+       Chaque entrée : [label EU affiché, longueur de pied en cm].
+       Certaines pointures entières n'existent pas selon la marque
+       (ex. pas de EU 43 chez Adidas, pas de EU 41 chez ASICS).
     ============================================================ */
-    const SIZE_RANGES = {
-      homme: [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46],
-      femme: [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]
-    };
+    const ADIDAS_UNISEXE = [
+      ['36', 22.1], ['36⅔', 22.5], ['37⅓', 22.9], ['38', 23.3], ['38⅔', 23.8],
+      ['39⅓', 24.2], ['40', 24.6], ['40⅔', 25.0], ['41⅓', 25.5], ['42', 25.9],
+      ['42⅔', 26.3], ['43⅓', 26.7], ['44', 27.1], ['44⅔', 27.6], ['45⅓', 28.0],
+      ['46', 28.4]
+    ];
+    const CONVERSE_UNISEXE = [
+      ['35', 22.0], ['36', 22.5], ['36.5', 23.0], ['37', 23.5], ['37.5', 24.0],
+      ['38', 24.5], ['39', 24.5], ['39.5', 25.0], ['40', 25.5], ['41', 26.0],
+      ['41.5', 26.5], ['42', 27.0], ['42.5', 27.5], ['43', 28.0], ['44', 28.5],
+      ['44.5', 29.0], ['45', 29.5], ['46', 30.0]
+    ];
+    const VANS_UNISEXE = [
+      ['35', 22.0], ['36', 22.5], ['36.5', 23.0], ['37', 23.5], ['38', 24.0],
+      ['38.5', 24.5], ['39', 25.0], ['40', 25.5], ['40.5', 26.0], ['41', 26.5],
+      ['42', 27.0], ['42.5', 27.5], ['43', 28.0], ['44', 28.5], ['44.5', 29.0],
+      ['45', 29.5], ['46', 30.0]
+    ];
+    const SALOMON_UNISEXE = [
+      ['36', 21.5], ['36⅔', 22.0], ['37⅓', 22.5], ['38', 23.0], ['38⅔', 23.5],
+      ['39⅓', 24.0], ['40', 24.5], ['40⅔', 25.0], ['41⅓', 25.5], ['42', 26.0],
+      ['42⅔', 26.5], ['43⅓', 27.0], ['44', 27.5], ['44⅔', 28.0], ['45⅓', 28.5],
+      ['46', 29.0]
+    ];
 
     const BRANDS = {
       nike: {
         name: 'Nike', emoji: '🟠', logo: 'https://www.google.com/s2/favicons?domain=nike.com&sz=128',
         tip: null,
-        cm: {
-          homme: { 35:21.6, 36:22.0, 37:22.7, 38:23.3, 39:24.1, 40:24.5, 41:25.4, 42:25.8, 43:26.7, 44:27.1, 45:27.9, 46:28.8 },
-          femme: { 35:21.6, 36:22.4, 37:23.1, 38:23.7, 39:24.5, 40:25.0, 41:25.8, 42:26.2, 43:27.1, 44:27.5, 45:28.3, 46:29.2 }
+        sizes: {
+          homme: [
+            ['35.5', 21.6], ['36', 22.0], ['36.5', 22.4], ['37.5', 22.9],
+            ['38', 23.3], ['38.5', 23.7], ['39', 24.1], ['40', 24.5],
+            ['40.5', 25.0], ['41', 25.4], ['42', 25.8], ['42.5', 26.2],
+            ['43', 26.7], ['44', 27.1], ['44.5', 27.5], ['45', 27.9],
+            ['45.5', 28.3], ['46', 28.8]
+          ],
+          femme: [
+            ['35', 21.6], ['35.5', 22.0], ['36', 22.4], ['36.5', 22.9],
+            ['37.5', 23.3], ['38', 23.7], ['38.5', 24.1], ['39', 24.5],
+            ['40', 25.0], ['40.5', 25.4], ['41', 25.8], ['42', 26.2],
+            ['42.5', 26.7], ['43', 27.1], ['44', 27.5], ['44.5', 27.9],
+            ['45', 28.3], ['45.5', 28.8], ['46', 29.2]
+          ]
         }
       },
       adidas: {
         name: 'Adidas', emoji: '🔵', logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=128',
         tip: 'Adidas taille petit — chaussant plus étroit que la norme. Si tu as le pied large, prends la pointure supérieure à celle recommandée.',
-        cm: {
-          homme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 },
-          femme: { 35:21.5, 36:22.1, 37:22.7, 38:23.3, 39:24.0, 40:24.6, 41:25.3, 42:25.9, 43:26.5, 44:27.1, 45:28.0, 46:28.4 }
-        }
+        sizes: { homme: ADIDAS_UNISEXE, femme: ADIDAS_UNISEXE }
       },
       newbalance: {
         name: 'New Balance', emoji: '🟢', logo: 'https://www.google.com/s2/favicons?domain=newbalance.com&sz=128',
         tip: null,
-        cm: {
-          homme: { 35:21.5, 36:22.0, 37:22.5, 38:23.5, 39:24.0, 40:25.0, 41:25.5, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 },
-          femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:29.0, 45:29.5, 46:30.0 }
+        sizes: {
+          homme: [
+            ['36', 22.0], ['37', 22.5], ['37.5', 23.0], ['38', 23.5],
+            ['38.5', 24.0], ['39.5', 24.5], ['40', 25.0], ['40.5', 25.5],
+            ['41.5', 26.0], ['42', 26.5], ['42.5', 27.0], ['43', 27.5],
+            ['44', 28.0], ['44.5', 28.5], ['45', 29.0], ['45.5', 29.5]
+          ],
+          femme: [
+            ['35', 22.0], ['36', 22.5], ['36.5', 23.0], ['37', 23.5],
+            ['37.5', 24.0], ['38', 24.5], ['39', 25.0], ['40', 25.5],
+            ['40.5', 26.0], ['41', 26.5], ['41.5', 27.0], ['42.5', 27.5],
+            ['43', 28.0], ['43.5', 28.5], ['44', 29.0], ['45', 29.5],
+            ['45.5', 30.0], ['46', 30.5]
+          ]
         }
       },
       converse: {
         name: 'Converse', emoji: '⭐', logo: '/assets/converse.svg',
         tip: 'Converse taille grand — la semelle plate des Chuck Taylor libère de l\'espace en longueur. Si ton pied est étroit, la pointure recommandée devrait convenir sans descendre. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
-        cm: {
-          homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:24.5, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
-          femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.5, 39:24.5, 40:25.5, 41:26.0, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
-        }
+        sizes: { homme: CONVERSE_UNISEXE, femme: CONVERSE_UNISEXE }
       },
       salomon: {
         name: 'Salomon', emoji: '⚡', logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=128',
         tip: 'Salomon taille petit — fit trail enveloppant conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prends la supérieure.',
-        cm: {
-          homme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 },
-          femme: { 35:21.0, 36:21.5, 37:22.3, 38:23.0, 39:23.8, 40:24.5, 41:25.3, 42:26.0, 43:26.8, 44:27.5, 45:28.3, 46:29.0 }
-        }
+        sizes: { homme: SALOMON_UNISEXE, femme: SALOMON_UNISEXE }
       },
       vans: {
         name: 'Vans', emoji: '🔴', logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=128',
         tip: 'Vans taille grand — les modèles classiques (Old Skool, Authentic) ont un last long et généreux, surtout en largeur. Idéal pour les pieds larges.',
-        cm: {
-          homme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 },
-          femme: { 35:22.0, 36:22.5, 37:23.5, 38:24.0, 39:25.0, 40:25.5, 41:26.5, 42:27.0, 43:28.0, 44:28.5, 45:29.5, 46:30.0 }
-        }
+        sizes: { homme: VANS_UNISEXE, femme: VANS_UNISEXE }
       },
       asics: {
         name: 'ASICS', emoji: '🔷', logo: 'https://www.google.com/s2/favicons?domain=asics.com&sz=128',
         tip: null,
-        cm: {
-          homme: { 35:22.0, 36:22.5, 37:23.0, 38:24.0, 39:24.5, 40:25.5, 41:26.0, 42:26.5, 43:27.0, 44:28.0, 45:28.5, 46:29.0 },
-          femme: { 35:22.0, 36:23.0, 37:23.0, 38:24.0, 39:24.5, 40:25.5, 41:26.0, 42:26.5, 43:27.5, 44:28.0, 45:29.0, 46:29.5 }
+        sizes: {
+          homme: [
+            ['35.5', 22.25], ['36', 22.5], ['37', 23.0], ['37.5', 23.5],
+            ['38', 24.0], ['39', 24.5], ['39.5', 25.0], ['40', 25.25],
+            ['40.5', 25.5], ['41.5', 26.0], ['42', 26.5], ['42.5', 27.0],
+            ['43.5', 27.5], ['44', 28.0], ['44.5', 28.25], ['45', 28.5],
+            ['46', 29.0]
+          ],
+          femme: [
+            ['35.5', 22.5], ['36', 22.75], ['37', 23.0], ['37.5', 23.5],
+            ['38', 24.0], ['39', 24.5], ['39.5', 25.0], ['40', 25.5],
+            ['40.5', 25.75], ['41.5', 26.0], ['42', 26.5], ['42.5', 27.0],
+            ['43.5', 27.5], ['44', 28.0], ['44.5', 28.5], ['45', 28.75]
+          ]
         }
       },
       hoka: {
         name: 'HOKA', emoji: '🟣', logo: 'https://www.google.com/s2/favicons?domain=hoka.com&sz=128',
-        tip: null,
-        cm: {
-          homme: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.5, 41:25.5, 42:26.0, 43:26.5, 44:27.0, 45:28.0, 46:28.5 },
-          femme: { 35:21.5, 36:22.0, 37:22.7, 38:23.3, 39:24.0, 40:24.5, 41:25.5, 42:26.0, 43:26.5, 44:27.0, 45:28.0, 46:28.5 }
+        tip: 'Sur les modèles femme récents (Clifton 10, Arahi 8, Challenger 8), HOKA conseille une demi-pointure en dessous de ta pointure HOKA habituelle.',
+        sizes: {
+          homme: [
+            ['39⅓', 24.3], ['40', 24.7], ['40⅔', 25.1], ['41⅓', 25.6],
+            ['42', 26.0], ['42⅔', 26.4], ['43⅓', 26.8], ['44', 27.2],
+            ['44⅔', 27.7], ['45⅓', 28.1], ['46', 28.5]
+          ],
+          femme: [
+            ['35⅓', 21.5], ['36', 22.0], ['36⅔', 22.4], ['37⅓', 22.9],
+            ['38', 23.3], ['38⅔', 23.7], ['39⅓', 24.1], ['40', 24.5],
+            ['40⅔', 25.0], ['41⅓', 25.4], ['42', 25.8], ['42⅔', 26.2],
+            ['43⅓', 26.7], ['44', 27.1], ['44⅔', 27.5], ['45⅓', 27.9]
+          ]
         }
       },
     };
+
+    /* Échelle de pointures d'une marque pour le genre courant */
+    function getSizes(brand, gender) {
+      const entry = BRANDS[brand];
+      if (!entry) return [];
+      return entry.sizes[gender] ?? entry.sizes.homme;
+    }
+
+    /* Les N meilleures correspondances dans une marque cible pour un CM donné */
+    function findBestMatches(brand, cm, gender, n) {
+      return getSizes(brand, gender)
+        .map(([label, sizeCm]) => ({ label, cm: sizeCm, diff: Math.abs(sizeCm - cm) }))
+        .sort((a, b) => a.diff - b.diff || a.cm - b.cm)
+        .slice(0, n || 2);
+    }
+
+    /* Le second choix n'est proposé que sur quasi-égalité avec le premier */
+    const TIE_THRESHOLD = 0.15;
+    function secondIfTie(matches) {
+      if (matches.length < 2) return null;
+      return (matches[1].diff - matches[0].diff) <= TIE_THRESHOLD ? matches[1] : null;
+    }
 
 
     /* ============================================================
        STATE + PERSISTENCE
     ============================================================ */
-    const STORAGE_KEY = 'sizecheck_v3';
+    const STORAGE_KEY = 'sizecheck_v4';
     const S = { gender: 'homme', sourceBrand: null, sourceSize: null };
 
     function saveState() {
@@ -282,17 +360,20 @@
       history.replaceState({}, '', location.pathname);
     }
 
+    function isValidState(st) {
+      return st && BRANDS[st.sourceBrand] && ['homme', 'femme'].includes(st.gender) &&
+        getSizes(st.sourceBrand, st.gender).some(([label]) => label === st.sourceSize);
+    }
+
     function loadSavedState() {
       try {
         // URL params take priority (for shared links)
         const p = new URLSearchParams(location.search);
-        const g = p.get('g'), from = p.get('from'), size = parseInt(p.get('size'));
-        if (g && from && !isNaN(size) && BRANDS[from] && (SIZE_RANGES[g] || []).includes(size)) {
-          return { gender: g, sourceBrand: from, sourceSize: size };
-        }
+        const fromUrl = { gender: p.get('g'), sourceBrand: p.get('from'), sourceSize: p.get('size') };
+        if (isValidState(fromUrl)) return fromUrl;
         // Fallback: localStorage
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (isValidState(saved)) return saved;
       } catch (e) {}
       return null;
     }
@@ -390,17 +471,15 @@
       const c = document.getElementById('sizes-container');
       c.innerHTML = '';
       if (!S.sourceBrand) return;
-      const brandCm = BRANDS[S.sourceBrand].cm[S.gender] ?? BRANDS[S.sourceBrand].cm.homme;
-      SIZE_RANGES[S.gender].forEach(sz => {
-        if (!(sz in brandCm)) return;
+      getSizes(S.sourceBrand, S.gender).forEach(([label]) => {
         const btn = document.createElement('button');
-        btn.className = 'chip-btn w-12 h-12 rounded-xl border-2 text-sm font-bold flex items-center justify-center ' +
-          (S.sourceSize === sz
+        btn.className = 'chip-btn min-w-12 h-12 px-2 rounded-xl border-2 text-sm font-bold flex items-center justify-center ' +
+          (S.sourceSize === label
             ? 'border-blue-600 bg-blue-600 text-white shadow-md'
             : 'border-gray-100 bg-gray-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50');
-        btn.textContent = sz;
+        btn.textContent = label;
         btn.addEventListener('click', () => {
-          S.sourceSize = sz;
+          S.sourceSize = label;
           renderSizes();
           computeAllResults();
           saveState();
@@ -417,32 +496,25 @@
       const el = document.getElementById('result');
       if (!S.sourceBrand || S.sourceSize === null) { conceal('result'); return; }
 
-      const srcTable = BRANDS[S.sourceBrand].cm[S.gender] ?? BRANDS[S.sourceBrand].cm.homme;
-      const srcCm = srcTable[S.sourceSize];
-      const srcN  = BRANDS[S.sourceBrand].name;
+      const srcCm = getSizes(S.sourceBrand, S.gender).find(([label]) => label === S.sourceSize)?.[1];
+      if (srcCm === undefined) { conceal('result'); return; }
+      const srcN = BRANDS[S.sourceBrand].name;
 
       const rows = Object.entries(BRANDS)
         .filter(([key]) => key !== S.sourceBrand)
         .map(([key, b]) => {
-          const tgtTable = b.cm[S.gender] ?? b.cm.homme;
-          const candidates = Object.entries(tgtTable)
-            .map(([eu, cm]) => ({ eu: parseInt(eu), diff: Math.abs(cm - srcCm) }))
-            .sort((a, b) => a.diff - b.diff || a.eu - b.eu);
-          const bestEu   = candidates[0]?.eu ?? null;
-          const secondEu = candidates[1]?.diff <= 0.5 ? candidates[1]?.eu : null;
-          const tgtCm    = tgtTable[bestEu];
-          const delta    = parseFloat((tgtCm - srcCm).toFixed(1));
-          return { key, b, bestEu, secondEu, tgtCm, delta };
+          const matches = findBestMatches(key, srcCm, S.gender, 2);
+          return { key, b, best: matches[0], second: secondIfTie(matches) };
         })
+        .filter(r => r.best)
         .sort((a, b) => {
           const POP = ['adidas','newbalance','converse','vans','hoka','salomon','asics'];
           return (POP.indexOf(a.key) ?? 99) - (POP.indexOf(b.key) ?? 99);
         });
 
       // Build brand cards HTML
-      const hasSecond = rows.some(r => r.secondEu);
-      const cardsHTML = rows.map(({ b, bestEu, secondEu, tgtCm }) => {
-        const secondLbl = secondEu ? `<span class="text-xs text-slate-400 mt-0.5 block">ou ${secondEu}</span>` : '';
+      const cardsHTML = rows.map(({ b, best, second }) => {
+        const secondLbl = second ? `<span class="text-xs text-slate-400 mt-0.5 block">ou ${second.label}</span>` : '';
         return `
           <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 p-1">
@@ -453,21 +525,12 @@
               <p class="text-sm font-bold text-slate-800 leading-tight">${b.name}</p>
             </div>
             <div class="text-right shrink-0">
-              <p class="text-3xl font-black text-blue-600 leading-none">${bestEu}</p>
-              <p class="text-xs text-slate-400 mt-0.5">${tgtCm} cm</p>
+              <p class="text-3xl font-black text-blue-600 leading-none">${best.label}</p>
+              <p class="text-xs text-slate-400 mt-0.5">${best.cm} cm</p>
               ${secondLbl}
             </div>
           </div>`;
       }).join('');
-
-      // Micro-texte entre deux tailles
-      const betweenHTML = hasSecond
-        ? `<div class="flex items-center gap-2 px-1">
-            <div class="flex-1 h-px bg-slate-100"></div>
-            <p class="text-xs text-slate-400 text-center shrink-0">Entre deux tailles — prends la plus grande.</p>
-            <div class="flex-1 h-px bg-slate-100"></div>
-           </div>`
-        : '';
 
       // Tips accordion — ouvert par défaut, uniquement si des conseils existent
       const tipsRows = rows.filter(r => r.b.tip);
@@ -511,8 +574,6 @@
             ${cardsHTML}
           </div>
 
-          ${betweenHTML ? `<div class="mt-2 mb-1">${betweenHTML}</div>` : ''}
-
           ${tipsHTML ? `<div class="mt-3">${tipsHTML}</div>` : ''}
         </div>`;
 
@@ -543,7 +604,7 @@
 
     // Restore from URL params or localStorage
     const saved = loadSavedState();
-    if (saved && BRANDS[saved.sourceBrand]) {
+    if (saved) {
       S.gender      = saved.gender;
       S.sourceBrand = saved.sourceBrand;
       S.sourceSize  = saved.sourceSize;
