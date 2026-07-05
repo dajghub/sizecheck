@@ -80,7 +80,8 @@ def extension_cta_html(a, b):
           <p>Sur {na} comme sur {nb}, l'extension Chrome SizeCheck affiche ta taille sur la page produit — sans revenir ici.</p>
         </div>
       </div>
-      <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener">Installer →</a>
+      <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener"
+         data-umami-event="cta-extension" data-umami-event-paire="{a}-{b}">Installer →</a>
     </div>'''
 
 
@@ -203,7 +204,8 @@ def page_html(a, b):
   à un EU 42 {nb}. Les tableaux ci-dessous croisent les longueurs de pied en centimètres publiées dans les
   guides officiels des deux marques — y compris les demi-pointures et tiers réellement vendus.</p>
   <p class="updated">Données relevées une à une sur les guides des tailles officiels des deux marques.</p>
-  <p><a class="convert-link" href="/?from={a}&size=42&g=homme">Convertir une autre pointure ou marque →</a></p>
+  <p><a class="convert-link" href="/?from={a}&size=42&g=homme"
+        data-umami-event="lien-convertisseur" data-umami-event-paire="{a}-{b}">Convertir une autre pointure ou marque →</a></p>
 
   {''.join(sections)}
 

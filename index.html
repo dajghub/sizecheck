@@ -428,6 +428,11 @@
     /* ============================================================
        HELPERS
     ============================================================ */
+    /* Envoi d'un custom event à Umami (silencieux si Umami absent/bloqué) */
+    function track(name, data) {
+      try { if (window.umami) window.umami.track(name, data); } catch (e) {}
+    }
+
     function reveal(id) {
       const el = document.getElementById(id);
       el.classList.remove('hidden', 'slide-up');
@@ -540,6 +545,7 @@
       Object.keys(BRANDS).forEach(key => {
         const btn = makeBrandBtn(key, S.sourceBrand === key);
         btn.addEventListener('click', () => {
+          track('selection-marque', { marque: key });
           S.sourceBrand = key;
           S.sourceSize = null;
           renderSourceBrands();
@@ -691,10 +697,10 @@
     /* ============================================================
        INIT
     ============================================================ */
-    document.getElementById('btn-homme').addEventListener('click', () => setGender('homme'));
-    document.getElementById('btn-femme').addEventListener('click', () => setGender('femme'));
-    document.getElementById('btn-mode-brand').addEventListener('click', () => setMode('brand'));
-    document.getElementById('btn-mode-cm').addEventListener('click', () => setMode('cm'));
+    document.getElementById('btn-homme').addEventListener('click', () => { track('changement-genre', { genre: 'homme' }); setGender('homme'); });
+    document.getElementById('btn-femme').addEventListener('click', () => { track('changement-genre', { genre: 'femme' }); setGender('femme'); });
+    document.getElementById('btn-mode-brand').addEventListener('click', () => { track('changement-mode', { mode: 'brand' }); setMode('brand'); });
+    document.getElementById('btn-mode-cm').addEventListener('click', () => { track('changement-mode', { mode: 'cm' }); setMode('cm'); });
 
     const cmInput = document.getElementById('cm-input');
     cmInput.addEventListener('input', () => {
