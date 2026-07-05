@@ -21,6 +21,16 @@ EXT_STORE_URL = ('https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-c
                   'bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_comparaisons')
 LASTMOD = date.today().isoformat()
 
+# Réponses « taille grand ou petit ? » — uniquement les affirmations vérifiées
+# (cohérentes avec les tips et la FAQ de l'accueil). Pas de claim pour NB/ASICS/HOKA.
+FIT_CLAIMS = {
+    'nike': 'Nike taille standard : ses pointures suivent les tailles EU conventionnelles. Un EU 44 Nike correspond à 27,1 cm de longueur de pied selon le guide officiel.',
+    'adidas': 'Adidas taille petit, principalement à cause d\'un chaussant plus étroit que la norme. Si vous avez le pied large, prenez la pointure au-dessus de celle recommandée.',
+    'converse': 'Converse taille grand : la semelle plate des Chuck Taylor libère de l\'espace en longueur. Converse recommande officiellement de prendre une demi-pointure en dessous de sa pointure habituelle.',
+    'vans': 'Vans taille légèrement grand : les modèles classiques (Old Skool, Authentic) ont un chaussant long et généreux, surtout en largeur.',
+    'salomon': 'Salomon taille petit : le fit trail est enveloppant, conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prenez la supérieure.',
+}
+
 TIPS = {
     'adidas': 'Adidas taille petit — chaussant plus étroit que la norme. Si tu as le pied large, prends la pointure supérieure à celle recommandée.',
     'converse': 'Converse taille grand — la semelle plate des Chuck Taylor libère de l\'espace en longueur. Données basées sur les Chuck Taylor All Star.',
@@ -85,10 +95,60 @@ def extension_cta_html(a, b):
     </div>'''
 
 
+def fit_comparison(a, b):
+    """« Est-ce que A et B taillent pareil ? » — calculé depuis les tables :
+    écart moyen de longueur de pied (cm) à pointure EU affichée égale,
+    sur les labels communs aux deux marques (grilles homme)."""
+    na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
+    ta, tb = dict(TABLES[a]['homme']), dict(TABLES[b]['homme'])
+    shared = sorted(set(ta) & set(tb), key=lambda l: ta[l])
+    if not shared:
+        return None
+    avg = sum(tb[l] - ta[l] for l in shared) / len(shared)
+    d = abs(avg)
+    d_txt = f'{d:.1f}'.replace('.', ',')
+
+    q = f'Est-ce que {na} et {nb} taillent pareil ?'
+    if d <= 0.15:
+        ecart = 'de moins de 0,1 cm' if d < 0.05 else f'de seulement {d_txt} cm'
+        r = (f'Oui, quasiment : à pointure EU égale, l\'écart moyen entre {na} et {nb} '
+             f'est {ecart} de longueur de pied. Vous pouvez généralement garder '
+             f'la même pointure — le tableau ci-dessus donne la correspondance exacte pour chaque taille.')
+        return (q, r)
+
+    big, small = (nb, na) if avg > 0 else (na, nb)
+    if d <= 0.45:
+        steps = 'environ une demi-pointure'
+    elif d <= 0.85:
+        steps = 'environ une pointure'
+    else:
+        steps = 'plus d\'une pointure'
+    ex_best, _ = best_match(b, ta['42'], 'homme')
+    r = (f'Non. À pointure EU affichée égale, {big} chausse en moyenne {d_txt} cm plus long '
+         f'que {small} : {big} taille plus grand. Comptez {steps} d\'écart — par exemple, '
+         f'un EU 42 {na} homme correspond à un EU {ex_best[0]} {nb}. '
+         f'Le tableau ci-dessus donne la correspondance exacte pour chaque pointure.')
+    return (q, r)
+
+
 def faq_items(a, b):
     """Questions/réponses calculées depuis les tables."""
     na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
     items = []
+
+    # « Taillent pareil ? » en premier : c'est la formulation la plus recherchée
+    # (People Also Ask) pour les requêtes de comparaison de marques.
+    pair_fit = fit_comparison(a, b)
+    if pair_fit:
+        items.append(pair_fit)
+
+    # « Taille grand ou petit ? » par marque, si affirmation vérifiée disponible
+    for key in (a, b):
+        if key in FIT_CLAIMS:
+            items.append((
+                f'Est-ce que {BRAND_NAMES[key]} taille grand ou petit ?',
+                FIT_CLAIMS[key],
+            ))
 
     best, second = best_match(b, dict(TABLES[a]['homme'])['42'], 'homme')
     ans = f'EU {best[0]}'
@@ -184,7 +244,7 @@ def page_html(a, b):
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{SITE}/comparaisons/{slug}.html">
   <meta name="theme-color" content="#2563eb">
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(desc)}">
   <meta property="og:type" content="website">
@@ -244,7 +304,7 @@ def index_html(pairs):
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{SITE}/comparaisons/">
   <meta name="theme-color" content="#2563eb">
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(desc)}">
   <meta property="og:type" content="website">
