@@ -10,8 +10,8 @@
 __pycache__/
 *.pyc
 
-# Assets de marque gardés en local uniquement (avatars pour profils externes)
-brand-assets/
+# Avatars de marque gardés en local uniquement (profils externes : Awin, réseaux)
+marketing/avatars/
 
 # Temp files
 zi*

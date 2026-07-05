@@ -55,6 +55,8 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 | `assets/logos/` | Logos de marques auto-hébergés (site) |
 | `assets/converse.svg` | Logo Converse (SVG local, source Wikipedia) |
 | `assets/og-image.png` | Image Open Graph 1200×630 (prévisualisation WhatsApp/réseaux) |
+| `marketing/chrome-store/` | Assets Chrome Web Store (promo, captures 1280×800, `store-listing.md`, zip) — non déployés |
+| `marketing/avatars/` | Photos de profil (Awin/réseaux) — gardées **en local** (gitignorées), non déployées |
 | `tools/sizedata.py` | Lecture des tables (module partagé des scripts) |
 | `tools/check_sync.py` | Contrôle synchro/monotonie des tables site ↔ extension |
 | `tools/generate_pages.py` | Générateur des pages de comparaison + sitemap |
