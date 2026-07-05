@@ -64,9 +64,14 @@ _Dernière mise à jour : 4 juillet 2026 (soir)_
 
 ## 📋 Prochaines étapes (backlog — issu de l'audit UX/UI du 4 juil. 2026)
 
+### Monétisation — direction retenue (5 juil. 2026)
+Décision : **AdSense abandonné** (mauvais fit : sessions courtes, RPM faible, dégrade vitesse/SEO, friction bandeau). On monétise l'**intention d'achat** par l'**affiliation**, pas l'attention par la pub.
+- [ ] **Analytics cookieless** (Plausible / Fathom / Simple Analytics, ou Matomo/Umami auto-hébergés) en remplacement de Google Analytics → permet de **retirer le bandeau de consentement** (moins de friction) et de mesurer aussi les pages SEO. _Décision requise : quel outil._
+- [ ] **Affiliation** : bouton « Acheter dans cette taille » sur les résultats (site) + widget (extension), vers les retailers déjà détectés (Zalando, JD Sports, Foot Locker, Courir) et marques en direct. _Prérequis : inscriptions aux programmes (Awin / Rakuten / Effiliation / direct) → obtenir les IDs affiliés._
+- [ ] _Horizon long_ : angle B2B « réduction des retours » (widget/API de recommandation de taille en marque blanche pour retailers).
+
 ### Reste au backlog
 - [ ] **v1.2 extension** : logos embarqués localement, évaluer Amazon/Decathlon, tailles US/UK, widget draggable
 - [ ] Soumettre les nouvelles pages `/comparaisons/` à Google Search Console (sitemap déjà à jour)
-- [ ] Google AdSense (une fois approuvé)
 - [ ] og:image à mettre à jour si les marques supportées changent
 - [ ] Duplication des tables index.html ↔ sizes.js : conservée par choix (single-file), verrouillée par `tools/check_sync.py`
