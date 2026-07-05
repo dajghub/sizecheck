@@ -6,5 +6,12 @@
 # Build artifacts
 *.zip
 
+# Python
+__pycache__/
+*.pyc
+
+# Assets de marque gardés en local uniquement (avatars pour profils externes)
+brand-assets/
+
 # Temp files
 zi*
