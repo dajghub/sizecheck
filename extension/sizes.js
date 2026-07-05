@@ -1,8 +1,8 @@
 // sizes.js — Données de conversion SizeCheck (module partagé)
 // Chargé avant content.js et popup.js
 //
-// Grilles officielles relevées en juillet 2026 sur les guides des tailles
-// des marques (nike.com, adidas.fr, newbalance.fr, converse.com, vans.com,
+// Grilles officielles relevées sur les guides des tailles des marques
+// (nike.com, adidas.fr, newbalance.fr, converse.com, vans.com,
 // salomon.com, asics.com, hoka.com), avec les demi-pointures et tiers réels.
 // Chaque entrée : [label EU affiché, longueur de pied en cm].
 // Les échelles étant propres à chaque marque, certaines pointures entières

@@ -17,7 +17,6 @@ from sizedata import ROOT, BRAND_NAMES, load_reference
 SITE = 'https://www.sizecheck.fr'
 OUT = ROOT / 'comparaisons'
 TIE = 0.15  # seuil de quasi-égalité (identique au site/extension)
-UPDATED = 'juillet 2026'
 EXT_STORE_URL = ('https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/'
                   'bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_comparaisons')
 LASTMOD = date.today().isoformat()
@@ -69,15 +68,16 @@ def conversion_table(a, b, genre):
 
 
 def extension_cta_html(a, b):
+    # Titre fixe (indépendant des marques) pour garantir une seule ligne
+    # sur mobile quelle que soit la paire ; les marques restent dans le corps.
     na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
-    domain_a, domain_b = f'{a}.com', f'{b}.com'
     return f'''
     <div class="ext-cta">
       <div class="ext-cta-main">
         <span class="ext-cta-icon">🧩</span>
         <div class="ext-cta-text">
-          <strong>Tu vas acheter sur {domain_a} ou {domain_b} ?</strong>
-          <p>L'extension Chrome SizeCheck affiche automatiquement ta pointure {na} ou {nb} directement sur la page produit — sans revenir ici.</p>
+          <strong>Ta pointure directement sur le site</strong>
+          <p>Sur {na} comme sur {nb}, l'extension Chrome SizeCheck affiche ta taille sur la page produit — sans revenir ici.</p>
         </div>
       </div>
       <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener">Installer →</a>
@@ -201,7 +201,7 @@ def page_html(a, b):
   <p class="intro">Chaque marque a sa propre grille de tailles : un EU 42 {na} ne correspond pas forcément
   à un EU 42 {nb}. Les tableaux ci-dessous croisent les longueurs de pied en centimètres publiées dans les
   guides officiels des deux marques — y compris les demi-pointures et tiers réellement vendus.</p>
-  <p class="updated">Données vérifiées sur les guides officiels — mise à jour {UPDATED}.</p>
+  <p class="updated">Données relevées une à une sur les guides des tailles officiels des deux marques.</p>
   <p><a class="convert-link" href="/?from={a}&size=42&g=homme">Convertir une autre pointure ou marque →</a></p>
 
   {''.join(sections)}
@@ -256,7 +256,7 @@ def index_html(pairs):
 
   <h1>Correspondances de pointures entre marques</h1>
   <p class="intro">Tous nos tableaux de conversion par paire de marques, construits à partir des longueurs
-  de pied en centimètres des guides officiels — mise à jour {UPDATED}.</p>
+  de pied en centimètres des guides des tailles officiels de chaque marque.</p>
 
   <a class="cta" href="/">⚡ Convertis ta pointure en 2 clics
     <span class="go">Ouvrir le convertisseur</span></a>
