@@ -202,9 +202,7 @@ def page_html(a, b):
   à un EU 42 {nb}. Les tableaux ci-dessous croisent les longueurs de pied en centimètres publiées dans les
   guides officiels des deux marques — y compris les demi-pointures et tiers réellement vendus.</p>
   <p class="updated">Données vérifiées sur les guides officiels — mise à jour {UPDATED}.</p>
-
-  <a class="cta" href="/?from={a}&size=42&g=homme">⚡ Convertis ta pointure en 2 clics
-    <span class="go">Ouvrir le convertisseur</span></a>
+  <p><a class="convert-link" href="/?from={a}&size=42&g=homme">Convertir une autre pointure ou marque →</a></p>
 
   {''.join(sections)}
 
