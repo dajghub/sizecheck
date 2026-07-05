@@ -190,6 +190,7 @@ def page_html(a, b):
   <meta property="og:url" content="{SITE}/comparaisons/{slug}.html">
   <meta property="og:image" content="{SITE}/assets/og-image.png">
   <link rel="stylesheet" href="/assets/pages.css">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
   <script type="application/ld+json">{faq_ld}</script>
 </head>
 <body>
@@ -248,6 +249,7 @@ def index_html(pairs):
   <meta property="og:url" content="{SITE}/comparaisons/">
   <meta property="og:image" content="{SITE}/assets/og-image.png">
   <link rel="stylesheet" href="/assets/pages.css">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
 </head>
 <body>
 <div class="wrap">

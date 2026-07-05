@@ -15,8 +15,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - Single-file HTML — Tailwind précompilé statique (`assets/tailwind.css`) + JavaScript Vanilla
 - Aucun framework, aucun bundler, aucun backend
 - Mobile-first (`max-w-md mx-auto px-4`)
-- tarteaucitron.js v1.16.0 pour le consentement cookies (RGPD)
-- Google Analytics via gtag `G-X3S5MS25P0` (activé après consentement)
+- **Analytics : Umami Cloud** (cookieless, RGPD, sans bandeau de consentement) — `data-website-id` `c924201e-94a1-4c34-ad5a-83154e3cc4f7`, sur le site, la page légale et les 28 pages SEO. (Remplace l'ancien duo Google Analytics + tarteaucitron, retirés le 05/07/2026.)
 - Deux modes de conversion : depuis une marque, ou depuis la longueur de pied en cm
 
 ### Pages SEO (`comparaisons/`)
@@ -80,7 +79,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 
 ## Ce qu'il ne faut jamais toucher sans instruction explicite
 - Les tables de correspondance CM dans `extension/sizes.js` et `index.html`
-- La config tarteaucitron et l'ID Google Analytics (`G-X3S5MS25P0`)
+- Le `data-website-id` Umami (`c924201e-94a1-4c34-ad5a-83154e3cc4f7`)
 - Le fichier `CNAME`
 
 ---

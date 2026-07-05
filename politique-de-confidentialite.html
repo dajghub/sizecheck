@@ -18,29 +18,25 @@
     </a>
 
     <h1 class="text-2xl font-black text-slate-800 tracking-tight mb-1">Politique de confidentialité</h1>
-    <p class="text-slate-400 text-sm mb-8">Dernière mise à jour : juin 2026</p>
+    <p class="text-slate-400 text-sm mb-8">Dernière mise à jour : juillet 2026</p>
 
     <div class="space-y-6 text-sm text-slate-600 leading-relaxed">
 
       <section class="bg-white rounded-2xl shadow-sm p-5">
         <h2 class="font-bold text-slate-800 mb-2">1. Qui sommes-nous ?</h2>
-        <p>SizeCheck (<a href="https://sizecheck.fr" class="text-blue-600 underline">sizecheck.fr</a>) est un outil gratuit de conversion de pointures entre marques de chaussures. Le site n'est pas associé aux marques Nike, Adidas, New Balance, Converse, Birkenstock, Salomon, Crocs ou Vans.</p>
+        <p>SizeCheck (<a href="https://sizecheck.fr" class="text-blue-600 underline">sizecheck.fr</a>) est un outil gratuit de conversion de pointures entre marques de chaussures. Le site n'est pas associé aux marques Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS ou HOKA.</p>
       </section>
 
       <section class="bg-white rounded-2xl shadow-sm p-5">
         <h2 class="font-bold text-slate-800 mb-2">2. Données collectées</h2>
         <p class="mb-3">SizeCheck ne collecte aucune donnée personnelle directement (ni nom, ni email, ni adresse).</p>
-        <p>Cependant, les services tiers suivants peuvent collecter des données de navigation :</p>
-        <ul class="mt-2 space-y-1 list-disc list-inside text-slate-500">
-          <li><strong class="text-slate-700">Google Analytics (gtag)</strong> — statistiques de visite anonymisées</li>
-        </ul>
-        <p class="mt-3 text-slate-400 text-xs">Ces services ne sont activés qu'après votre consentement explicite via le bandeau cookies.</p>
+        <p class="mb-3">Pour mesurer l'audience du site, nous utilisons <strong class="text-slate-700">Umami</strong>, un outil de statistiques respectueux de la vie privée. Umami ne dépose <strong>aucun cookie</strong>, ne collecte aucune donnée personnelle identifiable et ne suit pas les visiteurs d'un site à l'autre. Les statistiques recueillies (pages vues, provenance, type d'appareil) sont entièrement anonymisées et agrégées.</p>
+        <p class="text-slate-400 text-xs">Ces données étant anonymes et sans cookie, elles ne nécessitent pas de consentement préalable. Umami est conforme au RGPD.</p>
       </section>
 
       <section class="bg-white rounded-2xl shadow-sm p-5">
         <h2 class="font-bold text-slate-800 mb-2">3. Cookies</h2>
-        <p class="mb-3">Nous utilisons un gestionnaire de consentement (<strong>Tarteaucitron</strong>) qui vous permet de choisir quels cookies activer. Aucun cookie tiers n'est déposé sans votre accord.</p>
-        <p>Vous pouvez modifier vos préférences à tout moment via le lien <em>"Paramètres des cookies"</em> en bas de page.</p>
+        <p>SizeCheck <strong>ne dépose aucun cookie de suivi ni cookie tiers</strong>. Aucun bandeau de consentement n'est donc nécessaire. Le site utilise uniquement le stockage local de votre navigateur (voir section 4) pour votre confort d'utilisation.</p>
       </section>
 
       <section class="bg-white rounded-2xl shadow-sm p-5">
@@ -50,7 +46,7 @@
 
       <section class="bg-white rounded-2xl shadow-sm p-5">
         <h2 class="font-bold text-slate-800 mb-2">5. Partage des données</h2>
-        <p>Nous ne vendons, ne louons et ne partageons aucune donnée personnelle avec des tiers, à l'exception du prestataire mentionné ci-dessus dans le cadre de son service (Google Analytics).</p>
+        <p>Nous ne vendons, ne louons et ne partageons aucune donnée personnelle avec des tiers. La mesure d'audience (Umami) repose exclusivement sur des données anonymes et agrégées.</p>
       </section>
 
       <section class="bg-white rounded-2xl shadow-sm p-5">
@@ -65,28 +61,9 @@
 
     </div>
 
-    <div class="mt-8 text-center">
-      <button type="button" onclick="tarteaucitron.userInterface.openPanel();"
-              class="text-xs text-slate-400 hover:text-slate-600 underline transition-colors">
-        Paramètres des cookies
-      </button>
-    </div>
-
   </div>
 
-  <!-- Tarteaucitron (même config que index.html) -->
-  <script src="https://cdn.jsdelivr.net/npm/tarteaucitronjs@1.16.0/tarteaucitron.js"></script>
-  <script>
-    tarteaucitron.init({
-      "privacyUrl": "/politique-de-confidentialite.html",
-      "orientation": "bottom",
-      "groupServices": true,
-      "googleConsentMode": true,
-      "cookieslist": true,
-      "removeCredit": false
-    });
-    tarteaucitron.user.gtagUa = 'G-X3S5MS25P0';
-    (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
-  </script>
+  <!-- Umami — analytics respectueux de la vie privée (cookieless, sans consentement) -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
 </body>
 </html>

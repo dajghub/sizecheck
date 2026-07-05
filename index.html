@@ -202,13 +202,8 @@
       <span class="shrink-0 text-xs font-bold bg-white text-blue-600 rounded-full px-3 py-1.5">Installer →</span>
     </a>
 
-    <!-- Footer cookies -->
+    <!-- Footer -->
     <div class="mt-8 mb-4 text-center">
-      <button type="button" onclick="tarteaucitron.userInterface.openPanel();"
-              class="text-xs text-slate-400 hover:text-slate-600 underline transition-colors">
-        Paramètres des cookies
-      </button>
-      <span class="text-slate-300 mx-2">·</span>
       <a href="/politique-de-confidentialite.html"
          class="text-xs text-slate-400 hover:text-slate-600 underline transition-colors">
         Politique de confidentialité
@@ -751,19 +746,7 @@
     }
   </script>
 
-  <!-- Tarteaucitron — Gestion du consentement cookies -->
-  <script src="https://cdn.jsdelivr.net/npm/tarteaucitronjs@1.16.0/tarteaucitron.js"></script>
-  <script>
-    tarteaucitron.init({
-      "privacyUrl": "/politique-de-confidentialite.html", /* ← ajoute le lien dans le bandeau */
-      "orientation": "bottom",
-      "groupServices": true,
-      "googleConsentMode": true,
-      "cookieslist": true,
-      "removeCredit": false
-    });
-    tarteaucitron.user.gtagUa = 'G-X3S5MS25P0';
-    (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
-  </script>
+  <!-- Umami — analytics respectueux de la vie privée (cookieless, sans consentement) -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
 </body>
 </html>
