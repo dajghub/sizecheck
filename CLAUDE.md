@@ -38,6 +38,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - **CNAME :** `www.sizecheck.fr`
 - **Déploiement :** push sur `main` → **GitHub Actions** (`.github/workflows/deploy.yml`) publie une **whitelist** du site uniquement (`index.html`, `politique-de-confidentialite.html`, `assets/`, `comparaisons/`, `sitemap.xml`, `robots.txt`, `CNAME`). Les fichiers internes (`STATUS.md`, `CLAUDE.md`, `tools/`, `marketing/`, `extension/`) restent versionnés mais **ne sont pas servis** sur le domaine.
 - **Ajouter un fichier/dossier au site déployé** = l'ajouter à la whitelist dans `deploy.yml` (sinon il ne sera pas publié).
+- **`.nojekyll` : NE PAS retirer.** Testé le 6 juil. 2026 : son retrait a fait échouer le déploiement Actions (« Deployment failed ») deux fois de suite ; sa restauration a redéployé au vert immédiatement. Il reste nécessaire même sous Actions (le workflow le copie dans l'artefact).
 - Vérifier un déploiement : `gh run list --workflow=deploy.yml`. (Historique : l'ancien build Jekyll « legacy » était capricieux — remplacé par Actions le 6 juil. 2026.)
 
 ---
