@@ -1,6 +1,6 @@
 # STATUS — SizeCheck
 
-_Dernière mise à jour : 5 juillet 2026_
+_Dernière mise à jour : 6 juillet 2026_
 
 ---
 
@@ -31,10 +31,39 @@ _Dernière mise à jour : 5 juillet 2026_
 
 ---
 
+## 📈 Suivi SEO — plan de lecture (démarré ~5 juil. 2026)
+
+**Bon outil pour le bon signal :**
+- **Google Search Console** = instrument de la **santé SEO** (requêtes, positions, impressions, clics). C'est là qu'on juge si le SEO décolle — bien avant qu'Umami ne voie du trafic.
+- **Umami** = trafic **qui arrive** + comportement une fois sur le site (pas le « pourquoi » du référencement).
+
+**Le SEO ne se juge pas à une date-verdict, mais à une séquence de signaux :**
+
+| Signal (Search Console) | Quand | Ce que ça dit |
+|---|---|---|
+| Indexation (rapport Pages) | 1-4 sem. | Les pages sont-elles dans l'index ? |
+| **Impressions** (Performances) | **1-2 mois** | Les pages commencent-elles à apparaître (même page 4-5) ? **1er vrai signal.** |
+| Positions qui montent | 2-6 mois | Progression page 5 → 3 → 1 |
+| Clics / trafic | 3-6 mois+ | Résultat final : visites réelles |
+
+**Checkpoints / déclencheurs :**
+- **~4 sem.** : pages **indexées** — sinon, diagnostiquer un souci technique.
+- **~2-3 mois** : **impressions qui montent** attendues. Zéro impression = signal d'alerte (contenu qui ne matche pas / domaine trop jeune).
+- **~6 mois** : **verdict fiable**. Impressions + positions en hausse → ça marche, laisser mûrir. Stagnation en page 4-5 → autre levier requis (liens entrants, contenu renforcé).
+
+**Point de référence « jour 0 » (rapport Couverture du 6 juil., données ≤ 30 juin — donc AVANT les 28 pages SEO) :** accueil **indexé** (1 page), impressions 1-4/jour, base technique **saine** (pas d'erreur noindex/crawl/serveur). « Problèmes » bénins : 2 pages en redirection (canonique `sizecheck.fr` → `www`, normal) + 1 « détectée, non indexée » (lag jeune site). Les pages `/comparaisons/` sont trop récentes pour y figurer. Sitemaps rangés : un seul (`/sitemap.xml`), le doublon `/sitemap` supprimé de Search Console.
+
+**Prochain relevé : ~2-3 semaines** → rapport **Performances** (impressions par requête = signal de traction) + rapport **Pages** (les 28 passent de « découvertes » à « indexées »).
+
+**À garder en tête :** ne rien conclure avant ~3 mois. Le contenu est un pari raisonnable (répond à de vraies requêtes, longue traîne peu concurrentielle) : le risque est le **temps / l'autorité du domaine**, pas l'adéquation contenu/recherche. Niche → succès = trafic **qualifié et cumulatif**, pas du volume brut.
+
+---
+
 ## 📌 Décisions clés
 
 - **Monétisation** : AdSense **abandonné** (sessions courtes, RPM faible, dégrade vitesse/SEO, friction bandeau). On monétise l'**intention d'achat** par l'**affiliation**, pas l'attention par la pub. B2B « réduction des retours » gardé en horizon long.
 - **Expansion géo** : rester **FR** tant que le modèle n'est pas validé (SEO qui ranke + affiliation qui convertit). Ensuite, pays par pays (**Allemagne** d'abord — tailles EU, données réutilisables telles quelles), pas « anglais pour l'Europe ».
+- **Pub payante (Google Ads, social…)** : **prématurée** (6 juil. 2026). L'économie unitaire ne tient pas — on paierait pour des visiteurs qui rapportent ~0 € (affiliation pas encore active), et sans donnée de conversion on serait aveugle. Prérequis avant tout test payant : affiliation active + trackée → connaître le **revenu par visiteur** → alors seulement un petit test mesuré (Search longue traîne / retargeting), jamais du Google Ads large.
 
 ---
 
