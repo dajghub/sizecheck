@@ -36,8 +36,9 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - **Hébergement :** GitHub Pages (dépôt `jadesaradesst/sizecheck`)
 - **Domaine :** Infomaniak (registrar + DNS)
 - **CNAME :** `www.sizecheck.fr`
-- **Déploiement :** push sur `main` → GitHub Pages auto-deploy
-- **`.nojekyll`** : présent à la racine — désactive le traitement Jekyll (site 100 % statique). Ne pas supprimer : sans lui, les builds Pages échouaient par intermittence (« Page build failed »). Vérifier le déploiement avec `gh api repos/dajghub/sizecheck/pages/builds`.
+- **Déploiement :** push sur `main` → **GitHub Actions** (`.github/workflows/deploy.yml`) publie une **whitelist** du site uniquement (`index.html`, `politique-de-confidentialite.html`, `assets/`, `comparaisons/`, `sitemap.xml`, `robots.txt`, `CNAME`). Les fichiers internes (`STATUS.md`, `CLAUDE.md`, `tools/`, `marketing/`, `extension/`) restent versionnés mais **ne sont pas servis** sur le domaine.
+- **Ajouter un fichier/dossier au site déployé** = l'ajouter à la whitelist dans `deploy.yml` (sinon il ne sera pas publié).
+- Vérifier un déploiement : `gh run list --workflow=deploy.yml`. (Historique : l'ancien build Jekyll « legacy » était capricieux — remplacé par Actions le 6 juil. 2026.)
 
 ---
 

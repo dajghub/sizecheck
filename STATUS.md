@@ -12,6 +12,7 @@ _Dernière mise à jour : 6 juillet 2026_
 - **Extension Chrome v1.1.0 — LIVE** sur le Chrome Web Store : widget Shadow DOM + popup, persistance profil (marque/pointure/genre/cm), FAB zéro-clic « Ta taille ici : EU X », mode cm, support SPA, masquage panier/checkout.
 - **Analytics : Umami Cloud** (cookieless, RGPD, **sans bandeau de consentement**) — sur le site, la page légale et les 28 pages SEO. 5 custom events instrumentés (`selection-marque`, `changement-mode`, `changement-genre`, `cta-extension`, `lien-convertisseur`).
 - **SEO technique** : favicon PNG (rendu correct dans Google), `og-image` 1200×630, `robots.txt`, `sitemap.xml` (31 URL) soumis à Search Console.
+- **Déploiement via GitHub Actions** (`.github/workflows/deploy.yml`, 6 juil.) : publie une **whitelist** du site uniquement → builds fiables (~20-30 s, fini les rebuilds forcés du Jekyll legacy) **et** fichiers internes (STATUS.md, CLAUDE.md, tools/, marketing/, extension/) **non servis** sur le domaine.
 - **Assets marketing** (`marketing/`, non déployés) : `chrome-store/` (promo 440×280 + 1400×560, 2 captures 1280×800, `store-listing.md`, zip v1.1.0) et `avatars/` (photos de profil Awin/réseaux, gardées en local).
 
 ---
@@ -70,6 +71,5 @@ _Dernière mise à jour : 6 juillet 2026_
 ## 📋 Backlog
 
 - [ ] **v1.2 extension** : logos embarqués localement (aujourd'hui via le service favicon Google), évaluer Amazon/Decathlon, tailles US/UK, widget draggable.
-- [ ] **Déploiement** : migrer du pipeline Jekyll « legacy » (builds Pages capricieux, rebuild forcé récurrent) vers **GitHub Actions** — fiabiliserait les déploiements.
 - [ ] og:image à mettre à jour si les marques supportées changent.
 - [ ] Duplication des tables `index.html` ↔ `extension/sizes.js` : conservée par choix (single-file), verrouillée par `tools/check_sync.py`.
