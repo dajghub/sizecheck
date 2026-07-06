@@ -235,6 +235,7 @@ def page_html(a, b):
     ]
 
     return f'''<!DOCTYPE html>
+<!-- © 2026 Jade Saradesst — SizeCheck. Tous droits réservés / All rights reserved. Reproduction ou réutilisation interdite. https://www.sizecheck.fr -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -295,6 +296,7 @@ def index_html(pairs):
     desc = ('Tableaux de correspondance des pointures entre Nike, Adidas, New Balance, Converse, Vans, '
             'Salomon, ASICS et HOKA — données officielles en centimètres, homme et femme.')
     return f'''<!DOCTYPE html>
+<!-- © 2026 Jade Saradesst — SizeCheck. Tous droits réservés / All rights reserved. Reproduction ou réutilisation interdite. https://www.sizecheck.fr -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
