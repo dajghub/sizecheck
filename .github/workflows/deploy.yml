@@ -1,0 +1,53 @@
+name: Déploiement du site (GitHub Pages)
+
+# Publie UNIQUEMENT les fichiers du site sur GitHub Pages.
+# Les fichiers internes (STATUS.md, CLAUDE.md, tools/, marketing/, extension/)
+# restent dans le dépôt mais NE sont PAS servis sur le domaine.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; on annule les déploiements en cours dépassés.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Préparer le contenu à publier (whitelist du site)
+        run: |
+          mkdir -p _site
+          # Fichiers racine du site
+          cp index.html politique-de-confidentialite.html sitemap.xml robots.txt CNAME _site/
+          cp .nojekyll _site/ 2>/dev/null || true
+          # Dossiers du site
+          cp -r assets comparaisons _site/
+          echo "=== Contenu publié ==="
+          find _site -maxdepth 2 | sort
+
+      - name: Configurer Pages
+        uses: actions/configure-pages@v5
+
+      - name: Uploader l'artefact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Déployer sur Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
