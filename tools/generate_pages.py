@@ -246,11 +246,15 @@ def page_html(a, b):
   <link rel="canonical" href="{SITE}/comparaisons/{slug}.html">
   <meta name="theme-color" content="#2563eb">
   <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(desc)}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{SITE}/comparaisons/{slug}.html">
   <meta property="og:image" content="{SITE}/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/pages.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
   <script type="application/ld+json">{faq_ld}</script>
@@ -307,11 +311,15 @@ def index_html(pairs):
   <link rel="canonical" href="{SITE}/comparaisons/">
   <meta name="theme-color" content="#2563eb">
   <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(desc)}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{SITE}/comparaisons/">
   <meta property="og:image" content="{SITE}/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/pages.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
 </head>
