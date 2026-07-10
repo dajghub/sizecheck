@@ -19,8 +19,8 @@ _Dernière mise à jour : 6 juillet 2026_
 
 ## 🔄 En cours (attente externe — rien à coder)
 
-- **Affiliation Awin** : compte actif, candidatures soumises pour **Zalando, Adidas, JD Sports** — en attente d'approbation annonceur. (Nike absent d'Awin FR ; Zalando/JD couvrent déjà la marque.)
-- **Indexation Search Console** des pages `/comparaisons/` : sitemap lu, indexation en cours (délai normal ~1-2 semaines).
+- **Affiliation Awin** : compte réseau actif. **Zalando : refusé. Adidas : refusé. JD Sports : en attente** (10 juil. 2026). Cause quasi certaine : **trafic nul** (site lancé, pages SEO déployées le 4-5 juil.) — pas un jugement sur le produit. (Nike absent d'Awin FR ; Zalando/JD couvrent déjà la marque.)
+- **Indexation Search Console** des pages `/comparaisons/` : **statut inconnu, non vérifié.** Le sitemap les déclare et elles répondent en 200, mais aucune donnée GSC ne le confirme (dernières données ≤ 30 juin, soit avant leur déploiement). ⚠️ Ne pas écrire « indexées » sans l'avoir constaté — **vérifier via Inspection d'URL** (test en direct) ou le rapport Sitemaps.
 - **Favicon Google** : re-crawl en attente côté Google (quelques semaines) avant affichage dans les résultats.
 
 ---
@@ -29,6 +29,7 @@ _Dernière mise à jour : 6 juillet 2026_
 
 - **Dès la 1ère approbation Awin** → câbler les boutons « Acheter dans cette taille » (résultats du site + widget extension) avec le format de lien affilié, + event Umami `clic-acheter` pour mesurer le tunnel.
 - **Suivre Umami** (`selection-marque`, `changement-mode: cm`, `cta-extension`) après quelques semaines → décisions data-driven (marques à prioriser, usage réel du mode cm, conversion du CTA).
+- **Vérifier l'indexation** (à faire, 2 min) : Search Console → Inspection d'URL sur `/comparaisons/nike-vs-adidas.html` → « Tester l'URL en direct ». Alternative : rapport Sitemaps (pages découvertes) ou `site:sizecheck.fr` sur Google.
 
 ---
 
@@ -65,6 +66,11 @@ _Dernière mise à jour : 6 juillet 2026_
 - **Monétisation** : AdSense **abandonné** (sessions courtes, RPM faible, dégrade vitesse/SEO, friction bandeau). On monétise l'**intention d'achat** par l'**affiliation**, pas l'attention par la pub. B2B « réduction des retours » gardé en horizon long.
 - **Expansion géo** : rester **FR** tant que le modèle n'est pas validé (SEO qui ranke + affiliation qui convertit). Ensuite, pays par pays (**Allemagne** d'abord — tailles EU, données réutilisables telles quelles), pas « anglais pour l'Europe ».
 - **Pub payante (Google Ads, social…)** : **prématurée** (6 juil. 2026). L'économie unitaire ne tient pas — on paierait pour des visiteurs qui rapportent ~0 € (affiliation pas encore active), et sans donnée de conversion on serait aveugle. Prérequis avant tout test payant : affiliation active + trackée → connaître le **revenu par visiteur** → alors seulement un petit test mesuré (Search longue traîne / retargeting), jamais du Google Ads large.
+- **Monétisation gelée 3-6 mois** (10 juil. 2026, suite aux refus Zalando/Adidas). Les trois portes — AdSense, pub payante, affiliation — se ferment sur le **même verrou : l'absence de trafic**. Le goulot d'étranglement n'est pas la monétisation, c'est l'audience. Toute l'énergie va au trafic (SEO + installs extension) jusqu'à ce que ce verrou saute.
+  - **Ne pas recandidater à vide.** Awin autorise techniquement une nouvelle candidature annonceur (bouton « + » sous le logo, en contactant d'abord l'annonceur pour expliquer ce qui a changé), mais re-postuler avec les mêmes chiffres = 2ᵉ refus + crédibilité grillée auprès du manager. Le délai de 60 j d'Awin concerne le refus de la *candidature réseau*, pas les programmes annonceurs — le compte n'est donc pas bloqué.
+  - **Ne pas s'éparpiller** sur d'autres réseaux (Rakuten, Effiliation, Kwanko…) : même filtre trafic, on ne collectionnerait que des refus.
+  - **Seuil de recandidature** : ~**500-1 000 visiteurs/mois** ou quelques centaines d'installs actives. Argumentaire à ce moment-là : audience 100 % FR sur des requêtes d'**intention d'achat** (« pointure Nike Adidas »), stats Umami à l'appui.
+  - **Amazon Partenaires** = premier palier accessible (accepte presque tout le monde à l'entrée), mais le filtre est **à la sortie** : quelques ventes qualifiantes sous 180 j sinon compte fermé. À garder pour les premiers clics réels, pas maintenant.
 
 ---
 
