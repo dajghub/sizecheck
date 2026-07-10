@@ -349,11 +349,13 @@ def index_html(pairs):
 
 
 def sitemap_xml(pairs):
+    # La page légale est en `noindex` : l'inscrire au sitemap enverrait à Google
+    # deux instructions contradictoires et lui ferait dépenser du budget de crawl
+    # pour une page qu'on ne veut pas voir indexée.
     urls = [
         (f'{SITE}/', 'monthly', '1.0'),
         (f'{SITE}/comparaisons/', 'monthly', '0.8'),
         *((f'{SITE}/comparaisons/{a}-vs-{b}.html', 'monthly', '0.7') for a, b in pairs),
-        (f'{SITE}/politique-de-confidentialite.html', 'yearly', '0.3'),
     ]
     entries = ''.join(
         f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{LASTMOD}</lastmod>\n'
