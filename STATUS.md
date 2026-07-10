@@ -20,7 +20,10 @@ _Dernière mise à jour : 6 juillet 2026_
 ## 🔄 En cours (attente externe — rien à coder)
 
 - **Affiliation Awin** : compte réseau actif. **Zalando : refusé. Adidas : refusé. JD Sports : en attente** (10 juil. 2026). Cause quasi certaine : **trafic nul** (site lancé, pages SEO déployées le 4-5 juil.) — pas un jugement sur le produit. (Nike absent d'Awin FR ; Zalando/JD couvrent déjà la marque.)
-- **Indexation Search Console** des pages `/comparaisons/` : **statut inconnu, non vérifié.** Le sitemap les déclare et elles répondent en 200, mais aucune donnée GSC ne le confirme (dernières données ≤ 30 juin, soit avant leur déploiement). ⚠️ Ne pas écrire « indexées » sans l'avoir constaté — **vérifier via Inspection d'URL** (test en direct) ou le rapport Sitemaps.
+- **Indexation Search Console** des pages `/comparaisons/` : **découvertes mais jamais explorées** (vérifié le 10 juil. 2026). Google a lu le sitemap le **08/07** et y a découvert les **31 URLs**. L'inspection de `nike-vs-adidas.html` renvoie « non indexée », bloc Exploration entièrement « Sans objet » = **jamais crawlée**. Donc **aucun rejet qualitatif** (Google n'a pas lu la page) — c'est du **budget de crawl** sur un domaine jeune. Attendu à ce stade.
+  - Chaîne technique vérifiée maillon par maillon, **rien de cassé** : pages en 200 · `robots.txt: Allow: /` · `meta robots: index, follow` · canonique auto-référente en `www` · sitemap XML valide (31 URLs, toutes `www`, `Content-Type: application/xml`) · apex → `www` en 301 · propriété GSC de type **Domaine** (couvre apex + www).
+  - ⚠️ Ne jamais écrire « indexées » sans l'avoir constaté. Le rapport **Sitemaps** fait autorité sur la *découverte* ; l'**Inspection d'URL** sur l'*exploration/indexation*. Un « Aucun sitemap référent détecté » dans l'Inspection ne contredit pas le rapport Sitemaps : sans crawl, l'URL n'a pas de fiche d'index, donc tous les champs sortent à « Sans objet ».
+  - **Seuil d'alerte : ~4 semaines.** Si les pages restent « jamais explorées » alors qu'elles sont découvertes depuis le 08/07 → investiguer. Pas avant.
 - **Favicon Google** : re-crawl en attente côté Google (quelques semaines) avant affichage dans les résultats.
 
 ---
