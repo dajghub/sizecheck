@@ -1,6 +1,6 @@
 # STATUS — SizeCheck
 
-_Dernière mise à jour : 6 juillet 2026_
+_Dernière mise à jour : 10 juillet 2026_
 
 ---
 
@@ -11,7 +11,10 @@ _Dernière mise à jour : 6 juillet 2026_
 - **28 pages SEO** `/comparaisons/{a}-vs-{b}.html` + index, générées par `tools/generate_pages.py` : tableaux H/F, **FAQ JSON-LD** (dont « taillent pareil ? » / « taille grand ou petit ? » calculées depuis les données), maillage croisé, CTA extension entre les tableaux.
 - **Extension Chrome v1.1.0 — LIVE** sur le Chrome Web Store : widget Shadow DOM + popup, persistance profil (marque/pointure/genre/cm), FAB zéro-clic « Ta taille ici : EU X », mode cm, support SPA, masquage panier/checkout.
 - **Analytics : Umami Cloud** (cookieless, RGPD, **sans bandeau de consentement**) — sur le site, la page légale et les 28 pages SEO. 5 custom events instrumentés (`selection-marque`, `changement-mode`, `changement-genre`, `cta-extension`, `lien-convertisseur`).
-- **SEO technique** : favicon PNG (rendu correct dans Google), `og-image` 1200×630, `robots.txt`, `sitemap.xml` (31 URL) soumis à Search Console.
+- **SEO technique** : `robots.txt`, `sitemap.xml` (**30 URLs**) soumis à Search Console, propriété GSC de type **Domaine**.
+- **Assets graphiques — couverture complète** (10 juil.) : favicon PNG 96×96 (multiple de 48, requis par Google), **`apple-touch-icon` 180×180 à fond opaque** (écran d'accueil iOS — un fond transparent y serait rendu sur noir), `og-image` 1200×630. Balises `og:*` + `og:image:width/height` + `twitter:card` sur l'accueil, la page légale et les 28 pages SEO → vignette correcte sur WhatsApp/iMessage/Discord/LinkedIn/X.
+- **Cohérence des URLs — tout en `www`** (10 juil.) : canoniques (accueil, page légale, hub, 28 pages), champ `url` du JSON-LD `WebApplication`, liens internes. Plus aucune référence à l'apex dans les fichiers servis ; `sizecheck.fr` → `www` en 301.
+- **Sitemap assaini** (10 juil.) : la page légale (`noindex, follow`) **retirée du sitemap** — l'y déclarer envoyait à Google deux instructions contradictoires et dépensait du budget de crawl pour une page qu'on ne veut pas indexer. 31 → 30 URLs. La page reste liée en pied de page (donc accessible et parcourable via `follow`).
 - **Déploiement via GitHub Actions** (`.github/workflows/deploy.yml`, 6 juil.) : publie une **whitelist** du site uniquement → builds fiables (~20-30 s, fini les rebuilds forcés du Jekyll legacy) **et** fichiers internes (STATUS.md, CLAUDE.md, tools/, marketing/, extension/) **non servis** sur le domaine.
 - **Assets marketing** (`marketing/`, non déployés) : `chrome-store/` (promo 440×280 + 1400×560, 2 captures 1280×800, `store-listing.md`, zip v1.1.0) et `avatars/` (photos de profil Awin/réseaux, gardées en local).
 
@@ -21,9 +24,13 @@ _Dernière mise à jour : 6 juillet 2026_
 
 - **Affiliation Awin** : compte réseau actif. **Zalando : refusé. Adidas : refusé. JD Sports : en attente** (10 juil. 2026). Cause quasi certaine : **trafic nul** (site lancé, pages SEO déployées le 4-5 juil.) — pas un jugement sur le produit. (Nike absent d'Awin FR ; Zalando/JD couvrent déjà la marque.)
 - **Indexation Search Console** des pages `/comparaisons/` : **découvertes mais jamais explorées** (vérifié le 10 juil. 2026). Google a lu le sitemap le **08/07** et y a découvert les **31 URLs**. L'inspection de `nike-vs-adidas.html` renvoie « non indexée », bloc Exploration entièrement « Sans objet » = **jamais crawlée**. Donc **aucun rejet qualitatif** (Google n'a pas lu la page) — c'est du **budget de crawl** sur un domaine jeune. Attendu à ce stade.
-  - Chaîne technique vérifiée maillon par maillon, **rien de cassé** : pages en 200 · `robots.txt: Allow: /` · `meta robots: index, follow` · canonique auto-référente en `www` · sitemap XML valide (31 URLs, toutes `www`, `Content-Type: application/xml`) · apex → `www` en 301 · propriété GSC de type **Domaine** (couvre apex + www).
+  - Chaîne technique vérifiée maillon par maillon, **rien de cassé** : pages en 200 · `robots.txt: Allow: /` · `meta robots: index, follow` · canonique auto-référente en `www` · sitemap XML valide (toutes URLs en `www`, `Content-Type: application/xml`) · apex → `www` en 301 · propriété GSC de type **Domaine** (couvre apex + www). *(Le sitemap comptait 31 URLs lors de la lecture Google du 08/07 ; ramené à 30 le 10/07, cf. « Sitemap assaini ».)*
   - ⚠️ Ne jamais écrire « indexées » sans l'avoir constaté. Le rapport **Sitemaps** fait autorité sur la *découverte* ; l'**Inspection d'URL** sur l'*exploration/indexation*. Un « Aucun sitemap référent détecté » dans l'Inspection ne contredit pas le rapport Sitemaps : sans crawl, l'URL n'a pas de fiche d'index, donc tous les champs sortent à « Sans objet ».
   - **Seuil d'alerte : ~4 semaines.** Si les pages restent « jamais explorées » alors qu'elles sont découvertes depuis le 08/07 → investiguer. Pas avant.
+- **Rapport « Pourquoi des pages ne sont pas indexées »** (lu le 10 juil., données de l'état d'avant les pages SEO) : 2 lignes, **toutes deux bénignes et désormais traitées**.
+  - *Page avec redirection* (2 pages) → les URLs en apex qui redirigent en 301 vers `www`. Cause supprimée par l'unification des canoniques/JSON-LD sur `www`.
+  - *Détectée, actuellement non indexée* (1 page) → la page légale, en `noindex` **volontaire**. **Ce n'est pas une erreur à corriger** : cette page ne doit pas être indexée. Le seul défaut était sa présence au sitemap ; retirée le 10/07.
+  - 📌 Ne pas chercher à ramener ce rapport à zéro : redirections et `noindex` volontaires y figureront toujours. C'est du bruit normal, pas de la dette. Validations lancées côté GSC — laisser Google repasser, ne pas les relancer.
 - **Favicon Google** : re-crawl en attente côté Google (quelques semaines) avant affichage dans les résultats.
 
 ---
