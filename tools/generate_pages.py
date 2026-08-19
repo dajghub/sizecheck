@@ -131,6 +131,124 @@ def fit_comparison(a, b):
     return (q, r)
 
 
+# Paires enrichies (19 août 2026) : celles mises en avant depuis l'accueil,
+# donc les premières que Google recrawlera. Les 20 autres restent au gabarit
+# standard et servent de témoin pour attribuer l'effet.
+PRIORITY_PAIRS = {
+    ('nike', 'adidas'), ('nike', 'newbalance'), ('nike', 'converse'),
+    ('nike', 'vans'), ('adidas', 'newbalance'), ('adidas', 'vans'),
+    ('adidas', 'converse'), ('nike', 'asics'),
+}
+
+
+def _grid_stats(a, b, genre):
+    """Décompte réel : pointures de a gardant la même longueur chez b (±TIE),
+    dont simple changement de libellé, vs vraie différence de longueur."""
+    src = sorted(TABLES[a][genre], key=lambda x: x[1])
+    same, relabel, real = 0, 0, []
+    for label, cm in src:
+        best, _ = best_match(b, cm, genre)
+        if abs(best[1] - cm) <= TIE:
+            same += 1
+            if best[0] != label:
+                relabel += 1
+        else:
+            real.append((label, best[0], best[1] - cm))
+    return {'total': len(src), 'same': same, 'relabel': relabel, 'real': real}
+
+
+def _avg_offset(a, b, genre):
+    ta, tb = dict(TABLES[a][genre]), dict(TABLES[b][genre])
+    shared = set(ta) & set(tb)
+    if not shared:
+        return None
+    return sum(tb[l] - ta[l] for l in shared) / len(shared)
+
+
+def deep_analysis(a, b, both_unisex):
+    """Section CALCULÉE depuis les tables vérifiées. Aucun fait saisi à la main.
+
+    Règle d'écriture : chaque phrase doit porter un chiffre propre à la paire.
+    Toute phrase d'explication générique (identique d'une paire à l'autre)
+    est proscrite — elle gonfle le texte tout en rendant les pages plus
+    similaires entre elles, ce qui est exactement l'effet à éviter.
+    """
+    na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
+    h = _grid_stats(a, b, 'homme')
+    grille = 'grille unisexe' if both_unisex else 'grille homme'
+    tot, same, rel = h['total'], h['same'], h['relabel']
+    out = [f'<h2>Ce qui change vraiment entre {na} et {nb}</h2>']
+
+    # 1. Verdict chiffré
+    bits = [f'{na} publie <strong>{tot}</strong> pointures en {grille}. '
+            f'Chez {nb}, <strong>{same}</strong> correspondent à la même longueur de pied '
+            f'(à 1,5 mm près) et <strong>{tot - same}</strong> à une longueur différente.']
+    if rel:
+        q = 'toutes' if rel == same else f'{rel}'
+        bits.append(f'Sur ces {same}, <strong>{q}</strong> changent malgré tout de numéro.')
+    out.append('<p>' + ' '.join(bits) + '</p>')
+
+    # 2. Homme / femme
+    oh, of = _avg_offset(a, b, 'homme'), _avg_offset(a, b, 'femme')
+    if both_unisex:
+        out.append(f'<p>Les deux marques publient une grille unisexe unique : '
+                   f'une seule correspondance à retenir.</p>')
+    elif oh is not None and of is not None and abs(of - oh) >= 0.25:
+        plus = 'femme' if abs(of) > abs(oh) else 'homme'
+        out.append(f'<p>Écart moyen à pointure affichée égale : '
+                   f'<strong>{fmt_cm(round(abs(oh), 2))} cm</strong> en homme, '
+                   f'<strong>{fmt_cm(round(abs(of), 2))} cm</strong> en femme. '
+                   f'Le rayon {plus} est le plus exposé.</p>')
+
+    # 3. Amplitude
+    ta, tb = dict(TABLES[a]['homme']), dict(TABLES[b]['homme'])
+    shared = sorted(set(ta) & set(tb), key=lambda l: ta[l])
+    if len(shared) >= 4:
+        offs = sorted((abs(tb[l] - ta[l]), l) for l in shared)
+        lo, hi = offs[0], offs[-1]
+        if hi[0] - lo[0] >= 0.3:
+            out.append(f'<p>L\'écart n\'est pas constant : '
+                       f'<strong>{fmt_cm(round(lo[0], 2))} cm</strong> au EU {html.escape(lo[1])}, '
+                       f'<strong>{fmt_cm(round(hi[0], 2))} cm</strong> au EU {html.escape(hi[1])}.</p>')
+
+    # 4. Cas concrets — partie la plus dense en données
+    genres = ('homme',) if both_unisex else ('homme', 'femme')
+    per_genre = 6 // len(genres)
+    cases = []
+    for genre in genres:
+        ref = dict(TABLES[a][genre])
+        wanted = (('41', '42', '43', '44', '45', '40', '46')
+                  if genre == 'homme' else ('37', '38', '39', '40', '36', '41'))
+        scored = []
+        for want in wanted:
+            if want in ref:
+                best, _ = best_match(b, ref[want], genre)
+                scored.append((best[0] == want, want, best[0], ref[want]))
+        scored.sort(key=lambda x: x[0])
+        for same_label, want, tgt, cm in scored[:per_genre]:
+            rayon = '' if both_unisex else f' {genre}'
+            tail = ('même pointure' if same_label else f'<strong>EU {html.escape(tgt)}</strong>')
+            cases.append(f'<li>EU {want} {na}{rayon} — {fmt_cm(cm)} cm → {nb} : {tail}</li>')
+    if cases:
+        out.append(f'<h3>Correspondances courantes</h3><ul class="cases">{"".join(cases)}</ul>')
+
+    # 5. Finesse de grille
+    ca = [c for _, c in TABLES[a]['homme']]
+    cb = [c for _, c in TABLES[b]['homme']]
+    lo_c, hi_c = max(min(ca), min(cb)), min(max(ca), max(cb))
+    na_n = sum(1 for c in ca if lo_c <= c <= hi_c)
+    nb_n = sum(1 for c in cb if lo_c <= c <= hi_c)
+    seg = f'Entre {fmt_cm(lo_c)} et {fmt_cm(hi_c)} cm de pied'
+    if na_n != nb_n:
+        fine = na if na_n > nb_n else nb
+        out.append(f'<p>{seg} : <strong>{na_n}</strong> pointures {na}, '
+                   f'<strong>{nb_n}</strong> chez {nb}. Paliers plus serrés chez {fine}.</p>')
+    else:
+        out.append(f'<p>{seg} : <strong>{na_n}</strong> pointures de chaque côté.</p>')
+
+    return ''.join(out)
+
+
 def faq_items(a, b):
     """Questions/réponses calculées depuis les tables."""
     na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
@@ -193,6 +311,9 @@ def page_html(a, b):
     #   (coupure naturelle entre deux sections, ~50 % de la page) ;
     # - paire unisexe (un seul tableau) : juste après, la page étant courte.
     cta = extension_cta_html(a, b)
+
+    # Analyse enrichie : seulement sur les paires prioritaires (cf. PRIORITY_PAIRS).
+    deep_html = deep_analysis(a, b, both_unisex) if (a, b) in PRIORITY_PAIRS else ''
 
     sections = []
     if both_unisex:
@@ -273,6 +394,8 @@ def page_html(a, b):
         data-umami-event="lien-convertisseur" data-umami-event-paire="{a}-{b}">Convertir une autre pointure ou marque →</a></p>
 
   {''.join(sections)}
+
+  {deep_html}
 
   <h2>Questions fréquentes</h2>
   <div class="faq">{faq_html}</div>
