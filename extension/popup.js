@@ -51,7 +51,7 @@ function buildResultsHTML(cm) {
         <div class="result-row ${isPage ? 'page-result' : ''}">
           <img class="result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
           <span class="result-name">${b.name}${isPage ? ' <span class="on-page-tag">cette page</span>' : ''}</span>
-          <span class="result-size">EU ${best.label}${second ? `<span class="result-second">ou ${second.label}</span>` : ''}</span>
+          <span class="result-size">EU ${scFr(best.label)}${second ? `<span class="result-second">ou ${scFr(second.label)}</span>` : ''}</span>
         </div>
       `;
     }).join('');
@@ -93,7 +93,7 @@ function renderStep2() {
   }
 
   const sizesHTML = scGetSizes(state.sourceBrand, state.genre).map(([label]) => `
-    <button class="size-btn ${state.sourceSize === label ? 'active' : ''}" aria-pressed="${state.sourceSize === label}" data-action="size" data-value="${label}">${label}</button>
+    <button class="size-btn ${state.sourceSize === label ? 'active' : ''}" aria-pressed="${state.sourceSize === label}" data-action="size" data-value="${label}">${scFr(label)}</button>
   `).join('');
 
   const cm = state.sourceSize ? scGetCm(state.sourceBrand, state.sourceSize, state.genre) : null;

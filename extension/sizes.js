@@ -193,6 +193,13 @@ function scIsValidCm(v) {
   return typeof v === 'number' && v >= 18 && v <= 35;
 }
 
+/** Affichage FR : '41.5' -> '41,5', 25.8 -> '25,8'.
+ *  Rendu uniquement — les libellés bruts restent les clés utilisées par
+ *  chrome.storage et les data-attributes. */
+function scFr(v) {
+  return String(v).replace('.', ',');
+}
+
 // Patch Converse logo avec le SVG local (même qualité que le site)
 if (typeof chrome !== 'undefined' && chrome.runtime?.getURL) {
   SC_BRANDS.converse.logo = chrome.runtime.getURL('converse.svg');

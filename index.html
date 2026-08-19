@@ -387,6 +387,11 @@
     /* ============================================================
        STATE + PERSISTENCE
     ============================================================ */
+    /* Affichage FR : '41.5' -> '41,5', 25.8 -> '25,8'.
+       Ne s'applique QU'AU RENDU — les libellés bruts restent les clés
+       utilisées par le localStorage, les paramètres d'URL et les comparaisons. */
+    const fr = v => String(v).replace('.', ',');
+
     const STORAGE_KEY = 'sizecheck_v4';
     const S = { gender: 'homme', mode: 'brand', sourceBrand: null, sourceSize: null, footCm: null };
 
@@ -585,7 +590,7 @@
             ? 'border-blue-600 bg-blue-600 text-white shadow-md'
             : 'border-gray-100 bg-gray-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50');
         btn.setAttribute('aria-pressed', S.sourceSize === label);
-        btn.textContent = label;
+        btn.textContent = fr(label);
         btn.addEventListener('click', () => {
           S.sourceSize = label;
           renderSizes();
@@ -627,7 +632,7 @@
 
       // Build brand cards HTML
       const cardsHTML = rows.map(({ b, best, second }) => {
-        const secondLbl = second ? `<span class="text-xs text-slate-500 mt-0.5 block">ou ${second.label}</span>` : '';
+        const secondLbl = second ? `<span class="text-xs text-slate-500 mt-0.5 block">ou ${fr(second.label)}</span>` : '';
         return `
           <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 p-1">
@@ -638,8 +643,8 @@
               <p class="text-sm font-bold text-slate-800 leading-tight">${b.name}</p>
             </div>
             <div class="text-right shrink-0">
-              <p class="text-3xl font-black text-blue-600 leading-none">${best.label}</p>
-              <p class="text-xs text-slate-500 mt-0.5">${best.cm} cm</p>
+              <p class="text-3xl font-black text-blue-600 leading-none">${fr(best.label)}</p>
+              <p class="text-xs text-slate-500 mt-0.5">${fr(best.cm)} cm</p>
               ${secondLbl}
             </div>
           </div>`;
@@ -662,8 +667,8 @@
 
       const headerLabel = S.mode === 'cm' ? 'Ton pied' : 'Tu portes';
       const headerValue = S.mode === 'cm'
-        ? `${srcCm} cm`
-        : `${BRANDS[S.sourceBrand].name} EU ${S.sourceSize} <span class="text-blue-100 text-sm font-normal"> · ${srcCm} cm</span>`;
+        ? `${fr(srcCm)} cm`
+        : `${BRANDS[S.sourceBrand].name} EU ${fr(S.sourceSize)} <span class="text-blue-100 text-sm font-normal"> · ${fr(srcCm)} cm</span>`;
 
       el.innerHTML = `
         <div>
@@ -696,8 +701,8 @@
       document.getElementById('share-btn').addEventListener('click', () => {
         const url  = location.href;
         const text = S.mode === 'cm'
-          ? `Mes équivalences de pointures pour ${srcCm} cm sur SizeCheck`
-          : `Ma pointure ${BRANDS[S.sourceBrand].name} EU ${S.sourceSize} sur SizeCheck`;
+          ? `Mes équivalences de pointures pour ${fr(srcCm)} cm sur SizeCheck`
+          : `Ma pointure ${BRANDS[S.sourceBrand].name} EU ${fr(S.sourceSize)} sur SizeCheck`;
         if (navigator.share) {
           navigator.share({ title: 'SizeCheck', text, url }).catch(() => {});
         } else {

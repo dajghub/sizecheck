@@ -46,6 +46,16 @@ def fmt_cm(cm):
     return f'{cm:g}'.replace('.', ',')
 
 
+def fmt_label(label):
+    """Libellé de pointure pour l'AFFICHAGE : '41.5' -> '41,5'.
+
+    Les tables conservent le point (libellé des guides officiels, et clé
+    utilisée par l'URL / le localStorage) — on ne virgule qu'au rendu.
+    Les tiers ('41⅓') ne sont pas concernés.
+    """
+    return label.replace('.', ',')
+
+
 def best_match(target_key, cm, genre):
     """(label, cm, diff) le plus proche + éventuel second sur quasi-égalité."""
     ladder = TABLES[target_key][genre]
@@ -64,11 +74,11 @@ def conversion_table(a, b, genre):
     rows = []
     for label, cm in TABLES[a][genre]:
         best, second = best_match(b, cm, genre)
-        alt = f' <span class="alt">ou {html.escape(second[0])}</span>' if second else ''
+        alt = f' <span class="alt">ou {html.escape(fmt_label(second[0]))}</span>' if second else ''
         rows.append(
-            f'<tr><td class="eu">EU {html.escape(label)}</td>'
+            f'<tr><td class="eu">EU {html.escape(fmt_label(label))}</td>'
             f'<td class="cm">{fmt_cm(cm)} cm</td>'
-            f'<td class="target">EU {html.escape(best[0])}{alt}</td></tr>'
+            f'<td class="target">EU {html.escape(fmt_label(best[0]))}{alt}</td></tr>'
         )
     return (
         f'<table><caption>{BRAND_NAMES[a]} → {BRAND_NAMES[b]}</caption>'
@@ -126,7 +136,7 @@ def fit_comparison(a, b):
     ex_best, _ = best_match(b, ta['42'], 'homme')
     r = (f'Non. À pointure EU affichée égale, {big} chausse en moyenne {d_txt} cm plus long '
          f'que {small} : {big} taille plus grand. Comptez {steps} d\'écart — par exemple, '
-         f'un EU 42 {na} homme correspond à un EU {ex_best[0]} {nb}. '
+         f'un EU 42 {na} homme correspond à un EU {fmt_label(ex_best[0])} {nb}. '
          f'Le tableau ci-dessus donne la correspondance exacte pour chaque pointure.')
     return (q, r)
 
@@ -208,8 +218,8 @@ def deep_analysis(a, b, both_unisex):
         lo, hi = offs[0], offs[-1]
         if hi[0] - lo[0] >= 0.3:
             out.append(f'<p class="deep">L\'écart n\'est pas constant : '
-                       f'<strong>{fmt_cm(round(lo[0], 2))} cm</strong> au EU {html.escape(lo[1])}, '
-                       f'<strong>{fmt_cm(round(hi[0], 2))} cm</strong> au EU {html.escape(hi[1])}.</p>')
+                       f'<strong>{fmt_cm(round(lo[0], 2))} cm</strong> au EU {html.escape(fmt_label(lo[1]))}, '
+                       f'<strong>{fmt_cm(round(hi[0], 2))} cm</strong> au EU {html.escape(fmt_label(hi[1]))}.</p>')
 
     # 4. Cas concrets — partie la plus dense en données
     genres = ('homme',) if both_unisex else ('homme', 'femme')
@@ -227,8 +237,8 @@ def deep_analysis(a, b, both_unisex):
         scored.sort(key=lambda x: x[0])
         for same_label, want, tgt, cm in scored[:per_genre]:
             rayon = '' if both_unisex else f' {genre}'
-            tail = ('même pointure' if same_label else f'<strong>EU {html.escape(tgt)}</strong>')
-            cases.append(f'<li>EU {want} {na}{rayon} — {fmt_cm(cm)} cm → {nb} : {tail}</li>')
+            tail = ('même pointure' if same_label else f'<strong>EU {html.escape(fmt_label(tgt))}</strong>')
+            cases.append(f'<li>EU {fmt_label(want)} {na}{rayon} — {fmt_cm(cm)} cm → {nb} : {tail}</li>')
     if cases:
         out.append(f'<h3>Correspondances courantes</h3><ul class="cases">{"".join(cases)}</ul>')
 
@@ -269,9 +279,9 @@ def faq_items(a, b):
             ))
 
     best, second = best_match(b, dict(TABLES[a]['homme'])['42'], 'homme')
-    ans = f'EU {best[0]}'
+    ans = f'EU {fmt_label(best[0])}'
     if second:
-        ans += f' (ou EU {second[0]}, les deux tailles sont quasi équivalentes)'
+        ans += f' (ou EU {fmt_label(second[0])}, les deux tailles sont quasi équivalentes)'
     items.append((
         f'Quelle pointure {nb} pour un EU 42 {na} (homme) ?',
         f'Un EU 42 {na} homme correspond à {fmt_cm(dict(TABLES[a]["homme"])["42"])} cm de longueur de pied, '
@@ -279,9 +289,9 @@ def faq_items(a, b):
     ))
 
     best_f, second_f = best_match(b, dict(TABLES[a]['femme'])['38'], 'femme')
-    ans_f = f'EU {best_f[0]}'
+    ans_f = f'EU {fmt_label(best_f[0])}'
     if second_f:
-        ans_f += f' (ou EU {second_f[0]})'
+        ans_f += f' (ou EU {fmt_label(second_f[0])})'
     items.append((
         f'Quelle pointure {nb} pour un EU 38 {na} (femme) ?',
         f'Un EU 38 {na} femme correspond à {fmt_cm(dict(TABLES[a]["femme"])["38"])} cm de longueur de pied, '

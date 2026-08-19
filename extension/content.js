@@ -421,8 +421,8 @@
               <img src="${b.logo}" alt="${b.name}" loading="lazy">
               <span>${b.name}</span>
             </div>
-            <div class="sc-focus-size">EU ${best.label}</div>
-            ${second ? `<div style="font-size:11px;color:#94a3b8">ou EU ${second.label}</div>` : ''}
+            <div class="sc-focus-size">EU ${scFr(best.label)}</div>
+            ${second ? `<div style="font-size:11px;color:#94a3b8">ou EU ${scFr(second.label)}</div>` : ''}
             ${b.tip ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
           </div>
           <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
@@ -448,7 +448,7 @@
           <div class="sc-result ${isPage ? 'highlight' : ''}">
             <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
             <span class="sc-result-name">${b.name}</span>
-            <span class="sc-result-size">EU ${best.label}${second ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${second.label}</span>` : ''}</span>
+            <span class="sc-result-size">EU ${scFr(best.label)}${second ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${scFr(second.label)}</span>` : ''}</span>
           </div>
         `;
       }).join('');
@@ -472,7 +472,7 @@
     const cm = detectedBrand ? activeCm() : null;
     if (cm !== null) {
       const best = scFindBestMatches(detectedBrand, cm, state.genre, 1)[0];
-      if (best) label = `Ta taille ici : EU ${best.label}`;
+      if (best) label = `Ta taille ici : EU ${scFr(best.label)}`;
     }
     return `<span>👟</span><span>${label}</span><span class="sc-fab-hide" data-action="hide" title="Masquer SizeCheck sur cet onglet">✕</span>`;
   }
