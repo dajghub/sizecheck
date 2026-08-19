@@ -1,6 +1,6 @@
 # STATUS — SizeCheck
 
-_Dernière mise à jour : 10 juillet 2026_
+_Dernière mise à jour : 19 août 2026_
 
 ---
 
@@ -23,14 +23,18 @@ _Dernière mise à jour : 10 juillet 2026_
 ## 🔄 En cours (attente externe — rien à coder)
 
 - **Affiliation Awin** : compte réseau actif. **Zalando : refusé. Adidas : refusé. JD Sports : en attente** (10 juil. 2026). Cause quasi certaine : **trafic nul** (site lancé, pages SEO déployées le 4-5 juil.) — pas un jugement sur le produit. (Nike absent d'Awin FR ; Zalando/JD couvrent déjà la marque.)
-- **Indexation Search Console** — **le crawl a démarré** (constaté le 10 juil. 2026, en soirée). État du rapport « Indexation des pages » : **2 dans l'index**, 31 non indexées (33 URLs connues).
-  - Historique du jour : le matin du 10/07, les 28 `/comparaisons/` étaient **découvertes mais jamais explorées** (sitemap lu le 08/07). Après demande d'indexation manuelle sur le hub + `nike-vs-adidas.html`, le crawl s'est amorcé **en ~2 jours**. La condition d'alerte des 4 semaines (« toujours jamais explorées ») **ne se déclenchera donc pas**.
-  - Qui est indexé (vérifié par inspection d'URL) : **accueil + hub `/comparaisons/`**. Le hub est stratégique (il distribue le PageRank vers les 28 pages).
-  - Ventilation des 31 non indexées : **27 « détectée, non indexée »** (feuilles découvertes, pas encore crawlées, tendance ↗) · **1 « explorée, actuellement non indexée »** = `nike-vs-adidas.html` (crawlée, mise en attente) · **2 « page avec redirection »** (apex → www) · **1 « exclue par noindex »** = page légale (**bien classée** : Google l'a crawlée, a vu le noindex ; combiné à son retrait du sitemap, elle ne consomme plus de crawl inutile).
-  - 🎯 **Métrique-clé pour le 5 août** (prime sur le simple nombre d'indexées) : *les pages-feuilles se convertissent-elles `crawlée → indexée`, ou s'accumulent-elles dans « explorée, non indexée » ?* À N=1 (nike-vs-adidas), c'est de la **latence normale**. Si dans 2-4 sem. la **majorité** des 28 y stagnent → signal de **contenu jugé trop similaire** (28 pages même gabarit) → correctif = enrichir le texte propre à chaque paire (la FAQ calculée par paire va déjà dans ce sens). **Pas un diagnostic aujourd'hui, un point de vigilance.**
-  - ⚠️ Ne jamais écrire « indexées » sans l'avoir constaté (inspection d'URL). Le rapport **Sitemaps** fait autorité sur la *découverte*, l'**Inspection d'URL** sur l'*exploration/indexation*.
-  - 📌 Ne pas chercher à ramener le rapport « non indexées » à zéro : redirections et `noindex` volontaires y figureront toujours (bruit normal). Ne pas re-demander l'indexation en boucle (sans effet sur le classement).
-  - Chaîne technique vérifiée le 10/07, **rien de cassé** : pages 200 · `robots.txt: Allow: /` · `meta robots: index, follow` · canonique auto-référente `www` · sitemap XML valide (30 URLs `www`, `application/xml`) · apex → `www` 301 · propriété GSC **Domaine**.
+- **Indexation Search Console** — ⚠️ **CRAWL BLOQUÉ, seuil d'alerte franchi** (constaté le 19 août 2026, 6 semaines après la découverte du 08/07). **2 indexées** (accueil + hub `/comparaisons/`), **31 non indexées**.
+  - Ventilation : **27 « détectée, non indexée »** = *jamais crawlées* en 6 semaines · **1 « explorée, actuellement non indexée »** = `nike-vs-adidas.html`, **crawlée puis NON retenue** · 2 « page avec redirection » (apex → www, validation en **Échec** — normal et non corrigeable : le 301 apex→www doit exister) · 1 « exclue par noindex » = page légale (correct).
+  - **Site revérifié le 19/08, aucune régression** : pages 200 · `index, follow` · sitemap 30 URLs `www` · canoniques `www` · robots OK. **Le problème n'est pas technique.**
+  - **Deux mécanismes distincts, tous deux réels :**
+    1. **Budget de crawl / absence d'autorité** (dominant) → explique les 27 jamais explorées. Un domaine jeune sans lien entrant reçoit un budget minimal : Google lit l'accueil + le hub, puis s'arrête. **Aucune modification de contenu ne débloque ça** — il faut des signaux externes.
+    2. **Évaluation du contenu** (n=1, signal négatif) → la seule page-feuille que Google ait réellement évaluée, il ne l'a **pas indexée**. Insuffisant pour condamner le contenu, insuffisant aussi pour le déclarer bon.
+  - **Mesure de similarité des 28 pages (5-grammes, 19/08)** : seulement **13,5 % du contenu de chaque page lui est strictement propre** (86,5 % partagé avec au moins une page sœur) · similarité médiane entre paires **18,5 %** (max 51,4 %) · sur ~900 mots : **49 % de tableaux**, 27 % de FAQ, 220 mots d'intro/nav/pied. → Signature classique du **SEO programmatique**, déprioritisé sur un domaine sans autorité.
+  - **Plan d'action arrêté le 19/08 (ordre impératif) :**
+    1. **Backlinks d'abord** (`marketing/backlinks.md`) — sans crawl, toute amélioration de contenu est invisible pour Google. Tier 1 : fiche Chrome Web Store → site, plateformes de lancement, Show HN. Tier 2 : communautés (jamais de lien nu). Tier 3 : contenu citable + presse.
+    2. **Enrichir les 8 paires liées depuis l'accueil** (maillage ajouté le 19/08, commit `55b07a9`) — ce sont celles que Google crawlera en premier au déblocage. Du texte **réellement spécifique à la paire** (chaussant, usage, cas concrets), pas du gabarit. **Ne pas toucher aux 20 autres** : elles servent de témoin pour attribuer l'effet.
+  - 📌 Rappels : ne pas viser zéro page non indexée (redirections + noindex volontaires = bruit permanent) · ne pas re-demander l'indexation en boucle · ne jamais écrire « indexée » sans l'avoir constaté par Inspection d'URL.
+  - **Point de contrôle passé** : rappel Agenda du 5 août relevé avec 2 semaines de retard (19/08). Prochain relevé utile : **~4 semaines après les premiers backlinks réels**, pour juger si le crawl repart.
 - **Favicon Google** : re-crawl en attente côté Google (quelques semaines) avant affichage dans les résultats.
 
 ---
