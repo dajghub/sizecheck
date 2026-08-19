@@ -75,6 +75,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - **Source unique pour les données :** toute modification des tables de correspondance doit se faire dans `extension/sizes.js` ET dans `index.html` (structure `[label, cm]` par marque/genre)
 - **Après toute modification des tables** : lancer `python3 tools/check_sync.py` (contrôle) puis `python3 tools/generate_pages.py` (régénère pages + sitemap)
 - Tout ajout de marque ou de système de tailles passe par ces deux fichiers + régénération
+- **Séparation données / affichage (virgule décimale FR)** : les tables stockent les libellés **bruts avec un point** (`'41.5'`) — c'est le libellé des guides officiels **et la clé** utilisée par le localStorage, `chrome.storage`, les paramètres d'URL (`?size=42.5`), les `data-value` et les comparaisons d'égalité. La virgule ne s'applique **qu'au rendu**, via un formateur dédié : `fmt_label()` / `fmt_cm()` dans `tools/generate_pages.py`, `fr()` dans `index.html`, `scFr()` dans `extension/sizes.js` (partagé par `content.js` et `popup.js`). **Ne jamais virguler la donnée elle-même** : cela casserait la restauration d'état et les liens partagés.
 - Mobile-first en priorité absolue
 - Single-file HTML pour le site web (pas de séparation JS ; le CSS Tailwind est précompilé dans `assets/tailwind.css` — régénérer via le CDN si de nouvelles classes sont ajoutées)
 - Commits git clairs après chaque session de travail
