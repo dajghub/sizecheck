@@ -241,3 +241,5 @@ footer a:hover { color: #2563eb; }
   margin-bottom: 8px;
   line-height: 1.55;
 }
+.deep { margin: 10px 0; line-height: 1.6; color: #334155; }
+.deep + .deep { margin-top: 12px; }

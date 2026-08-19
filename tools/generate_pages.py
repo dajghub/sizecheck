@@ -186,16 +186,16 @@ def deep_analysis(a, b, both_unisex):
     if rel:
         q = 'toutes' if rel == same else f'{rel}'
         bits.append(f'Sur ces {same}, <strong>{q}</strong> changent malgré tout de numéro.')
-    out.append('<p>' + ' '.join(bits) + '</p>')
+    out.append('<p class="deep">' + ' '.join(bits) + '</p>')
 
     # 2. Homme / femme
     oh, of = _avg_offset(a, b, 'homme'), _avg_offset(a, b, 'femme')
     if both_unisex:
-        out.append(f'<p>Les deux marques publient une grille unisexe unique : '
+        out.append(f'<p class="deep">Les deux marques publient une grille unisexe unique : '
                    f'une seule correspondance à retenir.</p>')
     elif oh is not None and of is not None and abs(of - oh) >= 0.25:
         plus = 'femme' if abs(of) > abs(oh) else 'homme'
-        out.append(f'<p>Écart moyen à pointure affichée égale : '
+        out.append(f'<p class="deep">Écart moyen à pointure affichée égale : '
                    f'<strong>{fmt_cm(round(abs(oh), 2))} cm</strong> en homme, '
                    f'<strong>{fmt_cm(round(abs(of), 2))} cm</strong> en femme. '
                    f'Le rayon {plus} est le plus exposé.</p>')
@@ -207,7 +207,7 @@ def deep_analysis(a, b, both_unisex):
         offs = sorted((abs(tb[l] - ta[l]), l) for l in shared)
         lo, hi = offs[0], offs[-1]
         if hi[0] - lo[0] >= 0.3:
-            out.append(f'<p>L\'écart n\'est pas constant : '
+            out.append(f'<p class="deep">L\'écart n\'est pas constant : '
                        f'<strong>{fmt_cm(round(lo[0], 2))} cm</strong> au EU {html.escape(lo[1])}, '
                        f'<strong>{fmt_cm(round(hi[0], 2))} cm</strong> au EU {html.escape(hi[1])}.</p>')
 
@@ -241,10 +241,10 @@ def deep_analysis(a, b, both_unisex):
     seg = f'Entre {fmt_cm(lo_c)} et {fmt_cm(hi_c)} cm de pied'
     if na_n != nb_n:
         fine = na if na_n > nb_n else nb
-        out.append(f'<p>{seg} : <strong>{na_n}</strong> pointures {na}, '
+        out.append(f'<p class="deep">{seg} : <strong>{na_n}</strong> pointures {na}, '
                    f'<strong>{nb_n}</strong> chez {nb}. Paliers plus serrés chez {fine}.</p>')
     else:
-        out.append(f'<p>{seg} : <strong>{na_n}</strong> pointures de chaque côté.</p>')
+        out.append(f'<p class="deep">{seg} : <strong>{na_n}</strong> pointures de chaque côté.</p>')
 
     return ''.join(out)
 
