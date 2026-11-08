@@ -10,7 +10,7 @@
   <meta name="description" content="Trouve ta pointure Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS ou HOKA en quelques secondes. Comparaison fiable par la méthode des centimètres.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.sizecheck.fr/">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#E3E5E6">
   <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
 
@@ -87,146 +87,469 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
   }
   </script>
-
-  <!-- CSS Tailwind précompilé (extrait du JIT — voir tools/README note dans STATUS.md).
-       Si de nouvelles classes utilitaires sont ajoutées, régénérer via le CDN puis re-extraire. -->
-  <link rel="stylesheet" href="/assets/tailwind.css">
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <style>
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* Archivo (SIL OFL 1.1, voir assets/fonts/OFL.txt) — hébergée sur le site, aucun appel à Google. */
+    @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 900; font-stretch: 62% 125%; font-display: swap; src: url(/assets/fonts/archivo-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 900; font-stretch: 62% 125%; font-display: swap; src: url(/assets/fonts/archivo-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    /* ============================================================
+       SizeCheck — identité « mètre ruban »
+       Aluminium (le mesureur des magasins), papier (l'étiquette de
+       boîte), encre, jaune mètre, rouge aiguille.
+       Une seule famille : Archivo, dont on joue sur la largeur.
+    ============================================================ */
+    :root {
+      --alu: #E3E5E6;
+      --alu-deep: #CDD1D4;
+      --paper: #FFFFFF;
+      --ink: #202326;
+      --muted: #575D62;
+      --rule: #D3D7DA;
+      --tape: #F6C500;
+      --tape-edge: #DDB000;
+      --mark: #D42A1C;
+      --font: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color-scheme: light;
     }
-    .slide-up { animation: slideUp 0.26s ease-out both; }
-    .chip-btn { transition: all 0.13s ease; }
-    .chip-btn:active { transform: scale(0.95); }
-    details summary::-webkit-details-marker { display: none; }
-    details > summary { list-style: none; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--alu);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    a { color: inherit; }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .num { font-variant-numeric: tabular-nums; }
+
+    .page { max-width: 1080px; margin: 0 auto; padding: 0 16px 48px; }
+
+    /* ---------- En-tête ---------- */
+    .top {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+      padding: 18px 0 0;
+    }
+    .wordmark {
+      font-weight: 900; font-stretch: 70%; font-size: 24px; letter-spacing: -0.01em;
+      text-decoration: none;
+    }
+    .top-link { font-size: 15px; font-weight: 600; text-underline-offset: 3px; }
+
+    .intro h1 {
+      font-size: clamp(2.75rem, 12vw, 4.5rem);
+      font-stretch: 64%;
+      font-weight: 850;
+      line-height: 0.93;
+      letter-spacing: -0.005em;
+      margin: 28px 0 14px;
+      max-width: 12em;
+      text-wrap: balance;
+    }
+    .intro p { margin: 0 0 28px; max-width: 54ch; color: var(--muted); }
+    .intro p b { color: var(--ink); font-weight: 700; }
+
+    /* ---------- Convertisseur ---------- */
+    .app { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .form-col, .result-col { min-width: 0; }
+
+    .seg {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden;
+      background: var(--paper);
+    }
+    .seg button {
+      border: 0; background: transparent; padding: 11px 0; font-weight: 700;
+    }
+    .seg button + button { border-left: 1.5px solid var(--ink); }
+    .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+    .seg button:focus-visible { outline-offset: -5px; outline-color: var(--tape); }
+
+    .modes {
+      display: flex; gap: 22px; margin: 18px 0 4px;
+      border-bottom: 1.5px solid var(--alu-deep);
+    }
+    .modes button {
+      border: 0; background: none; padding: 10px 0 9px; margin-bottom: -1.5px;
+      font-weight: 600; color: var(--muted);
+      border-bottom: 3px solid transparent;
+    }
+    .modes button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+    .modes button:hover { color: var(--ink); }
+
+    .step { font-size: 15px; font-weight: 700; margin: 20px 0 10px; }
+
+    .brands { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .brand {
+      min-height: 58px; padding: 8px 9px;
+      display: flex; align-items: flex-end; text-align: left;
+      background: var(--paper); border: 1.5px solid var(--alu-deep); border-radius: 4px;
+      font-weight: 800; font-stretch: 72%; font-size: 17px; line-height: 1.02;
+    }
+    .brand:hover { border-color: var(--ink); }
+    .brand[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--tape); }
+
+    .sizes { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 6px; }
+    .size {
+      height: 48px; padding: 0 4px;
+      background: var(--paper); border: 1.5px solid var(--alu-deep); border-radius: 4px;
+      font-weight: 700; font-stretch: 78%; font-size: 19px; font-variant-numeric: tabular-nums;
+    }
+    .size:hover { border-color: var(--ink); }
+    .size[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--tape); }
+
+    /* ---------- Le mètre ---------- */
+    .gauge { margin-top: 26px; }
+    .gauge-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .gauge-label { font-size: 15px; font-weight: 700; padding-bottom: 5px; }
+    .gauge-value {
+      font-weight: 850; font-stretch: 66%; font-size: 46px; line-height: 0.9;
+      font-variant-numeric: tabular-nums; white-space: nowrap;
+    }
+    .gauge-value small { font-size: 20px; font-weight: 700; font-stretch: 85%; margin-left: 4px; }
+    .gauge-value .dash { color: var(--alu-deep); }
+    .cm-field { display: flex; align-items: baseline; }
+    .cm-field input {
+      width: 3.3ch; padding: 0; margin: 0; text-align: right;
+      font: inherit; color: inherit; background: transparent;
+      border: 0; border-bottom: 2.5px solid var(--ink); border-radius: 0;
+    }
+    .cm-field input::placeholder { color: var(--alu-deep); }
+    .cm-field input:focus { outline: none; border-bottom-color: var(--mark); }
+
+    .tape {
+      position: relative; height: 62px;
+      background: var(--tape); border-radius: 3px;
+      box-shadow: inset 0 -3px 0 var(--tape-edge);
+      overflow: hidden;
+    }
+    .tape-scroll {
+      display: flex; height: 100%;
+      overflow-x: hidden; overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+              mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+    }
+    .tape-scroll::-webkit-scrollbar { display: none; }
+    .tape.is-live .tape-scroll { overflow-x: auto; cursor: grab; touch-action: pan-x; }
+    .tape.is-live .tape-scroll.is-dragging { cursor: grabbing; }
+    .tape-pad { flex: 0 0 50%; }
+    .tape-track {
+      flex: 0 0 auto; position: relative; height: 100%;
+      background:
+        linear-gradient(90deg, var(--ink) 0 1.5px, transparent 1.5px) 0 0 / 60px 48% repeat-x,
+        linear-gradient(90deg, var(--ink) 0 1px, transparent 1px) 0 0 / 30px 32% repeat-x,
+        linear-gradient(90deg, var(--ink) 0 1px, transparent 1px) 0 0 / 6px 17% repeat-x;
+    }
+    .tape-num {
+      position: absolute; bottom: 9px; transform: translateX(-50%);
+      font-weight: 750; font-stretch: 85%; font-size: 15px; line-height: 1;
+      font-variant-numeric: tabular-nums; user-select: none;
+    }
+    .needle {
+      position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px;
+      background: var(--mark); pointer-events: none; transition: opacity .2s;
+    }
+    .needle::before {
+      content: ""; position: absolute; top: 0; left: -5px;
+      border: 6px solid transparent; border-top: 7px solid var(--mark); border-bottom: 0;
+    }
+    .tape.is-empty .needle { opacity: .25; }
+
+    .hint { font-size: 14px; color: var(--muted); margin: 10px 0 0; max-width: 46ch; }
+
+    .measure { margin-top: 14px; font-size: 14px; }
+    .measure summary { cursor: pointer; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; width: fit-content; }
+    .measure ol { margin: 10px 0 0; padding-left: 20px; color: var(--muted); }
+    .measure li { margin: 3px 0; }
+    .measure p { color: var(--muted); margin: 8px 0 0; }
+
+    /* ---------- Étiquette résultat ---------- */
+    .label {
+      background: var(--paper);
+      border: 2px solid var(--ink); border-radius: 4px;
+    }
+    .label-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      padding: 14px 16px 13px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .label-head h2 { margin: 0; font-size: 22px; font-weight: 850; font-stretch: 72%; line-height: 1.1; }
+    .label-head p { margin: 3px 0 0; font-size: 14px; color: var(--muted); }
+    .share {
+      flex-shrink: 0; background: var(--paper);
+      border: 1.5px solid var(--ink); border-radius: 4px;
+      padding: 7px 11px; font-size: 14px; font-weight: 700; white-space: nowrap;
+    }
+    .share:hover { background: var(--ink); color: var(--paper); }
+
+    .eq { width: 100%; border-collapse: collapse; }
+    .eq thead th {
+      font-size: 13px; font-weight: 600; color: var(--muted); text-align: left;
+      padding: 9px 16px 5px;
+    }
+    .eq .r { text-align: right; }
+    .eq tbody th, .eq tbody td { padding: 11px 16px; border-top: 1px solid var(--rule); vertical-align: middle; }
+    .eq tbody th { text-align: left; font-weight: 800; font-stretch: 74%; font-size: 19px; line-height: 1.1; }
+    .eq-size {
+      text-align: right; white-space: nowrap;
+      font-weight: 850; font-stretch: 66%; font-size: 32px; line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .eq-alt { display: block; margin-top: 3px; font-size: 13px; font-weight: 600; font-stretch: 100%; color: var(--muted); }
+    .eq-len { text-align: right; white-space: nowrap; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .eq-gap { display: block; margin-top: 2px; font-size: 13px; color: var(--muted); }
+    .eq-gap.is-exact { color: var(--ink); font-weight: 700; }
+    .label.is-empty .eq-size, .label.is-empty .eq-len { color: var(--alu-deep); }
+
+    .label-note { margin: 0; padding: 10px 16px 14px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--rule); }
+    .fits { padding: 4px 16px 16px; border-top: 2px solid var(--ink); }
+    .fits h3 { font-size: 15px; font-weight: 700; margin: 12px 0 4px; }
+    .fits p { margin: 8px 0 0; font-size: 14px; max-width: 62ch; }
+
+    /* ---------- Contenu ---------- */
+    .more { margin-top: 72px; display: grid; gap: 56px; }
+    .more h2 {
+      font-size: 32px; font-weight: 850; font-stretch: 66%; line-height: 1.02;
+      margin: 0 0 14px; max-width: 14em; text-wrap: balance;
+    }
+    .more p { margin: 0 0 12px; max-width: 62ch; }
+    .more .aside { font-size: 14px; color: var(--muted); }
+
+    .steps { list-style: none; margin: 18px 0 18px; padding: 0; counter-reset: step; }
+    .steps li {
+      counter-increment: step;
+      display: grid; grid-template-columns: 34px 1fr; gap: 0 10px;
+      padding: 12px 0; border-top: 1.5px solid var(--alu-deep);
+      max-width: 62ch;
+    }
+    .steps li::before {
+      content: counter(step);
+      font-weight: 850; font-stretch: 66%; font-size: 30px; line-height: 0.95;
+    }
+    .steps strong { display: block; }
+
+    .faq details { border-top: 1.5px solid var(--alu-deep); }
+    .faq details:last-of-type { border-bottom: 1.5px solid var(--alu-deep); }
+    .faq summary {
+      list-style: none; cursor: pointer; padding: 13px 28px 13px 0; position: relative;
+      font-weight: 700;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: "+"; position: absolute; right: 2px; top: 9px;
+      font-size: 24px; font-weight: 500; line-height: 1;
+    }
+    .faq details[open] summary::after { content: "−"; }
+    .faq details p { margin: 0 0 14px; color: var(--muted); }
+
+    .pairs ul { list-style: none; margin: 0 0 16px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+    .pairs li { border-top: 1.5px solid var(--alu-deep); }
+    .pairs li a { display: block; padding: 10px 0; font-weight: 600; text-decoration: none; }
+    .pairs li a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .pairs .all { font-weight: 700; text-underline-offset: 3px; }
+
+    .ext {
+      display: none;
+      margin-top: 56px; padding: 22px 24px;
+      background: var(--ink); color: var(--paper); border-radius: 4px;
+      align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .ext h2 { margin: 0 0 4px; font-size: 24px; font-weight: 850; font-stretch: 70%; line-height: 1.1; }
+    .ext p { margin: 0; font-size: 15px; color: #C9CED2; max-width: 56ch; }
+    .ext a {
+      flex-shrink: 0; background: var(--tape); color: var(--ink);
+      padding: 11px 16px; border-radius: 4px; font-weight: 800; text-decoration: none;
+    }
+    .ext a:hover { background: var(--paper); }
+    .ext a:focus-visible { outline-color: var(--tape); }
+
+    .foot {
+      margin-top: 48px; padding-top: 16px; border-top: 1.5px solid var(--alu-deep);
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
+      font-size: 14px; color: var(--muted);
+    }
+    .foot p { margin: 0; }
+    .foot a { text-underline-offset: 3px; }
+
+    /* ---------- Mobile : l'étiquette vide ne sert à rien ---------- */
+    @media (max-width: 899px) {
+      .label.is-empty { display: none; }
+    }
+    @media (min-width: 768px) {
+      .ext { display: flex; }
+    }
+    @media (min-width: 900px) {
+      .page { padding: 0 32px 56px; }
+      .top { padding-top: 26px; }
+      .intro {
+        display: grid; grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
+        column-gap: 48px; align-items: end;
+        margin: 44px 0 40px;
+      }
+      .intro h1 { margin: 0; }
+      .intro p { margin: 0; padding-bottom: 4px; font-size: 17px; }
+      .app { grid-template-columns: minmax(0, 460px) minmax(0, 1fr); gap: 48px; align-items: start; }
+      .result-col { position: sticky; top: 24px; }
+      .more { grid-template-columns: 1fr 1fr; column-gap: 56px; margin-top: 96px; }
+      .more .how { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; }
+      .more .how > h2 { grid-column: 1; }
+      .more .how > .how-text { grid-column: 1; }
+      .more .how > .steps { grid-column: 2; grid-row: 1 / span 3; margin-top: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .needle { transition: none; }
+    }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;">
+<body>
+  <div class="page">
 
-  <div class="max-w-md mx-auto px-4 pb-16">
+    <header class="top">
+      <a class="wordmark" href="/">SizeCheck</a>
+      <a class="top-link" href="/comparaisons/">Tableaux par marque</a>
+    </header>
 
-    <!-- Header -->
-    <div class="pt-10 pb-5 text-center">
-      <p class="text-3xl mb-1">👟</p>
-      <h1 class="text-2xl font-black text-slate-800 tracking-tight">SizeCheck</h1>
-      <p class="text-slate-500 text-sm mt-0.5">Trouve ta vraie pointure entre marques</p>
-    </div>
+    <main>
+      <section class="intro">
+        <h1>Convertis ta pointure d'une marque à l'autre</h1>
+        <p>Un <b>Nike 43</b> homme correspond à 26,7&nbsp;cm de pied, soit un <b>Vans 41</b> et un <b>Adidas 43⅓</b>. SizeCheck fait ce calcul pour 8&nbsp;marques, à partir de leurs guides des tailles officiels.</p>
+      </section>
 
-    <!-- Gender toggle -->
-    <div class="flex items-center gap-1 bg-gray-100 rounded-2xl p-1 mb-4">
-      <button id="btn-homme" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">Homme</button>
-      <button id="btn-femme" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200">Femme</button>
-    </div>
+      <div class="app" id="app">
+        <div class="form-col">
+          <div class="seg" role="group" aria-label="Rayon">
+            <button id="btn-homme" type="button">Homme</button>
+            <button id="btn-femme" type="button">Femme</button>
+          </div>
 
-    <!-- Step 1 — always visible -->
-    <div class="bg-white rounded-2xl shadow-sm p-5 mb-3">
-      <div class="flex items-center gap-2 mb-4">
-        <div class="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
-          <span class="text-white text-xs font-bold leading-none">1</span>
+          <div class="modes" role="group" aria-label="Point de départ">
+            <button id="btn-mode-brand" type="button">Avec ma pointure</button>
+            <button id="btn-mode-cm" type="button">Avec mon pied en cm</button>
+          </div>
+
+          <div id="brand-steps">
+            <h2 class="step">Ta marque habituelle</h2>
+            <div id="brands-source" class="brands"></div>
+            <div id="step2" hidden>
+              <h2 class="step" id="step2-label">Ta pointure</h2>
+              <div id="sizes-container" class="sizes"></div>
+            </div>
+          </div>
+
+          <div class="gauge" id="gauge">
+            <div class="gauge-head">
+              <span class="gauge-label" id="gauge-label">Longueur de pied</span>
+              <output id="gauge-out" class="gauge-value" aria-labelledby="gauge-label"></output>
+              <span id="cm-field" class="gauge-value cm-field" hidden>
+                <input id="cm-input" type="text" inputmode="decimal" autocomplete="off" maxlength="5"
+                       placeholder="26,5" aria-labelledby="gauge-label" aria-describedby="tape-hint"><small>cm</small>
+              </span>
+            </div>
+            <div class="tape is-empty" id="tape">
+              <div class="tape-scroll" id="tape-scroll" aria-hidden="true">
+                <div class="tape-pad"></div>
+                <div class="tape-track" id="tape-track"></div>
+                <div class="tape-pad"></div>
+              </div>
+              <div class="needle"></div>
+            </div>
+            <p class="hint" id="tape-hint"></p>
+
+            <details class="measure" id="measure" hidden>
+              <summary>Comment mesurer mon pied</summary>
+              <ol>
+                <li>Pose une feuille de papier au sol, contre un mur.</li>
+                <li>Mets-toi debout dessus, le talon collé au mur.</li>
+                <li>Marque le bout de ton orteil le plus long.</li>
+                <li>Mesure la distance entre le mur et la marque.</li>
+                <li>Recommence avec l'autre pied et garde la plus grande mesure.</li>
+              </ol>
+              <p>Mesure plutôt en fin de journée, en chaussettes fines : le pied gonfle un peu dans la journée.</p>
+            </details>
+          </div>
         </div>
-        <span id="step1-label" class="text-sm font-semibold text-slate-700">Ma marque actuelle</span>
-        <div class="ml-auto flex gap-0.5 bg-gray-100 rounded-lg p-0.5" role="group" aria-label="Point de départ">
-          <button id="btn-mode-brand" class="text-xs font-bold px-2.5 py-1.5 rounded-md transition-all">Marque</button>
-          <button id="btn-mode-cm" class="text-xs font-bold px-2.5 py-1.5 rounded-md transition-all">Pied (cm)</button>
+
+        <div class="result-col">
+          <div id="result" aria-live="polite"></div>
         </div>
       </div>
-      <div id="brands-source" class="grid grid-cols-4 gap-2"></div>
-      <div id="cm-wrap" class="hidden">
-        <div class="flex items-center gap-3">
-          <input id="cm-input" type="number" inputmode="decimal" step="0.1" min="18" max="35" placeholder="26.5"
-                 aria-label="Longueur du pied en centimètres"
-                 class="flex-1 min-w-0 text-2xl font-black text-slate-800 border-2 border-gray-100 bg-gray-50 rounded-xl px-4 py-3 focus:border-blue-600 focus:bg-white outline-none transition-colors">
-          <span class="text-slate-600 font-bold shrink-0">cm</span>
-        </div>
-        <details class="mt-3 group">
-          <summary class="flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-blue-700">
-            📏 Comment mesurer mon pied ?
-            <svg class="w-3.5 h-3.5 text-blue-400 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <ol class="mt-2 text-xs text-slate-500 leading-relaxed list-decimal list-inside space-y-1">
-            <li>Pose une feuille de papier au sol, contre un mur.</li>
-            <li>Debout sur la feuille, talon collé au mur.</li>
-            <li>Marque l'extrémité de ton orteil le plus long.</li>
-            <li>Mesure la distance mur → marque avec une règle.</li>
-            <li>Répète pour l'autre pied et garde la plus grande mesure.</li>
+
+      <div class="more">
+        <section class="how">
+          <h2>Pourquoi passer par les centimètres</h2>
+          <div class="how-text">
+            <p>Chaque marque numérote ses pointures à sa façon. Ce qui ne change pas d'une marque à l'autre, c'est la longueur de ton pied : c'est elle qui sert de pivot.</p>
+            <p class="aside">Les grilles ont été relevées une à une sur les guides des tailles officiels de Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA, demi-pointures et tiers compris. Certains modèles (Air Force 1, Jordan…) peuvent s'écarter légèrement du tableau standard de leur marque.</p>
+          </div>
+          <ol class="steps">
+            <li><div><strong>Ta pointure donne une longueur.</strong> Dans le guide Nike, un 43 homme correspond à 26,7&nbsp;cm de pied.</div></li>
+            <li><div><strong>On cherche cette longueur ailleurs.</strong> Dans chaque autre guide, SizeCheck retient la pointure la plus proche de 26,7&nbsp;cm.</div></li>
+            <li><div><strong>Tu lis ta pointure.</strong> Adidas 43⅓ (26,7&nbsp;cm), HOKA 43⅓ (26,8&nbsp;cm), Vans 41 (26,5&nbsp;cm).</div></li>
           </ol>
-          <p class="mt-2 text-xs text-slate-500">💡 Mesure en fin de journée (le pied gonfle) et en chaussettes fines.</p>
-        </details>
-      </div>
-    </div>
+        </section>
 
-    <!-- Step 2 — revealed after step 1 -->
-    <div id="step2" class="hidden bg-white rounded-2xl shadow-sm p-5 mb-3">
-      <div class="flex items-center gap-2 mb-4">
-        <div class="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
-          <span class="text-white text-xs font-bold leading-none">2</span>
+        <section class="faq">
+          <h2>Questions fréquentes</h2>
+          <details>
+            <summary>Comment convertir sa pointure entre différentes marques de chaussures&nbsp;?</summary>
+            <p>La méthode des centimètres consiste à trouver la longueur de pied en cm correspondant à sa pointure dans la marque actuelle, puis à localiser la pointure la plus proche dans le tableau de la marque cible. SizeCheck automatise cette conversion pour 8 marques : Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA.</p>
+          </details>
+          <details>
+            <summary>Est-ce qu'Adidas taille petit&nbsp;?</summary>
+            <p>Oui, Adidas taille petit, principalement en raison d'un chaussant plus étroit et d'une empeigne plus serrée que la norme. SizeCheck calcule la correspondance exacte en CM. Si vous avez le pied large, envisagez la pointure supérieure à celle recommandée.</p>
+          </details>
+          <details>
+            <summary>Converse taille-t-il grand&nbsp;?</summary>
+            <p>Oui, Converse taille grand. La semelle plate des Chuck Taylor libère de l'espace en longueur. Un EU 43 Converse correspond à 28 cm (homme), soit l'équivalent d'un EU 44 New Balance ou d'un EU 45 Nike. SizeCheck calcule automatiquement la correspondance exacte.</p>
+          </details>
+          <details>
+            <summary>Est-ce que Nike taille standard&nbsp;?</summary>
+            <p>Oui, Nike taille standard. Les pointures Nike correspondent aux tailles EU conventionnelles. Un EU 44 Nike correspond à une longueur de pied de 27,1 cm (homme) selon le guide officiel Nike.</p>
+          </details>
+          <details>
+            <summary>Vans taille-t-il grand ou petit&nbsp;?</summary>
+            <p>Vans taille légèrement grand. Il est généralement conseillé de prendre ½ pointure en dessous de sa taille habituelle, notamment pour les modèles classiques comme l'Old Skool ou l'Authentic.</p>
+          </details>
+        </section>
+
+        <section class="pairs">
+          <h2>Les correspondances les plus consultées</h2>
+          <ul>
+            <li><a href="/comparaisons/nike-vs-adidas.html">Nike ↔ Adidas</a></li>
+            <li><a href="/comparaisons/nike-vs-newbalance.html">Nike ↔ New Balance</a></li>
+            <li><a href="/comparaisons/nike-vs-converse.html">Nike ↔ Converse</a></li>
+            <li><a href="/comparaisons/nike-vs-vans.html">Nike ↔ Vans</a></li>
+            <li><a href="/comparaisons/adidas-vs-newbalance.html">Adidas ↔ New Balance</a></li>
+            <li><a href="/comparaisons/adidas-vs-vans.html">Adidas ↔ Vans</a></li>
+            <li><a href="/comparaisons/adidas-vs-converse.html">Adidas ↔ Converse</a></li>
+            <li><a href="/comparaisons/nike-vs-asics.html">Nike ↔ ASICS</a></li>
+          </ul>
+          <a class="all" href="/comparaisons/">Voir les 28 tableaux de correspondance</a>
+        </section>
+      </div>
+
+      <!-- Extension Chrome — desktop uniquement (pas d'extensions sur Chrome mobile) -->
+      <aside class="ext">
+        <div>
+          <h2>Ta pointure, directement sur la page produit</h2>
+          <p>L'extension Chrome SizeCheck affiche ton équivalent sur les sites des marques, Zalando, JD Sports, Foot Locker et Courir.</p>
         </div>
-        <span class="text-sm font-semibold text-slate-700">Ma pointure actuelle</span>
-      </div>
-      <div id="sizes-container" class="flex flex-wrap gap-2"></div>
-    </div>
+        <a href="https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_site"
+           target="_blank" rel="noopener"
+           data-umami-event="cta-extension" data-umami-event-paire="accueil">Installer l'extension</a>
+      </aside>
+    </main>
 
-    <!-- Multi-brand result — revealed after step 2 -->
-    <div id="result" class="hidden mb-3"></div>
-
-    <!-- SEO + crédibilité -->
-    <div class="mt-4 space-y-3">
-      <details class="bg-white rounded-2xl shadow-sm overflow-hidden group">
-        <summary class="flex items-center justify-between px-5 py-4 cursor-pointer text-sm font-semibold text-slate-600">
-          Comment ça marche ?
-          <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </summary>
-        <div class="px-5 pb-5 text-xs text-slate-500 leading-relaxed space-y-2 border-t border-gray-50">
-          <p class="pt-3"><strong class="text-slate-600">La méthode des centimètres</strong> : chaque pointure EU correspond à une longueur de pied précise selon le tableau officiel de chaque marque. SizeCheck compare ces valeurs pour trouver la correspondance la plus proche dans chaque marque cible.</p>
-          <p>Les données proviennent des guides de tailles officiels de <strong class="text-slate-600">8 marques</strong> : Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA — avec les demi-pointures et tiers réels de chaque marque, <strong class="text-slate-600">relevées une à une sur les guides officiels.</strong></p>
-          <p class="text-slate-500">Note : certains modèles spécifiques (ex. Air Force 1, Jordan) peuvent varier légèrement par rapport au tableau standard de la marque.</p>
-        </div>
-      </details>
-
-      <p class="text-xs text-slate-500 text-center leading-relaxed px-2">
-        SizeCheck compare gratuitement les pointures Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS et HOKA par la méthode des centimètres.
-      </p>
-
-      <!-- Maillage interne : liens directs vers les paires les plus recherchées -->
-      <div class="bg-white rounded-2xl shadow-sm px-5 py-4">
-        <p class="text-sm font-semibold text-slate-600 mb-3">Correspondances les plus consultées</p>
-        <div class="flex flex-wrap gap-2">
-          <a href="/comparaisons/nike-vs-adidas.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Nike ↔ Adidas</a>
-          <a href="/comparaisons/nike-vs-newbalance.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Nike ↔ New Balance</a>
-          <a href="/comparaisons/nike-vs-converse.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Nike ↔ Converse</a>
-          <a href="/comparaisons/nike-vs-vans.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Nike ↔ Vans</a>
-          <a href="/comparaisons/adidas-vs-newbalance.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Adidas ↔ New Balance</a>
-          <a href="/comparaisons/adidas-vs-vans.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Adidas ↔ Vans</a>
-          <a href="/comparaisons/adidas-vs-converse.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Adidas ↔ Converse</a>
-          <a href="/comparaisons/nike-vs-asics.html" class="text-xs font-semibold text-blue-700 bg-blue-50 rounded-xl px-3 py-2 no-underline hover:underline">Nike ↔ ASICS</a>
-        </div>
-      </div>
-
-      <p class="text-center">
-        <a href="/comparaisons/" class="text-xs font-semibold text-blue-700 hover:underline">Voir tous les tableaux de correspondance entre marques →</a>
-      </p>
-    </div>
-
-    <!-- Bandeau extension Chrome — desktop uniquement (pas d'extensions sur Chrome mobile) -->
-    <a href="https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_site" target="_blank" rel="noopener" class="hidden md:flex mt-6 items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl px-5 py-4 hover:from-blue-500 hover:to-blue-400 transition-colors cursor-pointer no-underline">
-      <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 text-lg">🧩</div>
-      <div class="flex-1 min-w-0">
-        <p class="text-sm font-bold text-white leading-tight">Extension Chrome disponible</p>
-        <p class="text-xs text-blue-100 mt-0.5">Convertis ta pointure directement sur Nike, Zalando, Adidas et plus.</p>
-      </div>
-      <span class="shrink-0 text-xs font-bold bg-white text-blue-600 rounded-full px-3 py-1.5">Installer →</span>
-    </a>
-
-    <!-- Footer -->
-    <div class="mt-8 mb-4 text-center">
-      <a href="/politique-de-confidentialite.html"
-         class="text-xs text-slate-400 hover:text-slate-600 underline transition-colors">
-        Politique de confidentialité
-      </a>
-    </div>
-
+    <footer class="foot">
+      <p>SizeCheck, convertisseur de pointures gratuit.</p>
+      <a href="/politique-de-confidentialite.html">Politique de confidentialité</a>
+    </footer>
   </div>
 
   <script>
@@ -383,7 +706,6 @@
       return (matches[1].diff - matches[0].diff) <= TIE_THRESHOLD ? matches[1] : null;
     }
 
-
     /* ============================================================
        STATE + PERSISTENCE
     ============================================================ */
@@ -426,13 +748,12 @@
 
     function loadSavedState() {
       try {
-        // URL params take priority (for shared links)
+        // Les paramètres d'URL (liens partagés) priment sur le localStorage
         const p = new URLSearchParams(location.search);
         const fromUrl = p.has('cm')
           ? { gender: p.get('g'), mode: 'cm', sourceBrand: null, sourceSize: null, footCm: parseFloat(p.get('cm')) }
           : { gender: p.get('g'), mode: 'brand', sourceBrand: p.get('from'), sourceSize: p.get('size'), footCm: null };
         if (isValidState(fromUrl)) return fromUrl;
-        // Fallback: localStorage
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
         if (isValidState(saved)) return { mode: 'brand', sourceBrand: null, sourceSize: null, footCm: null, ...saved };
       } catch (e) {}
@@ -450,33 +771,160 @@
     /* ============================================================
        HELPERS
     ============================================================ */
+    const $ = id => document.getElementById(id);
+    const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     /* Envoi d'un custom event à Umami (silencieux si Umami absent/bloqué) */
     function track(name, data) {
       try { if (window.umami) window.umami.track(name, data); } catch (e) {}
     }
 
-    function reveal(id) {
-      const el = document.getElementById(id);
-      el.classList.remove('hidden', 'slide-up');
-      void el.offsetWidth;
-      el.classList.add('slide-up');
-    }
-    function conceal(id) {
-      const el = document.getElementById(id);
-      el.classList.add('hidden');
-      el.classList.remove('slide-up');
-    }
+    function setPressed(id, on) { $(id).setAttribute('aria-pressed', on ? 'true' : 'false'); }
 
     function updateGenderToggle() {
-      const base = 'flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200';
-      const btnH = document.getElementById('btn-homme');
-      const btnF = document.getElementById('btn-femme');
-      btnH.className = base + (S.gender === 'homme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
-      btnF.className = base + (S.gender === 'femme' ? ' bg-blue-600 text-white shadow-sm' : ' text-slate-500 hover:text-slate-700');
-      btnH.setAttribute('aria-pressed', S.gender === 'homme');
-      btnF.setAttribute('aria-pressed', S.gender === 'femme');
+      setPressed('btn-homme', S.gender === 'homme');
+      setPressed('btn-femme', S.gender === 'femme');
+    }
+    function updateModeToggle() {
+      setPressed('btn-mode-brand', S.mode === 'brand');
+      setPressed('btn-mode-cm', S.mode === 'cm');
     }
 
+    /* Sur mobile, le mètre et le résultat sont sous la ligne de flottaison : les amener en vue */
+    function bringIntoView() {
+      const target = $('gauge');
+      if (target.getBoundingClientRect().top < window.innerHeight * 0.45) return;
+      target.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth', block: 'start' });
+    }
+
+    /* ============================================================
+       LE MÈTRE — pivot visuel EU → cm → EU
+       Mode marque : il se cale tout seul sur la longueur de la pointure.
+       Mode cm : on le fait glisser (ou on tape la mesure).
+    ============================================================ */
+    const TAPE_MIN = 18, TAPE_MAX = 35, PX_PER_CM = 60;
+    const tape = $('tape'), tapeScroll = $('tape-scroll'), cmInput = $('cm-input');
+
+    function buildTape() {
+      const track = $('tape-track');
+      track.style.width = ((TAPE_MAX - TAPE_MIN) * PX_PER_CM + 2) + 'px';
+      for (let c = TAPE_MIN; c <= TAPE_MAX; c++) {
+        const n = document.createElement('span');
+        n.className = 'tape-num';
+        n.style.left = ((c - TAPE_MIN) * PX_PER_CM) + 'px';
+        n.textContent = c;
+        track.appendChild(n);
+      }
+    }
+
+    function tapeTo(cm, smooth) {
+      tapeScroll.scrollTo({ left: (cm - TAPE_MIN) * PX_PER_CM, behavior: smooth && !REDUCED_MOTION ? 'smooth' : 'auto' });
+    }
+
+    function updateGauge(animate) {
+      const isCm = S.mode === 'cm';
+      const cm = activeCm();
+      tape.classList.toggle('is-live', isCm);
+      tape.classList.toggle('is-empty', cm === null);
+      $('gauge-out').hidden = isCm;
+      $('cm-field').hidden = !isCm;
+      $('measure').hidden = !isCm;
+
+      if (isCm) {
+        tapeScroll.removeAttribute('aria-hidden');
+        tapeScroll.setAttribute('role', 'slider');
+        tapeScroll.setAttribute('tabindex', '0');
+        tapeScroll.setAttribute('aria-label', 'Mètre : longueur de pied');
+        tapeScroll.setAttribute('aria-valuemin', TAPE_MIN);
+        tapeScroll.setAttribute('aria-valuemax', TAPE_MAX);
+        tapeScroll.setAttribute('aria-valuenow', cm ?? 26);
+        tapeScroll.setAttribute('aria-valuetext', cm === null ? 'aucune mesure' : fr(cm) + ' cm');
+        $('tape-hint').textContent = 'Fais glisser le mètre ou saisis ta mesure en centimètres.';
+      } else {
+        ['role', 'tabindex', 'aria-label', 'aria-valuemin', 'aria-valuemax', 'aria-valuenow', 'aria-valuetext']
+          .forEach(a => tapeScroll.removeAttribute(a));
+        tapeScroll.setAttribute('aria-hidden', 'true');
+        $('gauge-out').innerHTML = cm === null
+          ? '<span class="dash">–</span>'
+          : `${fr(cm)}<small>cm</small>`;
+        $('tape-hint').textContent = cm === null
+          ? 'Choisis ta marque et ta pointure : le mètre se cale sur la longueur de pied correspondante.'
+          : `Longueur indiquée par le guide ${BRANDS[S.sourceBrand].name} ${S.gender} pour le ${fr(S.sourceSize)}.`;
+      }
+      if (cm !== null) tapeTo(cm, animate);
+    }
+
+    /* Mise à jour de la mesure en mode cm. src : 'input' | 'tape' | 'key' */
+    function setFootCm(v, src) {
+      v = Math.min(TAPE_MAX, Math.max(TAPE_MIN, Math.round(v * 10) / 10));
+      S.footCm = v;
+      if (src !== 'input') cmInput.value = fr(v);
+      tape.classList.remove('is-empty');
+      tapeScroll.setAttribute('aria-valuenow', v);
+      tapeScroll.setAttribute('aria-valuetext', fr(v) + ' cm');
+      if (src !== 'tape') tapeTo(v, false);
+      computeAllResults();
+    }
+
+    /* Glisser le mètre : on n'écoute le scroll que s'il vient de l'utilisateur */
+    let userTape = false, tapeIdle = null, tapeFrame = null;
+    ['pointerdown', 'touchstart', 'wheel'].forEach(ev =>
+      tapeScroll.addEventListener(ev, () => { if (S.mode === 'cm') userTape = true; }, { passive: true }));
+
+    tapeScroll.addEventListener('scroll', () => {
+      if (!userTape || S.mode !== 'cm') return;
+      if (!tapeFrame) {
+        tapeFrame = requestAnimationFrame(() => {
+          tapeFrame = null;
+          const v = Math.round((TAPE_MIN + tapeScroll.scrollLeft / PX_PER_CM) * 10) / 10;
+          if (v !== S.footCm) setFootCm(v, 'tape');
+        });
+      }
+      clearTimeout(tapeIdle);
+      tapeIdle = setTimeout(() => {
+        userTape = false;
+        if (S.footCm !== null) { tapeTo(S.footCm, false); saveState(); updateURL(); }
+      }, 160);
+    }, { passive: true });
+
+    /* Souris : glisser-déposer (le tactile utilise le défilement natif) */
+    let drag = null;
+    tapeScroll.addEventListener('pointerdown', e => {
+      if (S.mode !== 'cm' || e.pointerType !== 'mouse' || e.button !== 0) return;
+      drag = { x: e.clientX, left: tapeScroll.scrollLeft };
+      tapeScroll.setPointerCapture(e.pointerId);
+      tapeScroll.classList.add('is-dragging');
+      e.preventDefault();
+    });
+    tapeScroll.addEventListener('pointermove', e => {
+      if (!drag) return;
+      userTape = true;
+      tapeScroll.scrollLeft = drag.left - (e.clientX - drag.x);
+    });
+    ['pointerup', 'pointercancel'].forEach(ev => tapeScroll.addEventListener(ev, () => {
+      drag = null;
+      tapeScroll.classList.remove('is-dragging');
+    }));
+
+    /* Clavier : flèches ±1 mm, Page ±1 cm */
+    tapeScroll.addEventListener('keydown', e => {
+      if (S.mode !== 'cm') return;
+      const cur = S.footCm ?? 26;
+      const step = { ArrowLeft: -0.1, ArrowDown: -0.1, ArrowRight: 0.1, ArrowUp: 0.1, PageDown: -1, PageUp: 1 }[e.key];
+      let v = null;
+      if (step !== undefined) v = cur + step;
+      else if (e.key === 'Home') v = TAPE_MIN;
+      else if (e.key === 'End') v = TAPE_MAX;
+      if (v === null) return;
+      e.preventDefault();
+      setFootCm(v, 'key');
+      saveState();
+      updateURL();
+    });
+
+    /* ============================================================
+       MODES, GENRE
+    ============================================================ */
     function setGender(g) {
       if (S.gender === g) return;
       S.gender = g;
@@ -490,19 +938,10 @@
       }
       S.sourceSize = null;
       renderSourceBrands();
-      if (S.sourceBrand) { renderSizes(); reveal('step2'); }
-      conceal('result');
+      if (S.sourceBrand) { renderSizes(); $('step2').hidden = false; }
+      computeAllResults();
+      updateGauge(false);
       clearState();
-    }
-
-    function updateModeToggle() {
-      const base = 'text-xs font-bold px-2.5 py-1.5 rounded-md transition-all';
-      const btnB = document.getElementById('btn-mode-brand');
-      const btnC = document.getElementById('btn-mode-cm');
-      btnB.className = base + (S.mode === 'brand' ? ' bg-white text-blue-700 shadow-sm' : ' text-slate-500 hover:text-slate-700');
-      btnC.className = base + (S.mode === 'cm' ? ' bg-white text-blue-700 shadow-sm' : ' text-slate-500 hover:text-slate-700');
-      btnB.setAttribute('aria-pressed', S.mode === 'brand');
-      btnC.setAttribute('aria-pressed', S.mode === 'cm');
     }
 
     function setMode(m) {
@@ -510,195 +949,130 @@
       S.mode = m;
       updateModeToggle();
       const isCm = m === 'cm';
-      document.getElementById('step1-label').textContent = isCm ? 'Mon pied' : 'Ma marque actuelle';
-      document.getElementById('brands-source').style.display = isCm ? 'none' : '';
-      document.getElementById('cm-wrap').classList.toggle('hidden', !isCm);
-      if (isCm) {
-        conceal('step2');
-      } else if (S.sourceBrand) {
-        renderSizes();
-        reveal('step2');
-      }
-      if (activeCm() !== null) {
-        computeAllResults();
-        saveState();
-        updateURL();
-      } else {
-        conceal('result');
-      }
-    }
-
-    function makeBrandBtn(key, selected) {
-      const b = BRANDS[key];
-      const btn = document.createElement('button');
-      btn.className = 'chip-btn flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 w-full ' +
-        (selected
-          ? 'border-blue-600 bg-blue-600 shadow-md'
-          : 'border-gray-100 bg-gray-50 hover:border-blue-200 hover:bg-blue-50');
-      btn.setAttribute('aria-pressed', selected);
-
-      const wrap = document.createElement('div');
-      wrap.className = 'w-9 h-9 rounded-xl overflow-hidden bg-white flex items-center justify-center shrink-0 border border-gray-100 p-1';
-
-      const img = document.createElement('img');
-      img.src = b.logo;
-      img.alt = b.name;
-      img.className = 'w-full h-full object-contain';
-      img.onerror = function () {
-        wrap.innerHTML = `<span class="text-base leading-none">${b.emoji}</span>`;
-      };
-      wrap.appendChild(img);
-
-      const lbl = document.createElement('span');
-      lbl.className = 'text-xs font-semibold text-center leading-tight ' + (selected ? 'text-white' : 'text-slate-600');
-      lbl.textContent = b.name;
-
-      btn.appendChild(wrap);
-      btn.appendChild(lbl);
-      return btn;
+      $('brand-steps').hidden = isCm;
+      if (!isCm && S.sourceBrand) { renderSizes(); $('step2').hidden = false; }
+      updateGauge(false);
+      computeAllResults();
+      if (activeCm() !== null) { saveState(); updateURL(); }
     }
 
     /* ============================================================
-       RENDER
+       RENDER — sélection
     ============================================================ */
     function renderSourceBrands() {
-      const c = document.getElementById('brands-source');
+      const c = $('brands-source');
       c.innerHTML = '';
       Object.keys(BRANDS).forEach(key => {
-        const btn = makeBrandBtn(key, S.sourceBrand === key);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'brand';
+        btn.textContent = BRANDS[key].name;
+        btn.setAttribute('aria-pressed', S.sourceBrand === key ? 'true' : 'false');
         btn.addEventListener('click', () => {
           track('selection-marque', { marque: key });
           S.sourceBrand = key;
           S.sourceSize = null;
           renderSourceBrands();
           renderSizes();
-          reveal('step2');
-          conceal('result');
+          $('step2').hidden = false;
+          computeAllResults();
+          updateGauge(false);
         });
         c.appendChild(btn);
       });
     }
 
     function renderSizes() {
-      const c = document.getElementById('sizes-container');
+      const c = $('sizes-container');
       c.innerHTML = '';
       if (!S.sourceBrand) return;
+      $('step2-label').textContent = `Ta pointure ${BRANDS[S.sourceBrand].name} ${S.gender}`;
       getSizes(S.sourceBrand, S.gender).forEach(([label]) => {
         const btn = document.createElement('button');
-        btn.className = 'chip-btn min-w-12 h-12 px-2 rounded-xl border-2 text-sm font-bold flex items-center justify-center ' +
-          (S.sourceSize === label
-            ? 'border-blue-600 bg-blue-600 text-white shadow-md'
-            : 'border-gray-100 bg-gray-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50');
-        btn.setAttribute('aria-pressed', S.sourceSize === label);
+        btn.type = 'button';
+        btn.className = 'size';
         btn.textContent = fr(label);
+        btn.setAttribute('aria-pressed', S.sourceSize === label ? 'true' : 'false');
         btn.addEventListener('click', () => {
           S.sourceSize = label;
           renderSizes();
           computeAllResults();
+          updateGauge(true);
           saveState();
           updateURL();
-          // Sur mobile le résultat est sous la ligne de flottaison : l'amener en vue
-          const res = document.getElementById('result');
-          if (res.getBoundingClientRect().top > window.innerHeight * 0.4) {
-            res.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // Fallback instantané si le smooth scroll est inactif (reduced motion…)
-            setTimeout(() => {
-              if (res.getBoundingClientRect().top > window.innerHeight * 0.6) {
-                res.scrollIntoView({ block: 'start' });
-              }
-            }, 400);
-          }
+          bringIntoView();
         });
         c.appendChild(btn);
       });
     }
 
     /* ============================================================
-       COMPUTE + RENDER ALL BRANDS
+       RENDER — l'étiquette des équivalences
     ============================================================ */
+    function gapText(mm) {
+      if (mm === 0) return 'pile';
+      return (mm > 0 ? '+' : '−') + Math.abs(mm) + ' mm';
+    }
+
     function computeAllResults() {
-      const el = document.getElementById('result');
+      const el = $('result');
       const srcCm = activeCm();
-      if (srcCm === null) { conceal('result'); return; }
+      const empty = srcCm === null;
 
-      const rows = Object.entries(BRANDS)
-        .filter(([key]) => S.mode === 'cm' || key !== S.sourceBrand)
-        .map(([key, b]) => {
-          const matches = findBestMatches(key, srcCm, S.gender, 2);
-          return { key, b, best: matches[0], second: secondIfTie(matches) };
-        })
-        .filter(r => r.best)
-        .sort((a, b) => a.best.diff - b.best.diff);
+      const keys = Object.keys(BRANDS).filter(k => S.mode === 'cm' || k !== S.sourceBrand);
+      const rows = keys.map(key => {
+        if (empty) return { key, b: BRANDS[key] };
+        const matches = findBestMatches(key, srcCm, S.gender, 2);
+        return { key, b: BRANDS[key], best: matches[0], second: secondIfTie(matches) };
+      });
 
-      // Build brand cards HTML
-      const cardsHTML = rows.map(({ b, best, second }) => {
-        const secondLbl = second ? `<span class="text-xs text-slate-500 mt-0.5 block">ou ${fr(second.label)}</span>` : '';
+      const rowsHTML = rows.map(({ b, best, second }) => {
+        if (!best) {
+          return `<tr><th scope="row">${b.name}</th><td class="eq-size">–</td><td class="eq-len">– cm</td></tr>`;
+        }
+        const mm = Math.round((best.cm - srcCm) * 10);
         return `
-          <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 p-1">
-              <img src="${b.logo}" alt="${b.name}" class="w-full h-full object-contain"
-                   onerror="this.parentElement.innerHTML='<span class=&quot;text-lg leading-none&quot;>${b.emoji}</span>'">
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-bold text-slate-800 leading-tight">${b.name}</p>
-            </div>
-            <div class="text-right shrink-0">
-              <p class="text-3xl font-black text-blue-600 leading-none">${fr(best.label)}</p>
-              <p class="text-xs text-slate-500 mt-0.5">${fr(best.cm)} cm</p>
-              ${secondLbl}
-            </div>
-          </div>`;
+          <tr>
+            <th scope="row">${b.name}</th>
+            <td class="eq-size">${fr(best.label)}${second ? `<span class="eq-alt">ou ${fr(second.label)}</span>` : ''}</td>
+            <td class="eq-len">${fr(best.cm)} cm<span class="eq-gap${mm === 0 ? ' is-exact' : ''}">${gapText(mm)}</span></td>
+          </tr>`;
       }).join('');
 
-      // Tips accordion — ouvert par défaut, uniquement si des conseils existent
-      const tipsRows = rows.filter(r => r.b.tip);
-      const tipsHTML = tipsRows.length ? `
-        <details class="bg-blue-50 rounded-2xl border border-blue-100 overflow-hidden group">
-          <summary class="flex items-center gap-2 px-4 py-3.5 cursor-pointer text-xs font-semibold text-blue-700">
-            <span>💡</span> Conseils par marque
-            <svg class="w-3.5 h-3.5 text-blue-400 ml-auto transition-transform duration-200 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="px-4 pb-4 space-y-2 border-t border-blue-100">
-            ${tipsRows.map(r => `
-              <p class="text-xs text-blue-700 leading-relaxed pt-2"><strong>${r.b.name}</strong> — ${r.b.tip}</p>
-            `).join('')}
-          </div>
-        </details>` : '';
+      let sub;
+      if (empty) sub = 'Elles s\'affichent ici dès que tu as choisi ta pointure.';
+      else if (S.mode === 'cm') sub = `Pour un pied de ${fr(srcCm)} cm, rayon ${S.gender}.`;
+      else sub = `${BRANDS[S.sourceBrand].name} ${fr(S.sourceSize)} ${S.gender}, soit ${fr(srcCm)} cm de pied.`;
 
-      const headerLabel = S.mode === 'cm' ? 'Ton pied' : 'Tu portes';
-      const headerValue = S.mode === 'cm'
-        ? `${fr(srcCm)} cm`
-        : `${BRANDS[S.sourceBrand].name} EU ${fr(S.sourceSize)} <span class="text-blue-100 text-sm font-normal"> · ${fr(srcCm)} cm</span>`;
+      const tipsRows = empty ? [] : rows.filter(r => r.b.tip);
+      const tipsHTML = tipsRows.length ? `
+        <div class="fits">
+          <h3>Bon à savoir</h3>
+          ${tipsRows.map(r => `<p><strong>${r.b.name}.</strong> ${r.b.tip}</p>`).join('')}
+        </div>` : '';
+
+      const shareLabel = navigator.share ? 'Partager' : 'Copier le lien';
 
       el.innerHTML = `
-        <div>
-          <!-- Summary header sticky -->
-          <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-3">
-            <div class="bg-blue-600 px-5 py-4">
-              <div class="flex items-center justify-between gap-3">
-                <div>
-                  <p class="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-0.5">${headerLabel}</p>
-                  <p class="text-white font-black text-lg leading-tight">${headerValue}</p>
-                </div>
-                <button id="share-btn"
-                  class="flex items-center gap-1.5 border border-white/40 text-white text-xs font-semibold px-3 py-2 rounded-xl hover:bg-white/10 active:scale-95 transition-all shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                  Partager
-                </button>
-              </div>
+        <div class="label${empty ? ' is-empty' : ''}">
+          <div class="label-head">
+            <div>
+              <h2>Tes pointures équivalentes</h2>
+              <p>${sub}</p>
             </div>
+            ${empty ? '' : `<button id="share-btn" type="button" class="share">${shareLabel}</button>`}
           </div>
-
-          <!-- Brand comparison cards -->
-          <div class="space-y-2 mb-2">
-            ${cardsHTML}
-          </div>
-
-          ${tipsHTML ? `<div class="mt-3">${tipsHTML}</div>` : ''}
+          <table class="eq">
+            <thead><tr><th scope="col">Marque</th><th scope="col" class="r">Pointure EU</th><th scope="col" class="r">Longueur</th></tr></thead>
+            <tbody>${rowsHTML}</tbody>
+          </table>
+          ${empty ? '' : `<p class="label-note">L'écart compare la longueur prévue par chaque marque à ton pied : « +3 mm » veut dire une chaussure prévue pour un pied un peu plus long.</p>`}
+          ${tipsHTML}
         </div>`;
 
-      // Share button handler
-      document.getElementById('share-btn').addEventListener('click', () => {
+      if (empty) return;
+
+      $('share-btn').addEventListener('click', () => {
         const url  = location.href;
         const text = S.mode === 'cm'
           ? `Mes équivalences de pointures pour ${fr(srcCm)} cm sur SizeCheck`
@@ -707,54 +1081,44 @@
           navigator.share({ title: 'SizeCheck', text, url }).catch(() => {});
         } else {
           navigator.clipboard.writeText(url).then(() => {
-            const btn = document.getElementById('share-btn');
-            if (btn) { btn.textContent = '✓ Lien copié !'; setTimeout(() => { if (btn) btn.textContent = 'Partager'; }, 2000); }
+            const btn = $('share-btn');
+            if (btn) { btn.textContent = 'Lien copié'; setTimeout(() => { if (btn.isConnected) btn.textContent = shareLabel; }, 2000); }
           }).catch(() => {});
         }
       });
-
-      reveal('result');
     }
 
     /* ============================================================
        INIT
     ============================================================ */
-    document.getElementById('btn-homme').addEventListener('click', () => { track('changement-genre', { genre: 'homme' }); setGender('homme'); });
-    document.getElementById('btn-femme').addEventListener('click', () => { track('changement-genre', { genre: 'femme' }); setGender('femme'); });
-    document.getElementById('btn-mode-brand').addEventListener('click', () => { track('changement-mode', { mode: 'brand' }); setMode('brand'); });
-    document.getElementById('btn-mode-cm').addEventListener('click', () => { track('changement-mode', { mode: 'cm' }); setMode('cm'); });
+    $('btn-homme').addEventListener('click', () => { track('changement-genre', { genre: 'homme' }); setGender('homme'); });
+    $('btn-femme').addEventListener('click', () => { track('changement-genre', { genre: 'femme' }); setGender('femme'); });
+    $('btn-mode-brand').addEventListener('click', () => { track('changement-mode', { mode: 'brand' }); setMode('brand'); });
+    $('btn-mode-cm').addEventListener('click', () => { track('changement-mode', { mode: 'cm' }); setMode('cm'); });
 
-    const cmInput = document.getElementById('cm-input');
     cmInput.addEventListener('input', () => {
       const v = parseFloat(String(cmInput.value).replace(',', '.'));
       if (isValidCm(v)) {
-        S.footCm = v;
-        computeAllResults();
+        setFootCm(v, 'input');
         saveState();
         updateURL();
       } else {
         S.footCm = null;
-        conceal('result');
+        tape.classList.add('is-empty');
+        computeAllResults();
       }
     });
-    cmInput.addEventListener('change', () => {
-      if (activeCm() === null) return;
-      const res = document.getElementById('result');
-      if (res.getBoundingClientRect().top > window.innerHeight * 0.4) {
-        res.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(() => {
-          if (res.getBoundingClientRect().top > window.innerHeight * 0.6) {
-            res.scrollIntoView({ block: 'start' });
-          }
-        }, 400);
-      }
-    });
+    cmInput.addEventListener('change', () => { if (activeCm() !== null) bringIntoView(); });
 
+    buildTape();
     updateGenderToggle();
     updateModeToggle();
     renderSourceBrands();
+    tapeTo(26, false);
+    updateGauge(false);
+    computeAllResults();
 
-    // Restore from URL params or localStorage
+    // Restauration depuis l'URL (lien partagé) ou le localStorage
     const saved = loadSavedState();
     if (saved) {
       S.gender      = saved.gender;
@@ -764,12 +1128,13 @@
       updateGenderToggle();
       renderSourceBrands();
       if (saved.mode === 'cm') {
-        cmInput.value = S.footCm;
+        cmInput.value = fr(S.footCm);
         setMode('cm'); // S.mode démarre à 'brand' : bascule + recalcul
       } else {
         renderSizes();
-        reveal('step2');
+        $('step2').hidden = false;
         computeAllResults();
+        updateGauge(false);
       }
     }
   </script>

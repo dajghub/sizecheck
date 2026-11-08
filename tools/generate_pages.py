@@ -94,14 +94,13 @@ def extension_cta_html(a, b):
     return f'''
     <div class="ext-cta">
       <div class="ext-cta-main">
-        <span class="ext-cta-icon">🧩</span>
         <div class="ext-cta-text">
           <strong>Ta pointure directement sur le site</strong>
           <p>Sur {na} comme sur {nb}, l'extension Chrome SizeCheck affiche ta taille sur la page produit — sans revenir ici.</p>
         </div>
       </div>
       <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener"
-         data-umami-event="cta-extension" data-umami-event-paire="{a}-{b}">Installer →</a>
+         data-umami-event="cta-extension" data-umami-event-paire="{a}-{b}">Installer l'extension</a>
     </div>'''
 
 
@@ -328,7 +327,7 @@ def page_html(a, b):
     sections = []
     if both_unisex:
         sections.append('<h2>Tableau de correspondance (homme &amp; femme)</h2>')
-        sections.append(f'<p class="note">💡 {na} et {nb} utilisent la même grille EU → cm pour les hommes et les femmes.</p>')
+        sections.append(f'<p class="note">{na} et {nb} utilisent la même grille EU → cm pour les hommes et les femmes.</p>')
         sections.append(f'<div class="tables">{conversion_table(a, b, "homme")}{conversion_table(b, a, "homme")}</div>')
         sections.append(cta)
     else:
@@ -375,7 +374,7 @@ def page_html(a, b):
   <meta name="description" content="{html.escape(desc)}">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{SITE}/comparaisons/{slug}.html">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#E3E5E6">
   <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
   <meta property="og:title" content="{html.escape(title)}">
@@ -386,13 +385,14 @@ def page_html(a, b):
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/pages.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
   <script type="application/ld+json">{faq_ld}</script>
 </head>
 <body>
 <div class="wrap">
-  <header class="top"><a class="brand" href="/">👟 SizeCheck</a></header>
+  <header class="top"><a class="brand" href="/">SizeCheck</a></header>
   <nav class="crumbs"><a href="/">Accueil</a> › <a href="/comparaisons/">Correspondances</a> › {na} ↔ {nb}</nav>
 
   <h1>Pointures {na} ↔ {nb} : tableau de correspondance</h1>
@@ -401,7 +401,7 @@ def page_html(a, b):
   guides officiels des deux marques — y compris les demi-pointures et tiers réellement vendus.</p>
   <p class="updated">Données relevées une à une sur les guides des tailles officiels des deux marques.</p>
   <p><a class="convert-link" href="/?from={a}&size=42&g=homme"
-        data-umami-event="lien-convertisseur" data-umami-event-paire="{a}-{b}">Convertir une autre pointure ou marque →</a></p>
+        data-umami-event="lien-convertisseur" data-umami-event-paire="{a}-{b}">Convertir une autre pointure ou marque</a></p>
 
   {''.join(sections)}
 
@@ -442,7 +442,7 @@ def index_html(pairs):
   <meta name="description" content="{html.escape(desc)}">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{SITE}/comparaisons/">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#E3E5E6">
   <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
   <meta property="og:title" content="{html.escape(title)}">
@@ -453,19 +453,20 @@ def index_html(pairs):
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/pages.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
 </head>
 <body>
 <div class="wrap">
-  <header class="top"><a class="brand" href="/">👟 SizeCheck</a></header>
+  <header class="top"><a class="brand" href="/">SizeCheck</a></header>
   <nav class="crumbs"><a href="/">Accueil</a> › Correspondances</nav>
 
   <h1>Correspondances de pointures entre marques</h1>
   <p class="intro">Tous nos tableaux de conversion par paire de marques, construits à partir des longueurs
   de pied en centimètres des guides des tailles officiels de chaque marque.</p>
 
-  <a class="cta" href="/">⚡ Convertis ta pointure en 2 clics
+  <a class="cta" href="/">Convertis ta pointure en 2 clics
     <span class="go">Ouvrir le convertisseur</span></a>
 
   <h2>Choisis ta paire de marques</h2>

@@ -12,15 +12,15 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 ## Stack technique
 
 ### Site web (`index.html`)
-- Single-file HTML — Tailwind précompilé statique (`assets/tailwind.css`) + JavaScript Vanilla
+- Single-file HTML — CSS écrit à la main dans un `<style>` + JavaScript Vanilla (Tailwind retiré lors de la refonte du 8 nov. 2026)
 - Aucun framework, aucun bundler, aucun backend
-- Mobile-first (`max-w-md mx-auto px-4`)
+- Mobile-first ; sur desktop (≥ 900 px) deux colonnes : formulaire à gauche, étiquette de résultat collante à droite
 - **Analytics : Umami Cloud** (cookieless, RGPD, sans bandeau de consentement) — `data-website-id` `c924201e-94a1-4c34-ad5a-83154e3cc4f7`, sur le site, la page légale et les 28 pages SEO. (Remplace l'ancien duo Google Analytics + tarteaucitron, retirés le 05/07/2026.)
 - Deux modes de conversion : depuis une marque, ou depuis la longueur de pied en cm
 
 ### Pages SEO (`comparaisons/`)
 - 28 pages statiques générées (une par paire de marques) + index, via `tools/generate_pages.py`
-- CSS dédié `assets/pages.css` (indépendant de Tailwind)
+- CSS dédié `assets/pages.css` (mêmes jetons de couleur que l'accueil)
 - **Ne jamais éditer ces pages à la main** — relancer le générateur après toute modification des tables
 
 ### Extension Chrome (`extension/`)
@@ -31,6 +31,13 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - Détection automatique de la marque sur 21 domaines (sites officiels + JD Sports, Zalando, Foot Locker, Courir)
 
 ---
+
+## Identité visuelle (refonte du 8 nov. 2026)
+- **Idée :** le mètre ruban. Le mètre jaune rend visible le pivot EU → cm → EU : il se cale sur la longueur de la pointure choisie, et sert de curseur en mode « pied en cm ». C'est l'unique élément audacieux, tout le reste reste sobre.
+- **Couleurs** (déclarées en variables CSS dans `index.html`, `assets/pages.css`, page légale) : aluminium `#E3E5E6` (fond), papier `#FFFFFF`, encre `#202326`, gris texte `#575D62`, jaune mètre `#F6C500`, rouge aiguille `#D42A1C` (aiguille du mètre uniquement).
+- **Typo :** une seule famille, **Archivo** (axe de largeur `wdth`). Étroite et grasse (`font-stretch` 64–74 %) pour titres et pointures, normale pour le texte. **Auto-hébergée** dans `assets/fonts/` (woff2 variables latin + latin étendu, `OFL.txt`) : `@font-face` dans le `<style>` de `index.html` et de la page légale, en tête de `assets/pages.css`, plus un `preload` du fichier latin. **Ne jamais réintroduire Google Fonts** (l'IP des visiteurs partirait chez Google, contraire à la politique de confidentialité).
+- **Le résultat** = une étiquette de boîte à chaussures : vrai `<table>`, marques dans un ordre fixe, écart en mm par rapport au pied.
+- **À éviter** pour rester dans l'identité : cartes arrondies avec ombre, dégradés, emojis, étiquettes en majuscules, « → » ajouté aux boutons, animations d'apparition sur chaque bloc.
 
 ## Hébergement & domaine
 - **Hébergement :** GitHub Pages (dépôt `jadesaradesst/sizecheck`)
@@ -52,7 +59,6 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 | `sitemap.xml` | Sitemap (régénéré par `tools/generate_pages.py`) |
 | `CNAME` | Domaine custom GitHub Pages |
 | `comparaisons/` | Pages SEO générées par paire de marques (ne pas éditer à la main) |
-| `assets/tailwind.css` | CSS Tailwind précompilé du site (extrait du JIT) |
 | `assets/pages.css` | CSS des pages de comparaison |
 | `assets/logos/` | Logos de marques auto-hébergés (site) |
 | `assets/converse.svg` | Logo Converse (SVG local, source Wikipedia) |
@@ -77,7 +83,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - Tout ajout de marque ou de système de tailles passe par ces deux fichiers + régénération
 - **Séparation données / affichage (virgule décimale FR)** : les tables stockent les libellés **bruts avec un point** (`'41.5'`) — c'est le libellé des guides officiels **et la clé** utilisée par le localStorage, `chrome.storage`, les paramètres d'URL (`?size=42.5`), les `data-value` et les comparaisons d'égalité. La virgule ne s'applique **qu'au rendu**, via un formateur dédié : `fmt_label()` / `fmt_cm()` dans `tools/generate_pages.py`, `fr()` dans `index.html`, `scFr()` dans `extension/sizes.js` (partagé par `content.js` et `popup.js`). **Ne jamais virguler la donnée elle-même** : cela casserait la restauration d'état et les liens partagés.
 - Mobile-first en priorité absolue
-- Single-file HTML pour le site web (pas de séparation JS ; le CSS Tailwind est précompilé dans `assets/tailwind.css` — régénérer via le CDN si de nouvelles classes sont ajoutées)
+- Single-file HTML pour le site web (CSS et JS intégrés à `index.html`)
 - Commits git clairs après chaque session de travail
 
 ---

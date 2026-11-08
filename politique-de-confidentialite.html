@@ -9,60 +9,80 @@
   <link rel="canonical" href="https://www.sizecheck.fr/politique-de-confidentialite.html">
   <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="theme-color" content="#E3E5E6">
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    /* Archivo (SIL OFL 1.1, voir assets/fonts/OFL.txt) — hébergée sur le site, aucun appel à Google. */
+    @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 900; font-stretch: 62% 125%; font-display: swap; src: url(/assets/fonts/archivo-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 900; font-stretch: 62% 125%; font-display: swap; src: url(/assets/fonts/archivo-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    :root { --alu:#E3E5E6; --alu-deep:#CDD1D4; --paper:#FFFFFF; --ink:#202326; --muted:#575D62; color-scheme: light; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--alu); color: var(--ink); font-family: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-underline-offset: 3px; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+    .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 64px; }
+    .top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+    .wordmark { font-weight: 900; font-stretch: 70%; font-size: 24px; letter-spacing: -0.01em; text-decoration: none; }
+    .top-link { font-size: 15px; font-weight: 600; }
+    h1 { font-size: clamp(2.25rem, 9vw, 3.25rem); font-stretch: 64%; font-weight: 850; line-height: 0.95; margin: 40px 0 10px; text-wrap: balance; }
+    .updated { margin: 0 0 32px; font-size: 14px; color: var(--muted); }
+    section { padding: 18px 0 6px; border-top: 1.5px solid var(--alu-deep); }
+    h2 { font-size: 22px; font-weight: 850; font-stretch: 72%; line-height: 1.15; margin: 0 0 8px; }
+    p { margin: 0 0 12px; max-width: 64ch; }
+    .small { font-size: 14px; color: var(--muted); }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;">
-  <div class="max-w-md mx-auto px-4 py-10 pb-16">
+<body>
+  <div class="wrap">
 
-    <!-- Header -->
-    <a href="/" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-600 mb-8 transition-colors">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      Retour à SizeCheck
-    </a>
+    <header class="top">
+      <a class="wordmark" href="/">SizeCheck</a>
+      <a class="top-link" href="/">Retour au convertisseur</a>
+    </header>
 
-    <h1 class="text-2xl font-black text-slate-800 tracking-tight mb-1">Politique de confidentialité</h1>
-    <p class="text-slate-400 text-sm mb-8">Dernière mise à jour : juillet 2026</p>
+    <h1>Politique de confidentialité</h1>
+    <p class="updated">Dernière mise à jour : juillet 2026</p>
 
-    <div class="space-y-6 text-sm text-slate-600 leading-relaxed">
+    <main>
 
-      <section class="bg-white rounded-2xl shadow-sm p-5">
-        <h2 class="font-bold text-slate-800 mb-2">1. Qui sommes-nous ?</h2>
-        <p>SizeCheck (<a href="https://www.sizecheck.fr" class="text-blue-600 underline">sizecheck.fr</a>) est un outil gratuit de conversion de pointures entre marques de chaussures. Le site n'est pas associé aux marques Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS ou HOKA.</p>
+      <section>
+        <h2>1. Qui sommes-nous ?</h2>
+        <p>SizeCheck (<a href="https://www.sizecheck.fr">sizecheck.fr</a>) est un outil gratuit de conversion de pointures entre marques de chaussures. Le site n'est pas associé aux marques Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS ou HOKA.</p>
       </section>
 
-      <section class="bg-white rounded-2xl shadow-sm p-5">
-        <h2 class="font-bold text-slate-800 mb-2">2. Données collectées</h2>
-        <p class="mb-3">SizeCheck ne collecte aucune donnée personnelle directement (ni nom, ni email, ni adresse).</p>
-        <p class="mb-3">Pour mesurer l'audience du site, nous utilisons <strong class="text-slate-700">Umami</strong>, un outil de statistiques respectueux de la vie privée. Umami ne dépose <strong>aucun cookie</strong>, ne collecte aucune donnée personnelle identifiable et ne suit pas les visiteurs d'un site à l'autre. Les statistiques recueillies (pages vues, provenance, type d'appareil) sont entièrement anonymisées et agrégées.</p>
-        <p class="text-slate-400 text-xs">Ces données étant anonymes et sans cookie, elles ne nécessitent pas de consentement préalable. Umami est conforme au RGPD.</p>
+      <section>
+        <h2>2. Données collectées</h2>
+        <p>SizeCheck ne collecte aucune donnée personnelle directement (ni nom, ni email, ni adresse).</p>
+        <p>Pour mesurer l'audience du site, nous utilisons <strong>Umami</strong>, un outil de statistiques respectueux de la vie privée. Umami ne dépose <strong>aucun cookie</strong>, ne collecte aucune donnée personnelle identifiable et ne suit pas les visiteurs d'un site à l'autre. Les statistiques recueillies (pages vues, provenance, type d'appareil) sont entièrement anonymisées et agrégées.</p>
+        <p class="small">Ces données étant anonymes et sans cookie, elles ne nécessitent pas de consentement préalable. Umami est conforme au RGPD.</p>
       </section>
 
-      <section class="bg-white rounded-2xl shadow-sm p-5">
-        <h2 class="font-bold text-slate-800 mb-2">3. Cookies</h2>
+      <section>
+        <h2>3. Cookies</h2>
         <p>SizeCheck <strong>ne dépose aucun cookie de suivi ni cookie tiers</strong>. Aucun bandeau de consentement n'est donc nécessaire. Le site utilise uniquement le stockage local de votre navigateur (voir section 4) pour votre confort d'utilisation.</p>
       </section>
 
-      <section class="bg-white rounded-2xl shadow-sm p-5">
-        <h2 class="font-bold text-slate-800 mb-2">4. LocalStorage</h2>
+      <section>
+        <h2>4. LocalStorage</h2>
         <p>SizeCheck utilise le <strong>localStorage</strong> de votre navigateur pour mémoriser votre dernière sélection (marque et pointure) afin d'améliorer votre expérience. Ces données restent sur votre appareil et ne sont jamais envoyées à un serveur.</p>
       </section>
 
-      <section class="bg-white rounded-2xl shadow-sm p-5">
-        <h2 class="font-bold text-slate-800 mb-2">5. Partage des données</h2>
+      <section>
+        <h2>5. Partage des données</h2>
         <p>Nous ne vendons, ne louons et ne partageons aucune donnée personnelle avec des tiers. La mesure d'audience (Umami) repose exclusivement sur des données anonymes et agrégées.</p>
       </section>
 
-      <section class="bg-white rounded-2xl shadow-sm p-5">
-        <h2 class="font-bold text-slate-800 mb-2">6. Vos droits</h2>
-        <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour toute demande, contactez-nous à l'adresse : <a href="mailto:contact@sizecheck.fr" class="text-blue-600 underline">contact@sizecheck.fr</a></p>
+      <section>
+        <h2>6. Vos droits</h2>
+        <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour toute demande, contactez-nous à l'adresse : <a href="mailto:contact@sizecheck.fr">contact@sizecheck.fr</a></p>
       </section>
 
-      <section class="bg-white rounded-2xl shadow-sm p-5">
-        <h2 class="font-bold text-slate-800 mb-2">7. Hébergement</h2>
-        <p>Ce site est hébergé via <strong>GitHub Pages</strong>, un service de GitHub, Inc. (88 Colin P Kelly Jr St, San Francisco, CA 94107, USA). Politique de confidentialité GitHub : <a href="https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement" class="text-blue-600 underline" target="_blank" rel="noopener">docs.github.com</a></p>
+      <section>
+        <h2>7. Hébergement</h2>
+        <p>Ce site est hébergé via <strong>GitHub Pages</strong>, un service de GitHub, Inc. (88 Colin P Kelly Jr St, San Francisco, CA 94107, USA). Politique de confidentialité GitHub : <a href="https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">docs.github.com</a></p>
       </section>
 
-    </div>
+    </main>
 
   </div>
 
