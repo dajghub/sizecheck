@@ -51,7 +51,7 @@
         "name": "Converse taille-t-il grand ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Oui, Converse taille grand. La semelle plate des Chuck Taylor libère de l'espace en longueur. Un EU 43 Converse correspond à 28 cm (homme), soit l'équivalent d'un EU 44 New Balance ou d'un EU 45 Nike. SizeCheck calcule automatiquement la correspondance exacte."
+          "text": "Oui, Converse taille grand, et l'indique sur son guide des tailles officiel. Ce décalage est déjà intégré à son tableau en centimètres : un EU 43 Converse correspond à 28 cm de pied (homme), soit un EU 44 New Balance ou un EU 45 Nike. Prenez donc la pointure donnée par SizeCheck, sans descendre d'une demi-pointure en plus."
         }
       },
       {
@@ -67,7 +67,7 @@
         "name": "Vans taille-t-il grand ou petit ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Vans taille légèrement grand. Il est généralement conseillé de prendre ½ pointure en dessous de sa taille habituelle, notamment pour les modèles classiques comme l'Old Skool ou l'Authentic."
+          "text": "Vans taille grand en numéro EU : pour un pied de 27,5 cm, le guide officiel Vans indique un 42,5, là où Nike indique un 44,5. Cet écart est déjà dans le tableau en centimètres : prenez la pointure donnée par SizeCheck, sans descendre d'une demi-pointure en plus. Les modèles classiques (Old Skool, Authentic) sont aussi réputés généreux en largeur."
         }
       }
     ]
@@ -506,7 +506,7 @@
           </details>
           <details>
             <summary>Converse taille-t-il grand&nbsp;?</summary>
-            <p>Oui, Converse taille grand. La semelle plate des Chuck Taylor libère de l'espace en longueur. Un EU 43 Converse correspond à 28 cm (homme), soit l'équivalent d'un EU 44 New Balance ou d'un EU 45 Nike. SizeCheck calcule automatiquement la correspondance exacte.</p>
+            <p>Oui, Converse taille grand, et l'indique sur son guide des tailles officiel. Ce décalage est déjà intégré à son tableau en centimètres : un EU 43 Converse correspond à 28 cm de pied (homme), soit un EU 44 New Balance ou un EU 45 Nike. Prenez donc la pointure donnée par SizeCheck, sans descendre d'une demi-pointure en plus.</p>
           </details>
           <details>
             <summary>Est-ce que Nike taille standard&nbsp;?</summary>
@@ -514,7 +514,7 @@
           </details>
           <details>
             <summary>Vans taille-t-il grand ou petit&nbsp;?</summary>
-            <p>Vans taille légèrement grand. Il est généralement conseillé de prendre ½ pointure en dessous de sa taille habituelle, notamment pour les modèles classiques comme l'Old Skool ou l'Authentic.</p>
+            <p>Vans taille grand en numéro EU : pour un pied de 27,5 cm, le guide officiel Vans indique un 42,5, là où Nike indique un 44,5. Cet écart est déjà dans le tableau en centimètres : prenez la pointure donnée par SizeCheck, sans descendre d'une demi-pointure en plus. Les modèles classiques (Old Skool, Authentic) sont aussi réputés généreux en largeur.</p>
           </details>
         </section>
 
@@ -633,7 +633,7 @@
       },
       converse: {
         name: 'Converse', emoji: '⭐', logo: '/assets/converse.svg',
-        tip: 'Converse taille grand — la semelle plate des Chuck Taylor libère de l\'espace en longueur. Si ton pied est étroit, la pointure recommandée devrait convenir sans descendre. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
+        tip: 'Converse taille grand, et son guide officiel en cm en tient déjà compte : la pointure ci-dessus est la bonne, inutile de descendre encore. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
         sizes: { homme: CONVERSE_UNISEXE, femme: CONVERSE_UNISEXE }
       },
       salomon: {
@@ -643,7 +643,7 @@
       },
       vans: {
         name: 'Vans', emoji: '🔴', logo: '/assets/logos/vans.png',
-        tip: 'Vans taille grand — les modèles classiques (Old Skool, Authentic) ont un last long et généreux, surtout en largeur. Idéal pour les pieds larges.',
+        tip: 'Vans taille grand, et son guide officiel en cm en tient déjà compte : la pointure ci-dessus est la bonne, inutile de descendre encore. Les modèles classiques (Old Skool, Authentic) sont réputés généreux en largeur.',
         sizes: { homme: VANS_UNISEXE, femme: VANS_UNISEXE }
       },
       asics: {
@@ -1014,6 +1014,13 @@
       return (mm > 0 ? '+' : '−') + Math.abs(mm) + ' mm';
     }
 
+    // Le nom de la marque précède déjà le conseil : « Vans. Taille grand… » plutôt que « Vans. Vans taille grand… »
+    function tipText(b) {
+      if (!b.tip.startsWith(b.name + ' ')) return b.tip;
+      const rest = b.tip.slice(b.name.length + 1);
+      return rest.charAt(0).toUpperCase() + rest.slice(1);
+    }
+
     function computeAllResults() {
       const el = $('result');
       const srcCm = activeCm();
@@ -1048,7 +1055,7 @@
       const tipsHTML = tipsRows.length ? `
         <div class="fits">
           <h3>Bon à savoir</h3>
-          ${tipsRows.map(r => `<p><strong>${r.b.name}.</strong> ${r.b.tip}</p>`).join('')}
+          ${tipsRows.map(r => `<p><strong>${r.b.name}.</strong> ${tipText(r.b)}</p>`).join('')}
         </div>` : '';
 
       const shareLabel = navigator.share ? 'Partager' : 'Copier le lien';

@@ -3,7 +3,7 @@
   "name": "SizeCheck — Convertisseur de pointures",
   "short_name": "SizeCheck",
   "description": "Trouvez votre pointure dans n'importe quelle marque de chaussures. Détection automatique sur les pages produit.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -21,26 +21,68 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.nike.com/*", "*://*.nike.fr/*",
-        "*://*.adidas.com/*", "*://*.adidas.fr/*",
-        "*://*.newbalance.com/*", "*://*.newbalance.fr/*",
-        "*://*.converse.com/*", "*://*.converse.fr/*",
-        "*://*.salomon.com/*", "*://*.salomon.fr/*",
-        "*://*.vans.com/*", "*://*.vans.fr/*",
-        "*://*.asics.com/*", "*://*.asics.fr/*",
-        "*://*.hoka.com/*", "*://*.hoka.fr/*",
+        "*://*.nike.com/*",
+        "*://*.nike.fr/*",
+        "*://*.adidas.com/*",
+        "*://*.adidas.fr/*",
+        "*://*.newbalance.com/*",
+        "*://*.newbalance.fr/*",
+        "*://*.converse.com/*",
+        "*://*.converse.fr/*",
+        "*://*.salomon.com/*",
+        "*://*.salomon.fr/*",
+        "*://*.vans.com/*",
+        "*://*.vans.fr/*",
+        "*://*.asics.com/*",
+        "*://*.asics.fr/*",
+        "*://*.hoka.com/*",
+        "*://*.hoka.fr/*",
         "*://*.jdsports.fr/*",
         "*://*.zalando.fr/*",
         "*://*.footlocker.fr/*",
         "*://*.courir.com/*",
         "*://*.sizeer.com/*"
       ],
-      "js": ["sizes.js", "content.js"],
+      "js": [
+        "sizes.js",
+        "ui.js",
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
-  "permissions": ["storage", "activeTab"],
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
   "web_accessible_resources": [
-    { "resources": ["converse.svg"], "matches": ["<all_urls>"] }
+    {
+      "resources": [
+        "fonts/archivo-latin.woff2"
+      ],
+      "matches": [
+        "*://*.nike.com/*",
+        "*://*.nike.fr/*",
+        "*://*.adidas.com/*",
+        "*://*.adidas.fr/*",
+        "*://*.newbalance.com/*",
+        "*://*.newbalance.fr/*",
+        "*://*.converse.com/*",
+        "*://*.converse.fr/*",
+        "*://*.salomon.com/*",
+        "*://*.salomon.fr/*",
+        "*://*.vans.com/*",
+        "*://*.vans.fr/*",
+        "*://*.asics.com/*",
+        "*://*.asics.fr/*",
+        "*://*.hoka.com/*",
+        "*://*.hoka.fr/*",
+        "*://*.jdsports.fr/*",
+        "*://*.zalando.fr/*",
+        "*://*.footlocker.fr/*",
+        "*://*.courir.com/*",
+        "*://*.sizeer.com/*"
+      ]
+    }
   ]
 }

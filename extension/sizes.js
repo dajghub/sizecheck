@@ -39,7 +39,6 @@ const SC_SALOMON_UNISEXE = [
 const SC_BRANDS = {
   nike: {
     name: 'Nike', domain: 'nike.com',
-    logo: 'https://www.google.com/s2/favicons?domain=nike.com&sz=128',
     tip: null,
     sizes: {
       homme: [
@@ -60,13 +59,11 @@ const SC_BRANDS = {
   },
   adidas: {
     name: 'Adidas', domain: 'adidas.com',
-    logo: 'https://www.google.com/s2/favicons?domain=adidas.com&sz=128',
-    tip: 'Chaussant étroit — si pied large, prends la pointure au-dessus de la recommandation.',
+    tip: 'Adidas taille petit — chaussant plus étroit que la norme. Si tu as le pied large, prends la pointure supérieure à celle recommandée.',
     sizes: { homme: SC_ADIDAS_UNISEXE, femme: SC_ADIDAS_UNISEXE }
   },
   newbalance: {
     name: 'New Balance', domain: 'newbalance.com',
-    logo: 'https://www.google.com/s2/favicons?domain=newbalance.com&sz=128',
     tip: null,
     sizes: {
       homme: [
@@ -86,25 +83,21 @@ const SC_BRANDS = {
   },
   converse: {
     name: 'Converse', domain: 'converse.com',
-    logo: 'https://www.google.com/s2/favicons?domain=converse.com&sz=128',
-    tip: 'Semelle plate qui libère de l\'espace en longueur. Si pied étroit, la taille recommandée convient sans descendre. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
+    tip: 'Converse taille grand, et son guide officiel en cm en tient déjà compte : la pointure ci-dessus est la bonne, inutile de descendre encore. Données basées sur les Chuck Taylor All Star — les modèles Standard Sneakers peuvent avoir un chaussant légèrement différent.',
     sizes: { homme: SC_CONVERSE_UNISEXE, femme: SC_CONVERSE_UNISEXE }
   },
   salomon: {
     name: 'Salomon', domain: 'salomon.com',
-    logo: 'https://www.google.com/s2/favicons?domain=salomon.com&sz=128',
-    tip: 'Fit trail enveloppant. En cas de doute entre deux pointures, prends la supérieure.',
+    tip: 'Salomon taille petit — fit trail enveloppant conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prends la supérieure.',
     sizes: { homme: SC_SALOMON_UNISEXE, femme: SC_SALOMON_UNISEXE }
   },
   vans: {
     name: 'Vans', domain: 'vans.com',
-    logo: 'https://www.google.com/s2/favicons?domain=vans.com&sz=128',
-    tip: 'Last long et généreux, surtout en largeur sur les modèles classiques (Old Skool, Authentic).',
+    tip: 'Vans taille grand, et son guide officiel en cm en tient déjà compte : la pointure ci-dessus est la bonne, inutile de descendre encore. Les modèles classiques (Old Skool, Authentic) sont réputés généreux en largeur.',
     sizes: { homme: SC_VANS_UNISEXE, femme: SC_VANS_UNISEXE }
   },
   asics: {
     name: 'ASICS', domain: 'asics.com',
-    logo: 'https://www.google.com/s2/favicons?domain=asics.com&sz=128',
     tip: null,
     sizes: {
       homme: [
@@ -124,7 +117,6 @@ const SC_BRANDS = {
   },
   hoka: {
     name: 'HOKA', domain: 'hoka.com',
-    logo: 'https://www.google.com/s2/favicons?domain=hoka.com&sz=128',
     tip: 'Sur les modèles femme récents (Clifton 10, Arahi 8, Challenger 8), HOKA conseille une demi-pointure en dessous de ta pointure HOKA habituelle.',
     sizes: {
       homme: [
@@ -200,7 +192,3 @@ function scFr(v) {
   return String(v).replace('.', ',');
 }
 
-// Patch Converse logo avec le SVG local (même qualité que le site)
-if (typeof chrome !== 'undefined' && chrome.runtime?.getURL) {
-  SC_BRANDS.converse.logo = chrome.runtime.getURL('converse.svg');
-}

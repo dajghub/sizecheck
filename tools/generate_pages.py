@@ -26,16 +26,16 @@ LASTMOD = date.today().isoformat()
 FIT_CLAIMS = {
     'nike': 'Nike taille standard : ses pointures suivent les tailles EU conventionnelles. Un EU 44 Nike correspond à 27,1 cm de longueur de pied selon le guide officiel.',
     'adidas': 'Adidas taille petit, principalement à cause d\'un chaussant plus étroit que la norme. Si vous avez le pied large, prenez la pointure au-dessus de celle recommandée.',
-    'converse': 'Converse taille grand : la semelle plate des Chuck Taylor libère de l\'espace en longueur. Converse recommande officiellement de prendre une demi-pointure en dessous de sa pointure habituelle.',
-    'vans': 'Vans taille légèrement grand : les modèles classiques (Old Skool, Authentic) ont un chaussant long et généreux, surtout en largeur.',
+    'converse': 'Converse taille grand, et l\'indique sur son guide des tailles officiel. Ce décalage est déjà intégré à son tableau en centimètres : à longueur de pied égale, la pointure EU Converse sort plus petite que chez Nike ou Adidas. Prenez la pointure du tableau ci-dessus, sans descendre d\'une demi-pointure en plus.',
+    'vans': 'Vans taille grand en numéro EU : à longueur de pied égale, son guide officiel donne une pointure plus petite que Nike ou Adidas. Cet écart est déjà dans le tableau ci-dessus : inutile de descendre d\'une demi-pointure en plus. Les modèles classiques (Old Skool, Authentic) sont réputés généreux en largeur.',
     'salomon': 'Salomon taille petit : le fit trail est enveloppant, conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prenez la supérieure.',
 }
 
 TIPS = {
     'adidas': 'Adidas taille petit — chaussant plus étroit que la norme. Si tu as le pied large, prends la pointure supérieure à celle recommandée.',
-    'converse': 'Converse taille grand — la semelle plate des Chuck Taylor libère de l\'espace en longueur. Données basées sur les Chuck Taylor All Star.',
+    'converse': 'Converse taille grand, et son guide officiel en cm en tient déjà compte : inutile de descendre encore. Données basées sur les Chuck Taylor All Star.',
     'salomon': 'Salomon taille petit — fit trail enveloppant conçu pour maintenir le pied en descente. En cas de doute entre deux pointures, prends la supérieure.',
-    'vans': 'Vans taille grand — les modèles classiques (Old Skool, Authentic) ont un last long et généreux, surtout en largeur.',
+    'vans': 'Vans taille grand, et son guide officiel en cm en tient déjà compte : inutile de descendre encore. Les modèles classiques (Old Skool, Authentic) sont réputés généreux en largeur.',
     'hoka': 'Sur les modèles femme récents (Clifton 10, Arahi 8, Challenger 8), HOKA conseille une demi-pointure en dessous de ta pointure HOKA habituelle.',
 }
 
@@ -104,20 +104,76 @@ def extension_cta_html(a, b):
     </div>'''
 
 
-def fit_comparison(a, b):
-    """« Est-ce que A et B taillent pareil ? » — calculé depuis les tables :
-    écart moyen de longueur de pied (cm) à pointure EU affichée égale,
-    sur les labels communs aux deux marques (grilles homme)."""
-    na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
-    ta, tb = dict(TABLES[a]['homme']), dict(TABLES[b]['homme'])
-    shared = sorted(set(ta) & set(tb), key=lambda l: ta[l])
+def que(name):
+    """« que Nike » / « qu'Adidas » (élision devant voyelle)."""
+    return f"qu'{name}" if name[0] in 'AEIOUaeiou' else f'que {name}'
+
+
+def _avg_gap(a, b, genre):
+    """Écart moyen de longueur de pied (cm, B − A) à pointure EU affichée égale,
+    sur les labels communs aux deux grilles du genre. None si aucun label commun."""
+    ta, tb = dict(TABLES[a][genre]), dict(TABLES[b][genre])
+    shared = [l for l in ta if l in tb]
     if not shared:
         return None
-    avg = sum(tb[l] - ta[l] for l in shared) / len(shared)
-    d = abs(avg)
-    d_txt = f'{d:.1f}'.replace('.', ',')
+    return sum(tb[l] - ta[l] for l in shared) / len(shared)
 
+
+def _steps(d):
+    if d <= 0.45:
+        return 'environ une demi-pointure'
+    if d <= 0.85:
+        return 'environ une pointure'
+    return 'plus d\'une pointure'
+
+
+def _verdict(avg):
+    """('same', None) ou (marque la plus longue 'a'/'b', ampleur de l'écart)."""
+    if abs(avg) <= 0.15:
+        return ('same', None)
+    return ('b' if avg > 0 else 'a', _steps(abs(avg)))
+
+
+def _example(a, b, genre, preferred):
+    """Exemple « un EU X A genre correspond à un EU Y B »."""
+    ta = dict(TABLES[a][genre])
+    ref = preferred if preferred in ta else TABLES[a][genre][len(ta) // 2][0]
+    best, _ = best_match(b, ta[ref], genre)
+    return ref, best[0]
+
+
+def fit_comparison(a, b):
+    """« Est-ce que A et B taillent pareil ? » — calculé depuis les tables.
+    Grilles homme par défaut ; si la grille femme mène à une autre conclusion,
+    la réponse distingue les deux genres (ex. Nike/Adidas : ~0 cm homme, 0,4 cm femme)."""
+    na, nb = BRAND_NAMES[a], BRAND_NAMES[b]
+    gh, gf = _avg_gap(a, b, 'homme'), _avg_gap(a, b, 'femme')
+    if gh is None:
+        return None
     q = f'Est-ce que {na} et {nb} taillent pareil ?'
+    end = ' Le tableau ci-dessus donne la correspondance exacte pour chaque pointure.'
+
+    # On ne distingue les genres que si la conclusion change de sens (pareil / l'une plus grande)
+    if gf is not None and _verdict(gh)[0] != _verdict(gf)[0]:
+        parts = []
+        for genre, avg, ref in (('homme', gh, '42'), ('femme', gf, '38')):
+            who = 'Chez les hommes' if genre == 'homme' else 'Chez les femmes'
+            d = abs(avg)
+            d_txt = f'{d:.1f}'.replace('.', ',')
+            if d <= 0.15:
+                ecart = 'est de moins de 0,1 cm' if d < 0.05 else f'n\'est que de {d_txt} cm'
+                parts.append(f'{who}, oui : à pointure EU égale, l\'écart moyen {ecart} '
+                             f'de longueur de pied.')
+            else:
+                big, small = (nb, na) if avg > 0 else (na, nb)
+                x, y = _example(a, b, genre, ref)
+                parts.append(f'{who}, non : à pointure EU égale, {big} chausse en moyenne {d_txt} cm '
+                             f'plus long {que(small)}, soit {_steps(d)} d\'écart (un EU {fmt_label(x)} '
+                             f'{na} {genre} correspond à un EU {fmt_label(y)} {nb}).')
+        return (q, 'Cela dépend du genre. ' + ' '.join(parts) + end)
+
+    d = abs(gh)
+    d_txt = f'{d:.1f}'.replace('.', ',')
     if d <= 0.15:
         ecart = 'de moins de 0,1 cm' if d < 0.05 else f'de seulement {d_txt} cm'
         r = (f'Oui, quasiment : à pointure EU égale, l\'écart moyen entre {na} et {nb} '
@@ -125,20 +181,12 @@ def fit_comparison(a, b):
              f'la même pointure — le tableau ci-dessus donne la correspondance exacte pour chaque taille.')
         return (q, r)
 
-    big, small = (nb, na) if avg > 0 else (na, nb)
-    if d <= 0.45:
-        steps = 'environ une demi-pointure'
-    elif d <= 0.85:
-        steps = 'environ une pointure'
-    else:
-        steps = 'plus d\'une pointure'
-    ex_best, _ = best_match(b, ta['42'], 'homme')
+    big, small = (nb, na) if gh > 0 else (na, nb)
+    x, y = _example(a, b, 'homme', '42')
     r = (f'Non. À pointure EU affichée égale, {big} chausse en moyenne {d_txt} cm plus long '
-         f'que {small} : {big} taille plus grand. Comptez {steps} d\'écart — par exemple, '
-         f'un EU 42 {na} homme correspond à un EU {fmt_label(ex_best[0])} {nb}. '
-         f'Le tableau ci-dessus donne la correspondance exacte pour chaque pointure.')
+         f'{que(small)} : {big} taille plus grand. Comptez {_steps(d)} d\'écart — par exemple, '
+         f'un EU {fmt_label(x)} {na} homme correspond à un EU {fmt_label(y)} {nb}.' + end)
     return (q, r)
-
 
 # Paires enrichies (19 août 2026) : celles mises en avant depuis l'accueil,
 # donc les premières que Google recrawlera. Les 20 autres restent au gabarit

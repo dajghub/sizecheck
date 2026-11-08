@@ -5,145 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SizeCheck</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      width: 340px;
-      min-height: 160px;
-      background: #f1f5f9;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-      color: #1e293b;
-      font-size: 14px;
+    /* Archivo (SIL OFL 1.1, voir fonts/OFL.txt). Le reste du style vient de ui.js. */
+    @font-face {
+      font-family: 'SizeCheck Archivo'; font-style: normal; font-weight: 400 900;
+      font-stretch: 62% 125%; font-display: block;
+      src: url(fonts/archivo-latin.woff2) format('woff2');
     }
-
-    /* Header */
-    .header {
-      background: #fff;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .header-left { display: flex; align-items: center; gap: 8px; }
-    .header-logo { font-size: 20px; }
-    .header-title { font-weight: 800; font-size: 16px; letter-spacing: -.02em; }
-    .header-link { font-size: 10px; color: #94a3b8; text-decoration: none; font-weight: 600; }
-    .header-link:hover { color: #1d4ed8; }
-
-    /* Content */
-    .content { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-
-    /* Card */
-    .card { background: #fff; border-radius: 16px; padding: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-
-    /* Label */
-    .label {
-      font-size: 10px; font-weight: 700; color: #94a3b8;
-      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
-    }
-
-    /* Brand grid */
-    .brand-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-    .brand-btn {
-      background: #f8fafc; border: 2px solid transparent; border-radius: 12px;
-      padding: 8px 3px; cursor: pointer; display: flex; flex-direction: column;
-      align-items: center; gap: 4px; transition: all .15s;
-    }
-    .brand-btn:hover { border-color: #bfdbfe; background: #eff6ff; }
-    .brand-btn.active { border-color: #1d4ed8; background: #eff6ff; }
-    .brand-btn img { width: 24px; height: 24px; object-fit: contain; border-radius: 4px; }
-    .brand-btn .bname {
-      font-size: 8.5px; font-weight: 700; color: #64748b;
-      text-align: center; line-height: 1.2;
-    }
-    .brand-btn.active .bname { color: #1d4ed8; }
-
-    /* Size grid */
-    .size-grid { display: flex; flex-wrap: wrap; gap: 5px; }
-    .size-btn {
-      padding: 7px 10px; border: 2px solid #e2e8f0; border-radius: 10px;
-      background: #fff; font-size: 12px; font-weight: 700; color: #475569;
-      cursor: pointer; transition: all .15s; min-width: 38px; text-align: center;
-    }
-    .size-btn:hover { border-color: #93c5fd; }
-    .size-btn.active { border-color: #1d4ed8; background: #1d4ed8; color: #fff; }
-
-    /* Results */
-    .results { display: flex; flex-direction: column; gap: 5px; }
-    .result-row {
-      display: flex; align-items: center; gap: 8px;
-      padding: 9px 11px; background: #f8fafc;
-      border-radius: 12px; border: 2px solid transparent;
-    }
-    .result-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
-    .result-name { font-size: 12px; font-weight: 700; color: #1e293b; flex: 1; }
-    .result-size { font-size: 18px; font-weight: 800; color: #1d4ed8; flex-shrink: 0; text-align: right; }
-    .result-second { display: block; font-size: 9px; font-weight: 600; color: #94a3b8; }
-
-    /* Page brand badge */
-    .page-brand-badge {
-      font-size: 10px; font-weight: 700; color: #1d4ed8;
-      background: #eff6ff; border: 1px solid #bfdbfe;
-      border-radius: 8px; padding: 5px 10px; margin-bottom: 8px;
-    }
-    .result-row.page-result { border-color: #1d4ed8; background: #eff6ff; }
-    .on-page-tag {
-      font-size: 8px; font-weight: 700; color: #1d4ed8;
-      background: #dbeafe; border-radius: 4px; padding: 1px 4px; margin-left: 4px;
-    }
-
-    /* CM input */
-    .cm-input {
-      flex: 1; min-width: 0;
-      border: 2px solid #e2e8f0; border-radius: 10px; background: #fff;
-      padding: 9px 11px; font-size: 18px; font-weight: 800; color: #1e293b;
-      outline: none; font-family: inherit;
-    }
-    .cm-input:focus { border-color: #1d4ed8; }
-
-    /* Tip */
-    .tip {
-      font-size: 11px; color: #64748b; line-height: 1.5;
-      background: #fffbeb; border-radius: 10px; padding: 9px 11px;
-      border-left: 3px solid #fcd34d;
-    }
+    html, body { margin: 0; background: #E3E5E6; }
+    body { width: 340px; min-height: 160px; }
   </style>
-</head>
-<body>
-
-  <div class="header">
-    <div class="header-left">
-      <span class="header-logo">👟</span>
-      <span class="header-title">SizeCheck</span>
-    </div>
-    <a class="header-link" href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr ↗</a>
-  </div>
-
-  <div class="content">
-    <!-- Toggle genre -->
-    <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
-      <button id="btn-homme" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Homme</button>
-      <button id="btn-femme" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:#64748b">Femme</button>
-    </div>
-
-    <!-- Toggle mode (depuis ma marque / depuis mon pied) -->
-    <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
-      <button id="btn-mode-brand" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">Depuis ma marque</button>
-      <button id="btn-mode-cm" style="flex:1;padding:6px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">Depuis mon pied</button>
-    </div>
-
-    <!-- Marque habituelle -->
-    <div class="card" id="brand-card">
-      <div class="label">Ma marque habituelle</div>
-      <div class="brand-grid" id="brand-grid"><!-- JS --></div>
-    </div>
-
-    <!-- Pointure + Résultats (injectés par JS) -->
-    <div id="step2"></div>
-  </div>
-
   <script src="sizes.js"></script>
+  <script src="ui.js"></script>
+</head>
+<body class="sc-root">
+  <header class="sc-top">
+    <span class="sc-wordmark">SizeCheck</span>
+    <a class="sc-top-aside" href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr</a>
+  </header>
+  <div class="sc-strip" aria-hidden="true"></div>
+  <main class="sc-body" id="app"><!-- popup.js --></main>
   <script src="popup.js"></script>
 </body>
 </html>

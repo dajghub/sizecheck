@@ -25,9 +25,11 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 
 ### Extension Chrome (`extension/`)
 - Manifest V3
-- `sizes.js` — données de conversion partagées (source unique de vérité)
-- `content.js` — widget injecté via Shadow DOM sur les pages produit
+- `sizes.js` — données de conversion partagées (source unique de vérité), conseils de chaussant **identiques au site** (contrôlé par `check_sync.py`)
+- `ui.js` — identité « mètre ruban » partagée par le popup et le widget : jetons, composants (rayon, méthode, marques, pointures, champ cm) et **étiquette de résultat identique à celle du site**. Toute évolution visuelle du site doit y être reportée.
+- `content.js` — widget injecté via Shadow DOM sur les pages produit (police chargée en binaire via `FontFace`, car `@font-face` ne marche pas dans un shadow DOM)
 - `popup.html` / `popup.js` — interface manuelle accessible depuis la barre Chrome
+- `fonts/` — Archivo embarquée (nom `SizeCheck Archivo`, pour ne pas entrer en conflit avec les pages visitées). Plus aucun logo ni appel à un service externe.
 - Détection automatique de la marque sur 21 domaines (sites officiels + JD Sports, Zalando, Foot Locker, Courir)
 
 ---
@@ -61,19 +63,22 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 | `comparaisons/` | Pages SEO générées par paire de marques (ne pas éditer à la main) |
 | `assets/pages.css` | CSS des pages de comparaison |
 | `assets/logos/` | Logos de marques auto-hébergés (site) |
-| `assets/converse.svg` | Logo Converse (SVG local, source Wikipedia) |
-| `assets/og-image.png` | Image Open Graph 1200×630 (prévisualisation WhatsApp/réseaux) |
+| `assets/converse.svg` | Logo Converse (SVG local, source Wikipedia) — plus affiché depuis la refonte |
+| `assets/og-image.png` | Image Open Graph 1200×630 (prévisualisation WhatsApp/réseaux) — générée par `tools/render_brand_assets.py` |
 | `marketing/chrome-store/` | Assets Chrome Web Store (promo, captures 1280×800, `store-listing.md`, zip) — non déployés |
 | `marketing/avatars/` | Photos de profil (Awin/réseaux) — gardées **en local** (gitignorées), non déployées |
 | `tools/sizedata.py` | Lecture des tables (module partagé des scripts) |
-| `tools/check_sync.py` | Contrôle synchro/monotonie des tables site ↔ extension |
+| `tools/check_sync.py` | Contrôle synchro/monotonie des tables et synchro des conseils site ↔ extension |
 | `tools/generate_pages.py` | Générateur des pages de comparaison + sitemap |
+| `tools/render_brand_assets.py` | Régénère `og-image.png`, `favicon.png`, `apple-touch-icon.png` (Chrome headless + Archivo du site) |
 | `STATUS.md` | Suivi d'avancement par session |
 | `extension/sizes.js` | **Source unique des données de conversion** |
 | `extension/manifest.json` | Config extension Chrome |
 | `extension/content.js` | Widget injecté sur pages produit |
 | `extension/popup.html/js` | Popup fallback |
-| `extension/converse.svg` | Copie locale du logo Converse pour l'extension (web_accessible_resources) |
+| `extension/ui.js` | Style et rendu partagés popup + widget (identité du site) |
+| `extension/fonts/` | Archivo embarquée (web_accessible_resources, limitée aux domaines du widget) |
+| `tools/render_brand_assets.py` | (voir plus haut) génère aussi `extension/icons/` et les bannières `marketing/chrome-store/promo-*.png` |
 
 ---
 

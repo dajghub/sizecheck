@@ -108,7 +108,7 @@
   }
 
   /* ══════════════════════════════════════════
-     SHADOW DOM
+     SHADOW DOM — identité « mètre ruban » (ui.js)
   ══════════════════════════════════════════ */
 
   const hostEl = document.createElement('div');
@@ -117,273 +117,79 @@
 
   const shadow = hostEl.attachShadow({ mode: 'open' });
 
-  const css = `
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  // Police : chargée en binaire (pas d'URL exposée à la CSP de la page) et
+  // ajoutée au document — les @font-face ne fonctionnent pas dans un shadow DOM.
+  try {
+    fetch(chrome.runtime.getURL(SC_FONT_PATH))
+      .then(r => r.arrayBuffer())
+      .then(buf => new FontFace(SC_FONT_FAMILY, buf, { weight: '400 900', stretch: '62% 125%' }).load())
+      .then(face => document.fonts.add(face))
+      .catch(() => { /* repli sur la police système */ });
+  } catch { /* idem */ }
 
+  const css = `
     :host {
+      all: initial;
       position: fixed !important;
       bottom: 20px !important;
       right: 20px !important;
       z-index: 2147483647 !important;
-      display: block !important;
+      /* Sans !important : un !important ici l'emporterait sur le display:none
+         posé par updateVisibility() / « Masquer » (règle d'encapsulation du shadow DOM). */
+      display: block;
       pointer-events: none;
     }
+    ${SC_UI_CSS}
 
     .sc-wrap {
       pointer-events: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+      background: transparent;
     }
 
-    /* ── FAB ── */
+    /* Bouton flottant : un bout de mètre */
     .sc-fab {
-      background: #1d4ed8;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 11px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      box-shadow: 0 4px 20px rgba(29,78,216,0.4);
-      transition: transform .15s, box-shadow .15s;
+      display: flex; align-items: center; gap: 10px;
+      border: 2px solid var(--ink); border-radius: 4px;
+      padding: 13px 8px 9px 14px;
+      background-color: var(--tape);
+      background-image:
+        repeating-linear-gradient(90deg, var(--ink) 0 1.5px, transparent 1.5px 30px),
+        repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 6px);
+      background-size: 100% 7px, 100% 4px;
+      background-repeat: no-repeat;
+      font-weight: 800; font-stretch: 74%; font-size: 17px; line-height: 1;
       white-space: nowrap;
-      letter-spacing: -.01em;
-      line-height: 1;
     }
-    .sc-fab:hover { transform: scale(1.04); box-shadow: 0 6px 26px rgba(29,78,216,0.5); }
+    .sc-fab:hover { background-color: #FFD21A; }
     .sc-fab-hide {
-      opacity: .55;
-      font-size: 10px;
-      padding: 3px 5px;
-      margin-left: 2px;
-      border-radius: 50%;
-      line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 3px;
+      font-size: 17px; font-weight: 600; font-stretch: 100%; color: var(--ink); opacity: .6;
     }
-    .sc-fab-hide:hover { opacity: 1; background: rgba(255,255,255,.18); }
+    .sc-fab-hide:hover { opacity: 1; background: rgba(32, 35, 38, .12); }
 
-    /* ── Panel ── */
+    /* Panneau */
     .sc-panel {
-      width: 330px;
-      background: #f1f5f9;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.05);
-      overflow: hidden;
-      display: none;
-      flex-direction: column;
-      max-height: min(520px, calc(100vh - 90px));
+      width: 340px;
+      background: var(--alu);
+      border: 2px solid var(--ink); border-radius: 6px; overflow: hidden;
+      display: none; flex-direction: column;
+      max-height: min(560px, calc(100vh - 100px));
     }
     .sc-panel.open { display: flex; }
-
-    /* ── Header ── */
-    .sc-header {
-      background: #fff;
-      padding: 13px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #e2e8f0;
-      flex-shrink: 0;
+    .sc-panel .sc-top { flex-shrink: 0; }
+    .sc-panel .sc-strip { flex-shrink: 0; }
+    .sc-panel .sc-body { overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--alu-deep) transparent; }
+    .sc-panel .sc-body > * { flex-shrink: 0; }  /* sinon les blocs s'écrasent quand le panneau déborde */
+    .sc-close {
+      border: 0; background: none; width: 26px; height: 26px; border-radius: 3px;
+      font-size: 20px; line-height: 1; color: var(--ink);
     }
-    .sc-header-left { display: flex; align-items: center; gap: 7px; }
-    .sc-header-title { font-weight: 800; font-size: 14px; color: #1e293b; letter-spacing: -.02em; }
-    .sc-detected-badge {
-      background: #eff6ff;
-      color: #1d4ed8;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 20px;
-      border: 1px solid #bfdbfe;
-    }
-    .sc-close-btn {
-      background: #f1f5f9;
-      border: none;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      color: #64748b;
-      transition: background .15s;
-    }
-    .sc-close-btn:hover { background: #e2e8f0; color: #334155; }
-
-    /* ── Body ── */
-    .sc-body {
-      overflow-y: auto;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      scrollbar-width: thin;
-      scrollbar-color: #cbd5e1 transparent;
-    }
-
-    .sc-section-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 5px;
-    }
-
-    /* ── Brand grid ── */
-    .sc-brand-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 5px;
-    }
-    .sc-brand-btn {
-      background: #fff;
-      border: 2px solid transparent;
-      border-radius: 11px;
-      padding: 7px 3px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      transition: all .15s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-    .sc-brand-btn:hover { border-color: #bfdbfe; }
-    .sc-brand-btn.active { border-color: #1d4ed8; background: #eff6ff; }
-    .sc-brand-btn img { width: 22px; height: 22px; object-fit: contain; border-radius: 3px; }
-    .sc-brand-btn .sc-bname {
-      font-size: 8.5px;
-      font-weight: 700;
-      color: #64748b;
-      text-align: center;
-      line-height: 1.2;
-    }
-    .sc-brand-btn.active .sc-bname { color: #1d4ed8; }
-
-    /* ── CM input ── */
-    .sc-cm-input {
-      flex: 1;
-      min-width: 0;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      background: #fff;
-      padding: 8px 10px;
-      font-size: 18px;
-      font-weight: 800;
-      color: #1e293b;
-      outline: none;
-      font-family: inherit;
-    }
-    .sc-cm-input:focus { border-color: #1d4ed8; }
-
-    /* ── Size grid ── */
-    .sc-size-grid { display: flex; flex-wrap: wrap; gap: 4px; }
-    .sc-size-btn {
-      padding: 6px 9px;
-      border: 2px solid #e2e8f0;
-      border-radius: 9px;
-      background: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      color: #475569;
-      cursor: pointer;
-      transition: all .15s;
-      min-width: 36px;
-      text-align: center;
-    }
-    .sc-size-btn:hover { border-color: #93c5fd; }
-    .sc-size-btn.active { border-color: #1d4ed8; background: #1d4ed8; color: #fff; }
-
-    /* ── Résultat focus (marque détectée) ── */
-    .sc-focus-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
-      border: 2px solid #1d4ed8;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .sc-focus-brand {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #64748b;
-    }
-    .sc-focus-brand img { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; }
-    .sc-focus-size {
-      font-size: 32px;
-      font-weight: 900;
-      color: #1d4ed8;
-      letter-spacing: -.03em;
-      line-height: 1;
-    }
-    .sc-focus-label { font-size: 11px; color: #94a3b8; }
-
-    /* ── Fit tag ── */
-    /* ── Toggle "voir toutes les marques" ── */
-    .sc-toggle-all {
-      background: none;
-      border: none;
-      font-size: 11px;
-      color: #1d4ed8;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      padding: 2px 0;
-      letter-spacing: -.01em;
-    }
-    .sc-toggle-all:hover { text-decoration: underline; }
-
-    /* ── Résultats liste (mode "toutes marques") ── */
-    .sc-results { display: flex; flex-direction: column; gap: 5px; }
-    .sc-result {
-      background: #fff;
-      border-radius: 12px;
-      padding: 9px 11px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      border: 2px solid transparent;
-    }
-    .sc-result.highlight { border-color: #1d4ed8; background: #eff6ff; }
-    .sc-result-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
-    .sc-result-name { font-size: 12px; font-weight: 700; color: #1e293b; flex: 1; }
-    .sc-result-size { font-size: 14px; font-weight: 800; color: #1d4ed8; flex-shrink: 0; }
-    /* ── Tip ── */
-    .sc-tip {
-      font-size: 10.5px;
-      color: #64748b;
-      line-height: 1.5;
-      background: #fffbeb;
-      border-radius: 8px;
-      padding: 8px 10px;
-      border-left: 3px solid #fcd34d;
-    }
-
-    /* ── Footer ── */
-    .sc-footer {
-      text-align: center;
-      font-size: 9px;
-      color: #cbd5e1;
-      padding-top: 2px;
-    }
-    .sc-footer a { color: #93c5fd; text-decoration: none; }
-    .sc-footer a:hover { color: #1d4ed8; }
+    .sc-close:hover { background: var(--alu-deep); }
+    .sc-top-left { display: flex; align-items: baseline; gap: 8px; }
+    .sc-top-left .sc-top-aside { color: var(--muted); }
+    .sc-foot { font-size: 12px; text-align: center; }
   `;
 
   const styleEl = document.createElement('style');
@@ -391,7 +197,7 @@
   shadow.appendChild(styleEl);
 
   const wrap = document.createElement('div');
-  wrap.className = 'sc-wrap';
+  wrap.className = 'sc-wrap sc-root';
   shadow.appendChild(wrap);
 
   function updateVisibility() {
@@ -406,7 +212,7 @@
     const cm = activeCm();
     if (cm === null) return '';
 
-    // Mode focus : marque détectée en vedette
+    // Mode focus : la pointure de la marque de la page, en grand sur le mètre
     if (detectedBrand && !state.showAll) {
       const b = SC_BRANDS[detectedBrand];
       const matches = scFindBestMatches(detectedBrand, cm, state.genre, 2);
@@ -414,67 +220,38 @@
       const second = scSecondIfTie(matches);
 
       return `
-        <div>
-          <div class="sc-section-label">Ta taille sur cette page</div>
-          <div class="sc-focus-card">
-            <div class="sc-focus-brand">
-              <img src="${b.logo}" alt="${b.name}" loading="lazy">
-              <span>${b.name}</span>
-            </div>
-            <div class="sc-focus-size">EU ${scFr(best.label)}</div>
-            ${second ? `<div style="font-size:11px;color:#94a3b8">ou EU ${scFr(second.label)}</div>` : ''}
-            ${b.tip ? `<div class="sc-tip" style="text-align:left;margin-top:4px">💡 ${b.tip}</div>` : ''}
+        <div class="sc-label">
+          <div class="sc-label-head">
+            <h2>Ta pointure ${b.name}</h2>
+            <p>${scSourceText(state, cm)}</p>
           </div>
-          <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
-            Voir toutes les marques →
-          </button>
+          <div class="sc-focus">
+            <span class="sc-focus-unit">EU</span>
+            <span class="sc-focus-size">${scFr(best.label)}</span>
+            ${second ? `<span class="sc-focus-alt">ou ${scFr(second.label)}</span>` : ''}
+          </div>
+          ${b.tip ? `<div class="sc-fits"><h3>Bon à savoir</h3><p>${scTipText(b)}</p></div>` : ''}
         </div>
+        <button type="button" class="sc-link-btn" data-action="toggleAll">Voir toutes les marques</button>
       `;
     }
 
-    // Mode toutes marques
-    const allRows = Object.entries(SC_BRANDS)
-      .filter(([key]) => state.mode === 'cm' || key !== state.sourceBrand)
-      .map(([key, b]) => {
-        const matches = scFindBestMatches(key, cm, state.genre, 2);
-        return { key, b, best: matches[0], second: scSecondIfTie(matches) };
-      })
-      .filter(r => r.best)
-      .sort((a, b) => a.best.diff - b.best.diff);
-
-    const rows = allRows.map(({ key, b, best, second }) => {
-        const isPage = key === detectedBrand;
-        return `
-          <div class="sc-result ${isPage ? 'highlight' : ''}">
-            <img class="sc-result-logo" src="${b.logo}" alt="${b.name}" loading="lazy">
-            <span class="sc-result-name">${b.name}</span>
-            <span class="sc-result-size">EU ${scFr(best.label)}${second ? `<span style="font-size:9px;color:#94a3b8;display:block">ou ${scFr(second.label)}</span>` : ''}</span>
-          </div>
-        `;
-      }).join('');
-
+    // Mode toutes marques : l'étiquette du site
     return `
-      <div>
-        <div class="sc-section-label">Toutes les marques</div>
-        <div class="sc-results">${rows}</div>
-        ${detectedBrand ? `
-          <button class="sc-toggle-all" style="margin-top:8px;width:100%" data-action="toggleAll">
-            ← Retour
-          </button>
-        ` : ''}
-      </div>
+      ${scLabelHTML(state, cm, detectedBrand)}
+      ${detectedBrand ? `<button type="button" class="sc-link-btn" data-action="toggleAll">Revenir à ${SC_BRANDS[detectedBrand].name}</button>` : ''}
     `;
   }
 
-  /* ── FAB : affiche directement la taille convertie quand le profil est connu ── */
+  /* ── Bouton flottant : affiche directement la taille convertie quand le profil est connu ── */
   function fabHTML() {
-    let label = 'SizeCheck' + (detectedBrand ? ' · ' + SC_BRANDS[detectedBrand].name : '');
+    let label = 'SizeCheck' + (detectedBrand ? ' sur ' + SC_BRANDS[detectedBrand].name : '');
     const cm = detectedBrand ? activeCm() : null;
     if (cm !== null) {
       const best = scFindBestMatches(detectedBrand, cm, state.genre, 1)[0];
       if (best) label = `Ta taille ici : EU ${scFr(best.label)}`;
     }
-    return `<span>👟</span><span>${label}</span><span class="sc-fab-hide" data-action="hide" title="Masquer SizeCheck sur cet onglet">✕</span>`;
+    return `<span>${label}</span><span class="sc-fab-hide" data-action="hide" role="button" aria-label="Masquer SizeCheck sur cet onglet" title="Masquer SizeCheck sur cet onglet">×</span>`;
   }
 
   function patchFab() {
@@ -482,124 +259,83 @@
     if (fab) fab.innerHTML = fabHTML();
   }
 
-  /* ── Mise à jour chirurgicale des toggles genre + mode ── */
-  function patchSegmented(action, current) {
-    const active   = 'background:#fff;color:#1d4ed8;box-shadow:0 1px 3px rgba(0,0,0,0.1)';
-    const inactive = 'background:transparent;color:#64748b';
-    wrap.querySelectorAll(`[data-action="${action}"]`).forEach(btn => {
-      btn.style.cssText = `flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;${btn.dataset.value === current ? active : inactive}`;
-      btn.setAttribute('aria-pressed', btn.dataset.value === current);
-    });
-  }
-  function patchGenreToggle() { patchSegmented('genre', state.genre); }
-  function patchModeToggle()  { patchSegmented('mode', state.mode); }
-
-  /* ── Mise à jour chirurgicale de la brand grid ── */
+  /* ── Mises à jour ciblées (pas de re-render : garde le défilement et le focus) ── */
   function patchBrandGrid() {
-    wrap.querySelectorAll('.sc-brand-btn').forEach(btn => {
-      const active = btn.dataset.value === state.sourceBrand;
-      btn.classList.toggle('active', active);
-      btn.setAttribute('aria-pressed', active);
+    wrap.querySelectorAll('.sc-brand').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.value === state.sourceBrand);
     });
   }
 
-  /* ── Mise à jour chirurgicale de la section tailles ── */
   function patchSizeSection() {
     const section = wrap.querySelector('#sc-size-section');
+    if (!section) return;
     if (!state.sourceBrand || state.mode !== 'brand') {
-      if (section) section.style.display = 'none';
+      section.hidden = true;
       return;
     }
-    if (section) {
-      section.style.display = '';
-      section.querySelector('.sc-size-grid').innerHTML = scGetSizes(state.sourceBrand, state.genre).map(([label]) =>
-        `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" aria-pressed="${state.sourceSize === label}" data-action="size" data-value="${label}">${label}</button>`
-      ).join('');
-    }
+    section.hidden = false;
+    section.querySelector('.sc-step').textContent = `Ta pointure ${SC_BRANDS[state.sourceBrand].name}`;
+    section.querySelector('.sc-sizes').innerHTML = scSizesHTML(state);
   }
 
-  /* ── Mise à jour chirurgicale des résultats ── */
+  /* Amène l'étiquette en haut du panneau quand un résultat existe */
+  function scrollToResults() {
+    const body = wrap.querySelector('.sc-body');
+    const res = wrap.querySelector('#sc-results-section');
+    if (!body || !res || activeCm() === null) return;
+    requestAnimationFrame(() => {
+      body.scrollTop += res.getBoundingClientRect().top - body.getBoundingClientRect().top - 12;
+    });
+  }
+
   function patchResults() {
     const el = wrap.querySelector('#sc-results-section');
-    if (!el) return;
-    el.innerHTML = activeCm() !== null ? renderResultsSection() : '';
+    if (el) el.innerHTML = renderResultsSection();
   }
 
-  /* ── Rendu initial complet (appelé une seule fois + changement de genre) ── */
+  /* ── Rendu complet (initial, changement de genre ou de méthode) ── */
   function render() {
     const pageBrand = detectedBrand ? SC_BRANDS[detectedBrand] : null;
-
-    const brandsHTML = Object.entries(SC_BRANDS).map(([key, b]) => `
-      <button class="sc-brand-btn ${state.sourceBrand === key ? 'active' : ''}" aria-pressed="${state.sourceBrand === key}" data-action="brand" data-value="${key}">
-        <img src="${b.logo}" alt="${b.name}" loading="lazy">
-        <span class="sc-bname">${b.name}</span>
-      </button>
-    `).join('');
-
-    const sizesHTML = state.sourceBrand
-      ? scGetSizes(state.sourceBrand, state.genre).map(([label]) =>
-          `<button class="sc-size-btn ${state.sourceSize === label ? 'active' : ''}" aria-pressed="${state.sourceSize === label}" data-action="size" data-value="${label}">${label}</button>`
-        ).join('')
-      : '';
+    const brandMode = state.mode === 'brand';
 
     wrap.innerHTML = `
-      <div class="sc-panel ${state.open ? 'open' : ''}" id="sc-panel">
-        <div class="sc-header">
-          <div class="sc-header-left">
-            <span>👟</span>
-            <span class="sc-header-title">SizeCheck</span>
-            ${pageBrand ? `<span class="sc-detected-badge">${pageBrand.name}</span>` : ''}
+      <div class="sc-panel ${state.open ? 'open' : ''}" id="sc-panel" role="dialog" aria-label="SizeCheck">
+        <div class="sc-top">
+          <div class="sc-top-left">
+            <span class="sc-wordmark">SizeCheck</span>
+            ${pageBrand ? `<span class="sc-top-aside">sur ${pageBrand.name}</span>` : ''}
           </div>
-          <button class="sc-close-btn" data-action="close">✕</button>
+          <button type="button" class="sc-close" data-action="close" aria-label="Fermer">×</button>
         </div>
+        <div class="sc-strip" aria-hidden="true"></div>
 
         <div class="sc-body">
+          ${scSegHTML(state.genre)}
+          ${scModesHTML(state.mode)}
 
-          <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
-            <button data-action="genre" data-value="homme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Homme</button>
-            <button data-action="genre" data-value="femme" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Femme</button>
-          </div>
+          <section id="sc-brand-section" ${brandMode ? '' : 'hidden'}>
+            <h2 class="sc-step">Ta marque habituelle</h2>
+            <div class="sc-brands">${scBrandsHTML(state.sourceBrand)}</div>
+          </section>
 
-          <div style="display:flex;gap:4px;background:#e2e8f0;border-radius:10px;padding:3px;">
-            <button data-action="mode" data-value="brand" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Depuis ma marque</button>
-            <button data-action="mode" data-value="cm" style="flex:1;padding:5px 0;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;">Depuis mon pied</button>
-          </div>
+          <section id="sc-size-section" ${brandMode && state.sourceBrand ? '' : 'hidden'}>
+            <h2 class="sc-step">Ta pointure ${state.sourceBrand ? SC_BRANDS[state.sourceBrand].name : ''}</h2>
+            <div class="sc-sizes">${state.sourceBrand ? scSizesHTML(state) : ''}</div>
+          </section>
 
-          <div id="sc-brand-section" style="${state.mode === 'cm' ? 'display:none' : ''}">
-            <div class="sc-section-label">Ma marque habituelle</div>
-            <div class="sc-brand-grid">${brandsHTML}</div>
-          </div>
+          <section id="sc-cm-section" ${brandMode ? 'hidden' : ''}>
+            <h2 class="sc-step">Longueur de ton pied</h2>
+            ${scCmFieldHTML(state.footCm)}
+          </section>
 
-          <div id="sc-size-section" style="${state.mode === 'brand' && state.sourceBrand ? '' : 'display:none'}">
-            <div class="sc-section-label">Ma pointure habituelle</div>
-            <div class="sc-size-grid">${sizesHTML}</div>
-          </div>
+          <div id="sc-results-section">${renderResultsSection()}</div>
 
-          <div id="sc-cm-section" style="${state.mode === 'cm' ? '' : 'display:none'}">
-            <div class="sc-section-label">Longueur de mon pied</div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input class="sc-cm-input" data-action="cmInput" type="number" inputmode="decimal" step="0.1" min="18" max="35" placeholder="26.5" value="${scIsValidCm(state.footCm) ? state.footCm : ''}" aria-label="Longueur du pied en centimètres">
-              <span style="font-size:12px;font-weight:700;color:#475569">cm</span>
-            </div>
-            <p style="font-size:9.5px;color:#64748b;margin-top:6px;line-height:1.45">📏 Talon contre un mur, mesure jusqu'à l'orteil le plus long, en fin de journée. Garde la plus grande mesure des deux pieds.</p>
-          </div>
-
-          <div id="sc-results-section">
-            ${activeCm() !== null ? renderResultsSection() : ''}
-          </div>
-
-          <div class="sc-footer">
-            <a href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr</a>
-          </div>
-
+          <p class="sc-foot"><a href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr</a></p>
         </div>
       </div>
 
-      <button class="sc-fab" data-action="toggle">${fabHTML()}</button>
+      <button type="button" class="sc-fab" data-action="toggle" aria-expanded="${state.open}">${fabHTML()}</button>
     `;
-
-    patchGenreToggle();
-    patchModeToggle();
   }
 
   /* ══════════════════════════════════════════
@@ -616,11 +352,14 @@
         case 'toggle':
           state.open = !state.open;
           wrap.querySelector('#sc-panel').classList.toggle('open', state.open);
+          btn.setAttribute('aria-expanded', state.open);
+          if (state.open) scrollToResults();
           break;
 
         case 'close':
           state.open = false;
           wrap.querySelector('#sc-panel').classList.remove('open');
+          wrap.querySelector('.sc-fab')?.setAttribute('aria-expanded', 'false');
           break;
 
         case 'hide':
@@ -669,10 +408,7 @@
           patchSizeSection();
           patchResults();
           patchFab();
-          setTimeout(() => {
-            const body = wrap.querySelector('.sc-body');
-            if (body) body.scrollTop = body.scrollHeight;
-          }, 50);
+          scrollToResults();
           break;
 
         case 'toggleAll':
@@ -685,8 +421,7 @@
     // Saisie de la longueur de pied (mode cm)
     wrap.addEventListener('input', (e) => {
       if (e.target.dataset?.action !== 'cmInput') return;
-      const v = parseFloat(String(e.target.value).replace(',', '.'));
-      state.footCm = scIsValidCm(v) ? v : null;
+      state.footCm = scParseCm(e.target.value);
       state.showAll = false;
       chrome.storage.local.set({ sc_foot_cm: state.footCm });
       patchResults();

@@ -1,12 +1,16 @@
 # STATUS — SizeCheck
 
-_Dernière mise à jour : 8 novembre 2026_
+_Dernière mise à jour : 9 novembre 2026_
 
 ---
 
 ## ✅ En ligne / opérationnel
 
-- **Refonte visuelle (8 nov., pas encore déployée tant que non commitée)** — identité « mètre ruban » sur tout le site : accueil, 28 pages + hub, page légale. Mètre jaune interactif (pivot EU → cm → EU, curseur glissable + clavier en mode cm), résultat en étiquette de boîte (tableau, ordre de marques fixe, écart en mm), police Archivo **auto-hébergée** (`assets/fonts/`, woff2 latin + latin étendu, licence OFL jointe ; aucun appel à Google, conforme à la politique de confidentialité), CSS écrit à la main. FAQ de l'accueil désormais **visible** (elle n'existait qu'en JSON-LD). Saisie cm acceptant la virgule (`type=text inputmode=decimal`). Tailwind retiré (`assets/tailwind.css` supprimé ; la page légale chargeait le CDN de dev Tailwind). Détails dans CLAUDE.md, section « Identité visuelle ».
+- **Refonte visuelle (8 nov., en ligne — commit `1bd7e10`)** — identité « mètre ruban » sur tout le site : accueil, 28 pages + hub, page légale. Mètre jaune interactif (pivot EU → cm → EU, curseur glissable + clavier en mode cm), résultat en étiquette de boîte (tableau, ordre de marques fixe, écart en mm), police Archivo **auto-hébergée** (`assets/fonts/`, woff2 latin + latin étendu, licence OFL jointe ; aucun appel à Google, conforme à la politique de confidentialité), CSS écrit à la main. FAQ de l'accueil désormais **visible** (elle n'existait qu'en JSON-LD). Saisie cm acceptant la virgule (`type=text inputmode=decimal`). Tailwind retiré (`assets/tailwind.css` supprimé ; la page légale chargeait le CDN de dev Tailwind). Détails dans CLAUDE.md, section « Identité visuelle ».
+
+- **Cohérence des conseils + visuels (9 nov.)** — Converse et Vans : un seul message partout (accueil, FAQ, pages SEO) : ils taillent grand, mais leur guide officiel en cm l'intègre déjà, donc la pointure convertie est la bonne, **sans descendre en plus** (l'ancien « Converse recommande ½ pointure en dessous » faisait compter l'écart deux fois ; vérifié sur converse.com : US 8 = 26,5 cm contre US 8,5 chez Nike). FAQ « A et B taillent pareil ? » des pages SEO : calculée sur les grilles homme **et** femme, réponse par genre quand la conclusion diffère (6 paires, dont Nike/Adidas : ~0 cm homme, 0,4 cm femme). Accueil : le nom de marque n'est plus répété dans « Bon à savoir ». `og-image`, `favicon` et `apple-touch-icon` refaits dans l'identité mètre ruban via `tools/render_brand_assets.py` (Chrome headless + police du site).
+
+- **Extension v1.2.0 — refonte (9 nov., prête, pas encore publiée sur le store)** : popup et widget dans l'identité mètre ruban, avec la même étiquette de résultat que le site (`extension/ui.js` partagé). Police embarquée, icônes refaites, logos et appels au service favicon de Google supprimés. Conseils de chaussant recopiés du site et désormais contrôlés par `check_sync.py`. Corrigé au passage : pointures du widget affichées avec un point (« 42.5 ») ; saisie cm refusant la virgule ; bouton « Masquer » (et masquage sur les pages panier/paiement) inopérant à cause d'un `display: block !important` dans le shadow DOM. Le widget s'ouvre directement sur le résultat.
 
 - **8 marques** : Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS, HOKA. Données **100 % vérifiées en direct** sur les guides officiels, avec les demi-pointures et tiers réellement vendus (Nike 42.5, Adidas 42⅔, Salomon/HOKA en tiers, ASICS en quarts de cm). Structure `[label, cm]` par marque/genre, synchro site ↔ extension verrouillée par `tools/check_sync.py`.
 - **Site** (`index.html`) — convertisseur V3 mobile-first, **2 modes** (depuis une marque / depuis la longueur de pied en cm), **Tailwind précompilé statique** (`assets/tailwind.css`), scroll auto vers le résultat, a11y (aria-pressed, contraste AA).
@@ -95,11 +99,8 @@ _Dernière mise à jour : 8 novembre 2026_
 
 ## 📋 Backlog
 
-- [ ] **og-image, favicon, apple-touch-icon** : encore dans l'ancien bleu ; à refaire dans l'identité mètre ruban.
-- [ ] **Conseils de chaussant incohérents** : Converse — accueil/extension « la taille recommandée convient sans descendre » vs pages SEO « Converse recommande une demi-pointure en dessous » ; Vans — FAQ « ½ pointure en dessous » vs conseil « idéal pour pieds larges ». Choisir une version sourcée et l'aligner partout.
-- [ ] **FAQ « Nike et Adidas taillent pareil ? »** : répond « oui, < 0,1 cm » (moyenne homme) alors que l'écart femme est de 0,43 cm (calculé sur la même page). Faire dépendre la réponse du genre.
-- [ ] **Extension** : aligner le popup et le widget sur la nouvelle identité (encore en bleu).
+- [ ] **Publier l'extension v1.2.0 (à faire par Jade)** : envoyer `marketing/chrome-store/sizecheck-extension.zip` sur le Chrome Web Store, remplacer `promo-small.png` / `promo-large.png` (déjà refaites), et **refaire les 2 captures 1280×800** (encore l'ancien widget bleu) : installer la v1.2 en « non empaquetée », ouvrir une page produit (ex. nike.fr), capturer le widget fermé puis ouvert.
 
-- [ ] **v1.2 extension** : logos embarqués localement (aujourd'hui via le service favicon Google), évaluer Amazon/Decathlon, tailles US/UK, widget draggable.
+- [ ] **v1.3 extension** : évaluer Amazon/Decathlon, tailles US/UK, widget draggable.
 - [ ] og:image à mettre à jour si les marques supportées changent.
 - [ ] Duplication des tables `index.html` ↔ `extension/sizes.js` : conservée par choix (single-file), verrouillée par `tools/check_sync.py`.
