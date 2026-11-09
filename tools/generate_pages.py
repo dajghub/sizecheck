@@ -423,16 +423,19 @@ def page_html(a, b):
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{SITE}/comparaisons/{slug}.html">
   <meta name="theme-color" content="#E3E5E6">
-  <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" href="/assets/favicon.png?v=2" type="image/png" sizes="96x96">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2" sizes="180x180">
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(desc)}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{SITE}/comparaisons/{slug}.html">
-  <meta property="og:image" content="{SITE}/assets/og-image.png">
+  <meta property="og:image" content="{SITE}/assets/og-image.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image:alt" content="Convertis ta pointure d’une marque à l’autre : un mètre ruban jaune dont l’aiguille indique 26,7 cm, soit un Nike 43 homme.">
+  <meta property="og:site_name" content="SizeCheck">
+  <meta property="og:locale" content="fr_FR">
   <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/pages.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
@@ -491,16 +494,19 @@ def index_html(pairs):
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{SITE}/comparaisons/">
   <meta name="theme-color" content="#E3E5E6">
-  <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" href="/assets/favicon.png?v=2" type="image/png" sizes="96x96">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2" sizes="180x180">
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(desc)}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{SITE}/comparaisons/">
-  <meta property="og:image" content="{SITE}/assets/og-image.png">
+  <meta property="og:image" content="{SITE}/assets/og-image.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image:alt" content="Convertis ta pointure d’une marque à l’autre : un mètre ruban jaune dont l’aiguille indique 26,7 cm, soit un Nike 43 homme.">
+  <meta property="og:site_name" content="SizeCheck">
+  <meta property="og:locale" content="fr_FR">
   <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/pages.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>

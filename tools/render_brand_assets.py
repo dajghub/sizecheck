@@ -1,7 +1,8 @@
 """Génère les visuels de marque dans l'identité « mètre ruban » :
 assets/og-image.png (1200×630), assets/favicon.png (96×96),
-assets/apple-touch-icon.png (180×180, fond opaque pour iOS),
-extension/icons/icon{16,48,128}.png (même dessin que le favicon).
+assets/apple-touch-icon.png (180×180, fond opaque pour iOS), favicon.ico (racine),
+extension/icons/icon{16,48,128}.png (même dessin que le favicon),
+marketing/avatars/ (photos de profil 512×512), marketing/chrome-store/promo-*.png.
 
 Rendu par Chrome headless avec la police Archivo du site (embarquée en
 base64 pour fonctionner en file://), puis réduction par `sips` (macOS).
@@ -87,14 +88,39 @@ body {{ width:720px; height:720px; background:var(--tape); position:relative; }}
 """
 
 
-def shoot(html, w, h, out):
+def shoot(html, w, h, out, transparent=False):
     with tempfile.TemporaryDirectory() as d:
         page = Path(d) / 'page.html'
         page.write_text(html)
+        extra = ['--default-background-color=00000000'] if transparent else []
         subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--hide-scrollbars',
-                        '--force-device-scale-factor=1', f'--window-size={w},{h}',
+                        '--force-device-scale-factor=1', f'--window-size={w},{h}', *extra,
                         '--virtual-time-budget=2000', f'--screenshot={out}', page.as_uri()],
                        check=True, capture_output=True)
+
+
+def write_ico(pngs, out):
+    """favicon.ico contenant des PNG (format admis par tous les navigateurs actuels)."""
+    import struct
+    data = [Path(p).read_bytes() for _, p in pngs]
+    header = struct.pack('<HHH', 0, 1, len(data))
+    offset = 6 + 16 * len(data)
+    entries = b''
+    for (size, _), blob in zip(pngs, data):
+        entries += struct.pack('<BBBBHHII', size % 256, size % 256, 0, 0, 1, 32, len(blob), offset)
+        offset += len(blob)
+    Path(out).write_bytes(header + entries + b''.join(data))
+
+
+# Avatars (photos de profil Awin / réseaux, marketing/avatars/, non versionnés) :
+# l'icône pleine, ou posée au centre d'un fond blanc / transparent. Le motif reste
+# dans le cercle central, car la plupart des plateformes recadrent en rond.
+def avatar_html(icon_png, background):
+    b64 = base64.b64encode(Path(icon_png).read_bytes()).decode()
+    return f"""<!doctype html><meta charset="utf-8"><style>
+html, body {{ margin:0; width:512px; height:512px; background:{background}; overflow:hidden; }}
+img {{ position:absolute; left:106px; top:106px; width:300px; height:300px; border-radius:6px; }}
+</style><img src="data:image/png;base64,{b64}">"""
 
 
 # ── Bannières Chrome Web Store (marketing/chrome-store/) ──
@@ -169,10 +195,20 @@ def main():
         targets = [(180, ROOT / 'assets/apple-touch-icon.png'), (96, ROOT / 'assets/favicon.png')]
         # Icônes de l'extension Chrome : même dessin que le favicon du site
         targets += [(n, ROOT / f'extension/icons/icon{n}.png') for n in (128, 48, 16)]
+        # favicon.ico à la racine : demandé par défaut par les navigateurs et de nombreux services
+        targets += [(n, Path(d) / f'ico{n}.png') for n in (16, 32, 48)]
         for size, out in targets:
             subprocess.run(['sips', '-z', str(size), str(size), str(big), '--out', str(out)],
                            check=True, capture_output=True)
-    print('og-image, favicon, apple-touch-icon, icônes et bannières de l\'extension régénérés')
+        write_ico([(n, Path(d) / f'ico{n}.png') for n in (16, 32, 48)], ROOT / 'favicon.ico')
+
+        avatars = ROOT / 'marketing/avatars'
+        avatars.mkdir(parents=True, exist_ok=True)
+        subprocess.run(['sips', '-z', '512', '512', str(big), '--out', str(avatars / 'sizecheck-avatar-jaune.png')],
+                       check=True, capture_output=True)
+        shoot(avatar_html(big, '#FFFFFF'), 512, 512, avatars / 'sizecheck-avatar-blanc.png')
+        shoot(avatar_html(big, 'transparent'), 512, 512, avatars / 'sizecheck-avatar-transparent.png', transparent=True)
+    print('og-image, favicon (.png + .ico), apple-touch-icon, icônes et bannières de l\'extension, avatars régénérés')
 
 
 if __name__ == '__main__':

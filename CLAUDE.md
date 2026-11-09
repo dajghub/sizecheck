@@ -39,13 +39,14 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - **Couleurs** (déclarées en variables CSS dans `index.html`, `assets/pages.css`, page légale) : aluminium `#E3E5E6` (fond), papier `#FFFFFF`, encre `#202326`, gris texte `#575D62`, jaune mètre `#F6C500`, rouge aiguille `#D42A1C` (aiguille du mètre uniquement).
 - **Typo :** une seule famille, **Archivo** (axe de largeur `wdth`). Étroite et grasse (`font-stretch` 64–74 %) pour titres et pointures, normale pour le texte. **Auto-hébergée** dans `assets/fonts/` (woff2 variables latin + latin étendu, `OFL.txt`) : `@font-face` dans le `<style>` de `index.html` et de la page légale, en tête de `assets/pages.css`, plus un `preload` du fichier latin. **Ne jamais réintroduire Google Fonts** (l'IP des visiteurs partirait chez Google, contraire à la politique de confidentialité).
 - **Le résultat** = une étiquette de boîte à chaussures : vrai `<table>`, marques dans un ordre fixe, écart en mm par rapport au pied.
+- **Partage (messageries, réseaux)** : toutes les pages ont `og:title/description/url/image(+width/height/alt)/site_name/locale` et `twitter:card`. Après tout changement de `og-image.png` ou des icônes, **incrémenter le `?v=`** de leurs URL (index.html, page légale, `generate_pages.py`) pour forcer WhatsApp & co à recharger l'image.
 - **À éviter** pour rester dans l'identité : cartes arrondies avec ombre, dégradés, emojis, étiquettes en majuscules, « → » ajouté aux boutons, animations d'apparition sur chaque bloc.
 
 ## Hébergement & domaine
 - **Hébergement :** GitHub Pages (dépôt `jadesaradesst/sizecheck`)
 - **Domaine :** Infomaniak (registrar + DNS)
 - **CNAME :** `www.sizecheck.fr`
-- **Déploiement :** push sur `main` → **GitHub Actions** (`.github/workflows/deploy.yml`) publie une **whitelist** du site uniquement (`index.html`, `politique-de-confidentialite.html`, `assets/`, `comparaisons/`, `sitemap.xml`, `robots.txt`, `CNAME`). Les fichiers internes (`STATUS.md`, `CLAUDE.md`, `tools/`, `marketing/`, `extension/`) restent versionnés mais **ne sont pas servis** sur le domaine.
+- **Déploiement :** push sur `main` → **GitHub Actions** (`.github/workflows/deploy.yml`) publie une **whitelist** du site uniquement (`index.html`, `politique-de-confidentialite.html`, `favicon.ico`, `assets/`, `comparaisons/`, `sitemap.xml`, `robots.txt`, `CNAME`). Les fichiers internes (`STATUS.md`, `CLAUDE.md`, `tools/`, `marketing/`, `extension/`) restent versionnés mais **ne sont pas servis** sur le domaine.
 - **Ajouter un fichier/dossier au site déployé** = l'ajouter à la whitelist dans `deploy.yml` (sinon il ne sera pas publié).
 - **`.nojekyll` : NE PAS retirer.** Testé le 6 juil. 2026 : son retrait a fait échouer le déploiement Actions (« Deployment failed ») deux fois de suite ; sa restauration a redéployé au vert immédiatement. Il reste nécessaire même sous Actions (le workflow le copie dans l'artefact).
 - Vérifier un déploiement : `gh run list --workflow=deploy.yml`. (Historique : l'ancien build Jekyll « legacy » était capricieux — remplacé par Actions le 6 juil. 2026.)
@@ -60,13 +61,14 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 | `politique-de-confidentialite.html` | Page légale RGPD |
 | `sitemap.xml` | Sitemap (régénéré par `tools/generate_pages.py`) |
 | `CNAME` | Domaine custom GitHub Pages |
+| `favicon.ico` | Favicon racine (16/32/48), demandé par défaut par navigateurs et services — généré par `tools/render_brand_assets.py` |
 | `comparaisons/` | Pages SEO générées par paire de marques (ne pas éditer à la main) |
 | `assets/pages.css` | CSS des pages de comparaison |
 | `assets/logos/` | Logos de marques auto-hébergés (site) |
 | `assets/converse.svg` | Logo Converse (SVG local, source Wikipedia) — plus affiché depuis la refonte |
 | `assets/og-image.png` | Image Open Graph 1200×630 (prévisualisation WhatsApp/réseaux) — générée par `tools/render_brand_assets.py` |
 | `marketing/chrome-store/` | Assets Chrome Web Store (promo, captures 1280×800, `store-listing.md`, zip) — non déployés |
-| `marketing/avatars/` | Photos de profil (Awin/réseaux) — gardées **en local** (gitignorées), non déployées |
+| `marketing/avatars/` | Photos de profil 512×512 (Awin/réseaux) : `jaune`, `blanc`, `transparent`, générées par `tools/render_brand_assets.py` — gardées **en local** (gitignorées), non déployées ; anciennes versions bleues dans `ancien-2026-07/` |
 | `tools/sizedata.py` | Lecture des tables (module partagé des scripts) |
 | `tools/check_sync.py` | Contrôle synchro/monotonie des tables et synchro des conseils site ↔ extension |
 | `tools/generate_pages.py` | Générateur des pages de comparaison + sitemap |

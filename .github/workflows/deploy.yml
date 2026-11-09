@@ -33,7 +33,7 @@ jobs:
         run: |
           mkdir -p _site
           # Fichiers racine du site
-          cp index.html politique-de-confidentialite.html sitemap.xml robots.txt CNAME _site/
+          cp index.html politique-de-confidentialite.html sitemap.xml robots.txt CNAME favicon.ico _site/
           cp .nojekyll _site/ 2>/dev/null || true
           # Dossiers du site
           cp -r assets comparaisons _site/
