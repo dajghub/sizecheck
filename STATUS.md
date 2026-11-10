@@ -1,10 +1,12 @@
 # STATUS — SizeCheck
 
-_Dernière mise à jour : 9 novembre 2026_
+_Dernière mise à jour : 10 novembre 2026_
 
 ---
 
 ## ✅ En ligne / opérationnel
+
+- **Défilement vers le résultat corrigé + audit UX/UI (10 nov., commité, pas encore poussé)** — après le choix d'une pointure, la page calait le *mètre* en haut : sur un écran d'ordinateur de 720 px, l'étiquette partait au-dessus de l'écran (haut à −522 px après un saut de 869 px). `bringIntoView()` fait maintenant défiler juste assez pour voir tout le tableau, sans jamais couper le titre de l'étiquette ni le mètre (vérifié en 375×812, 375×600, 390×664, 768×1024, 1280×720). Audit complet dans `audits/2026-11-10-audit-ux-ui.md` (skill ux-ui-audit) : 1 critique, 2 majeurs, 2 accessibilité, 2 notes — reportés dans le backlog.
 
 - **Refonte visuelle (8 nov., en ligne — commit `1bd7e10`)** — identité « mètre ruban » sur tout le site : accueil, 28 pages + hub, page légale. Mètre jaune interactif (pivot EU → cm → EU, curseur glissable + clavier en mode cm), résultat en étiquette de boîte (tableau, ordre de marques fixe, écart en mm), police Archivo **auto-hébergée** (`assets/fonts/`, woff2 latin + latin étendu, licence OFL jointe ; aucun appel à Google, conforme à la politique de confidentialité), CSS écrit à la main. FAQ de l'accueil désormais **visible** (elle n'existait qu'en JSON-LD). Saisie cm acceptant la virgule (`type=text inputmode=decimal`). Tailwind retiré (`assets/tailwind.css` supprimé ; la page légale chargeait le CDN de dev Tailwind). Détails dans CLAUDE.md, section « Identité visuelle ».
 
@@ -17,7 +19,7 @@ _Dernière mise à jour : 9 novembre 2026_
 - **Visuels de partage complétés (9 nov.)** : `favicon.ico` racine ajouté (16/32/48, même dessin ; publié via la whitelist) ; balises `og:image:alt`, `og:site_name`, `og:locale` sur les 31 pages ; la page légale, qui n'avait **aucune** balise de partage, les a toutes ; URL de l'image d'aperçu et des icônes versionnées (`?v=2`) pour forcer le rechargement. Avatars 512×512 refaits dans l'identité (`marketing/avatars/` : jaune, blanc, transparent ; anciens rangés dans `ancien-2026-07/`).
 
 - **8 marques** : Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS, HOKA. Données **100 % vérifiées en direct** sur les guides officiels, avec les demi-pointures et tiers réellement vendus (Nike 42.5, Adidas 42⅔, Salomon/HOKA en tiers, ASICS en quarts de cm). Structure `[label, cm]` par marque/genre, synchro site ↔ extension verrouillée par `tools/check_sync.py`.
-- **Site** (`index.html`) — convertisseur V3 mobile-first, **2 modes** (depuis une marque / depuis la longueur de pied en cm), **Tailwind précompilé statique** (`assets/tailwind.css`), scroll auto vers le résultat, a11y (aria-pressed, contraste AA).
+- **Site** (`index.html`) — convertisseur V3 mobile-first, **2 modes** (depuis une marque / depuis la longueur de pied en cm), CSS écrit à la main (Tailwind retiré le 8 nov.), scroll auto vers le résultat, a11y (aria-pressed, contraste AA).
 - **28 pages SEO** `/comparaisons/{a}-vs-{b}.html` + index, générées par `tools/generate_pages.py` : tableaux H/F, **FAQ JSON-LD** (dont « taillent pareil ? » / « taille grand ou petit ? » calculées depuis les données), maillage croisé, CTA extension entre les tableaux.
 - **Extension Chrome v1.1.0 — LIVE** sur le Chrome Web Store : widget Shadow DOM + popup, persistance profil (marque/pointure/genre/cm), FAB zéro-clic « Ta taille ici : EU X », mode cm, support SPA, masquage panier/checkout.
 - **Analytics : Umami Cloud** (cookieless, RGPD, **sans bandeau de consentement**) — sur le site, la page légale et les 28 pages SEO. 5 custom events instrumentés (`selection-marque`, `changement-mode`, `changement-genre`, `cta-extension`, `lien-convertisseur`).
@@ -105,7 +107,11 @@ _Dernière mise à jour : 9 novembre 2026_
 
 - [ ] **Publier l'extension v1.2.0 (à faire par Jade)** : envoyer `marketing/chrome-store/sizecheck-extension.zip` sur le Chrome Web Store, remplacer `promo-small.png` / `promo-large.png` (déjà refaites), et **refaire les 2 captures 1280×800** (encore l'ancien widget bleu) : installer la v1.2 en « non empaquetée », ouvrir une page produit (ex. nike.fr), capturer le widget fermé puis ouvert.
 
-- [ ] **Grands pieds hors grille** : quand une marque s'arrête avant la longueur du pied (ex. Vans 47 = 31 cm → « Nike 46, −22 mm »), le résultat propose une pointure nettement trop petite. Afficher « au-delà de la grille officielle » au-delà d'un seuil (ex. −10 mm), ou étendre les grilles aux pointures 47+.
+- [ ] **Pieds hors grille (audit 02, critique)** : le résultat retient toujours la pointure la plus proche, même très loin. **111 combinaisons sur 1 981 (5,6 %) ont un écart ≥ 10 mm**, petits pieds compris (HOKA homme commence à 24,3 cm : NB 34 → HOKA 39⅓ = +38 mm ; Vans 47 F → HOKA 45⅓ = −31 mm). En mode cm, le mètre accepte 18–35 cm alors que les grilles couvrent 20,5–31 cm (19 cm → HOKA +53 mm). Afficher « Hors grille » + la limite du guide au-delà d'un seuil (à choisir), site + extension + pages SEO.
+- [ ] **Conseil HOKA femme affiché en rayon homme (audit 03)** : rendre le conseil conditionnel au rayon (site + extension, contrôlé par `check_sync.py`).
+- [ ] **Mode cm, saisie refusée muette (audit 04)** : message « entre 18 et 35 cm » + `aria-invalid` ; sous-titre de l'étiquette vide adapté au mode cm.
+- [ ] **Accessibilité (audit 05-06)** : le focus clavier retombe sur `<body>` après le choix d'une marque/pointure (boutons recréés) ; `aria-live` relit toute l'étiquette (1 939 caractères) à chaque changement.
+- [ ] **Petits liens (audit 07)** : « Tableaux par marque » 23 px de haut, pied de page 21 px → `padding-block`.
 - [ ] **v1.3 extension** : évaluer Amazon/Decathlon, tailles US/UK, widget draggable.
 - [ ] og:image à mettre à jour si les marques supportées changent.
 - [ ] Duplication des tables `index.html` ↔ `extension/sizes.js` : conservée par choix (single-file), verrouillée par `tools/check_sync.py`.

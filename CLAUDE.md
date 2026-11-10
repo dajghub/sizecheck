@@ -74,6 +74,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 | `tools/generate_pages.py` | Générateur des pages de comparaison + sitemap |
 | `tools/render_brand_assets.py` | Régénère `og-image.png`, `favicon.png`, `apple-touch-icon.png` (Chrome headless + Archivo du site) |
 | `STATUS.md` | Suivi d'avancement par session |
+| `audits/` | Rapports d'audit datés (UX/UI…) — non déployés |
 | `extension/sizes.js` | **Source unique des données de conversion** |
 | `extension/manifest.json` | Config extension Chrome |
 | `extension/content.js` | Widget injecté sur pages produit |

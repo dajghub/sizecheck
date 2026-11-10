@@ -798,11 +798,23 @@
       setPressed('btn-mode-cm', S.mode === 'cm');
     }
 
-    /* Sur mobile, le mètre et le résultat sont sous la ligne de flottaison : les amener en vue */
+    /* Après un choix, faire défiler juste assez pour voir tout le tableau des équivalences,
+       sans jamais pousser le titre de l'étiquette hors de l'écran. (Avant : on calait le mètre
+       en haut ; sur un écran peu haut, l'étiquette — plus haute que l'écran — partait au-dessus.)
+       Sur mobile, le mètre (juste au-dessus) reste entier s'il tient avec le tableau, sinon il
+       sort proprement de l'écran : jamais coupé à moitié. */
     function bringIntoView() {
-      const target = $('gauge');
-      if (target.getBoundingClientRect().top < window.innerHeight * 0.45) return;
-      target.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth', block: 'start' });
+      const card = $('result').querySelector('.label');
+      const table = card && card.querySelector('table');
+      if (!table || card.classList.contains('is-empty')) return;
+      const GAP = 16;
+      const top = card.getBoundingClientRect().top;
+      const gauge = $('gauge').getBoundingClientRect();
+      let dy = top < GAP ? top - GAP
+             : Math.max(0, Math.min(table.getBoundingClientRect().bottom + GAP - window.innerHeight, top - GAP));
+      if (dy > 0 && gauge.bottom <= top && gauge.top - dy < GAP && gauge.bottom - dy > 0) dy = top - GAP;
+      if (Math.abs(dy) < 2) return;
+      window.scrollBy({ top: dy, behavior: REDUCED_MOTION ? 'auto' : 'smooth' });
     }
 
     /* ============================================================
