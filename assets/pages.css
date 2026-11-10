@@ -59,7 +59,7 @@ h3 { font-size: 17px; font-weight: 700; margin: 24px 0 8px; }
 
 /* Lien vers le convertisseur */
 .convert-link {
-  display: inline-block; margin-top: 10px;
+  display: inline-block; padding-block: 10px; margin-bottom: -10px; /* zone cliquable agrandie (≈ 44 px) sans déplacer le texte */
   font-weight: 700; font-size: 15px;
 }
 

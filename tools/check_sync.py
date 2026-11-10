@@ -8,7 +8,7 @@ Contrôles :
 1. index.html et extension/sizes.js contiennent exactement les mêmes tables.
 2. Les 8 marques attendues sont présentes des deux côtés.
 3. Chaque table est croissante (jamais décroissante) en cm.
-4. Les conseils de chaussant (« tip ») sont identiques sur le site et dans l'extension.
+4. Les conseils de chaussant (« tip », et leur rayon « tipGender ») sont identiques sur le site et dans l'extension.
 """
 import re
 import sys
@@ -21,6 +21,14 @@ def load_tips(path):
     src = path.read_text()
     return {m.group(1): m.group(2) for m in re.finditer(
         r"\n\s+(\w+): \{\s*name: '[^']+'[\s\S]*?\n\s+tip: (null|'(?:[^'\\]|\\.)*'),", src)}
+
+
+
+def load_tip_genders(path):
+    """{brand_key: rayon} pour les conseils réservés à un rayon (champ tipGender)."""
+    src = path.read_text()
+    return {m.group(1): m.group(2) for m in re.finditer(
+        r"\n\s+(\w+): \{\s*name: '[^']+'[^}]*?\n\s+tipGender: '(\w+)'", src)}
 
 
 def main():
@@ -52,6 +60,10 @@ def main():
     for key in BRAND_NAMES:
         if tips_site.get(key) != tips_ext.get(key):
             errors.append(f'{key} : conseil de chaussant différent entre site et extension')
+    tg_site = load_tip_genders(ROOT / 'index.html')
+    tg_ext = load_tip_genders(ROOT / 'extension' / 'sizes.js')
+    if tg_site != tg_ext:
+        errors.append(f'tipGender différent entre site {tg_site} et extension {tg_ext}')
 
     if errors:
         print('ÉCHEC — données incohérentes :')

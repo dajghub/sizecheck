@@ -230,7 +230,7 @@
             <span class="sc-focus-size">${scFr(best.label)}</span>
             ${second ? `<span class="sc-focus-alt">ou ${scFr(second.label)}</span>` : ''}
           </div>
-          ${b.tip ? `<div class="sc-fits"><h3>Bon à savoir</h3><p>${scTipText(b)}</p></div>` : ''}
+          ${scHasTip(b, state.genre) ? `<div class="sc-fits"><h3>Bon à savoir</h3><p>${scTipText(b)}</p></div>` : ''}
         </div>
         <button type="button" class="sc-link-btn" data-action="toggleAll">Voir toutes les marques</button>
       `;

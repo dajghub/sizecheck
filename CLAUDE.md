@@ -25,7 +25,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 
 ### Extension Chrome (`extension/`)
 - Manifest V3
-- `sizes.js` — données de conversion partagées (source unique de vérité), conseils de chaussant **identiques au site** (contrôlé par `check_sync.py`)
+- `sizes.js` — données de conversion partagées (source unique de vérité), conseils de chaussant **identiques au site** (contrôlé par `check_sync.py`). Un conseil propre à un rayon porte `tipGender: 'femme'` (ou `'homme'`) et n'est affiché que dans ce rayon (`scHasTip()` côté extension, même filtre dans `index.html`)
 - `ui.js` — identité « mètre ruban » partagée par le popup et le widget : jetons, composants (rayon, méthode, marques, pointures, champ cm) et **étiquette de résultat identique à celle du site**. Toute évolution visuelle du site doit y être reportée.
 - `content.js` — widget injecté via Shadow DOM sur les pages produit (police chargée en binaire via `FontFace`, car `@font-face` ne marche pas dans un shadow DOM)
 - `popup.html` / `popup.js` — interface manuelle accessible depuis la barre Chrome

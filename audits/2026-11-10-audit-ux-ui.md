@@ -157,6 +157,19 @@ tailles : 16 ×91 · 19 ×25 · 14 ×24 · 15 ×23 · 13 ×16 · 32 ×10 · 17 �
 
 ---
 
+## Suivi
+
+| Constat | État |
+|---|---|
+| 01 Défilement vers le résultat | Corrigé et en ligne le 10 nov. |
+| 03 Conseil HOKA femme en rayon homme | Corrigé le 10 nov. (`tipGender`, site + extension) |
+| 04 Saisie cm refusée muette | Corrigé le 10 nov. |
+| 05 Focus perdu au clavier | Corrigé le 10 nov. (vérifié : focus sur « Adidas » puis « 36⅔ » après Entrée) |
+| 06 `aria-live` trop bavard | Corrigé le 10 nov. (phrase courte dans `#result-status`) |
+| 07 Petits liens | Corrigé le 10 nov. (23 → 43 px de zone cliquable, texte immobile) |
+| 02 Pieds hors grille | **Ouvert** : choix du seuil et du libellé à faire |
+| 08 Tokens CSS | Ouvert, sans urgence |
+
 ## Points solides
 
 - **Contraste** : 144/144 textes conformes sur l'accueil, 302/302 sur `nike-vs-adidas`, aucun échec.

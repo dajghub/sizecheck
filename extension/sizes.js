@@ -123,6 +123,7 @@ const SC_BRANDS = {
   hoka: {
     name: 'HOKA', domain: 'hoka.com',
     tip: 'Sur les modèles femme récents (Clifton 10, Arahi 8, Challenger 8), HOKA conseille une demi-pointure en dessous de ta pointure HOKA habituelle.',
+    tipGender: 'femme',   // conseil propre aux modèles femme : masqué en rayon homme
     sizes: {
       homme: [
         ['39⅓', 24.3], ['40', 24.7], ['40⅔', 25.1], ['41⅓', 25.6],
@@ -161,6 +162,11 @@ function scGetSizes(brand, genre) {
 function scGetCm(brand, sizeLabel, genre) {
   const row = scGetSizes(brand, genre).find(([label]) => label === sizeLabel);
   return row ? row[1] : null;
+}
+
+/** Le conseil de chaussant s'applique-t-il à ce rayon ? (tipGender : conseil propre à un rayon) */
+function scHasTip(b, genre) {
+  return !!b.tip && (!b.tipGender || b.tipGender === genre);
 }
 
 /** Les N meilleures correspondances dans une marque cible pour un CM donné.

@@ -197,7 +197,7 @@ function scLabelHTML(s, cm, pageKey) {
   }).join('');
 
   // Conseils : celui de la marque de la page s'il y en a une, sinon tous (comme le site)
-  const tipRows = rows.filter(r => r.b.tip && (!pageKey || r.key === pageKey));
+  const tipRows = rows.filter(r => scHasTip(r.b, s.genre) && (!pageKey || r.key === pageKey));
   const tipsHTML = tipRows.length ? `
     <div class="sc-fits">
       <h3>Bon à savoir</h3>

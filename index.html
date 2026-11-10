@@ -142,7 +142,7 @@
       font-weight: 900; font-stretch: 70%; font-size: 24px; letter-spacing: -0.01em;
       text-decoration: none;
     }
-    .top-link { font-size: 15px; font-weight: 600; text-underline-offset: 3px; }
+    .top-link { font-size: 15px; font-weight: 600; text-underline-offset: 3px; padding-block: 10px; margin-block: -10px; } /* zone cliquable agrandie (≈ 44 px) sans déplacer le texte */
 
     .intro h1 {
       font-size: clamp(2.75rem, 12vw, 4.5rem);
@@ -265,6 +265,13 @@
     .tape.is-empty .needle { opacity: .25; }
 
     .hint { font-size: 14px; color: var(--muted); margin: 10px 0 0; max-width: 46ch; }
+    .hint-error { color: var(--ink); font-weight: 700; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    .hint-error:empty { margin: 0; }
+    .cm-field input[aria-invalid="true"] { border-bottom-style: dashed; }
 
     .measure { margin-top: 14px; font-size: 14px; }
     .measure summary { cursor: pointer; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; width: fit-content; }
@@ -378,7 +385,7 @@
       font-size: 14px; color: var(--muted);
     }
     .foot p { margin: 0; }
-    .foot a { text-underline-offset: 3px; }
+    .foot a { text-underline-offset: 3px; padding-block: 12px; margin-block: -12px; } /* zone cliquable agrandie (≈ 44 px) sans déplacer le texte */
 
     /* ---------- Mobile : l'étiquette vide ne sert à rien ---------- */
     @media (max-width: 899px) {
@@ -451,7 +458,7 @@
               <output id="gauge-out" class="gauge-value" aria-labelledby="gauge-label"></output>
               <span id="cm-field" class="gauge-value cm-field" hidden>
                 <input id="cm-input" type="text" inputmode="decimal" autocomplete="off" maxlength="5"
-                       placeholder="26,5" aria-labelledby="gauge-label" aria-describedby="tape-hint"><small>cm</small>
+                       placeholder="26,5" aria-labelledby="gauge-label" aria-describedby="tape-hint cm-error"><small>cm</small>
               </span>
             </div>
             <div class="tape is-empty" id="tape">
@@ -463,6 +470,7 @@
               <div class="needle"></div>
             </div>
             <p class="hint" id="tape-hint"></p>
+            <p class="hint hint-error" id="cm-error" aria-live="polite"></p>
 
             <details class="measure" id="measure" hidden>
               <summary>Comment mesurer mon pied</summary>
@@ -479,7 +487,9 @@
         </div>
 
         <div class="result-col">
-          <div id="result" aria-live="polite"></div>
+          <!-- Annonce courte pour les lecteurs d'écran ; l'étiquette elle-même n'est pas relue à chaque clic -->
+          <p id="result-status" class="sr-only" aria-live="polite"></p>
+          <div id="result"></div>
         </div>
       </div>
 
@@ -676,6 +686,7 @@
       hoka: {
         name: 'HOKA', emoji: '🟣', logo: '/assets/logos/hoka.png',
         tip: 'Sur les modèles femme récents (Clifton 10, Arahi 8, Challenger 8), HOKA conseille une demi-pointure en dessous de ta pointure HOKA habituelle.',
+        tipGender: 'femme',   // conseil propre aux modèles femme : masqué en rayon homme
         sizes: {
           homme: [
             ['39⅓', 24.3], ['40', 24.7], ['40⅔', 25.1], ['41⅓', 25.6],
@@ -878,6 +889,7 @@
     function setFootCm(v, src) {
       v = Math.min(TAPE_MAX, Math.max(TAPE_MIN, Math.round(v * 10) / 10));
       S.footCm = v;
+      setCmError(false);
       if (src !== 'input') cmInput.value = fr(v);
       tape.classList.remove('is-empty');
       tapeScroll.setAttribute('aria-valuenow', v);
@@ -967,6 +979,7 @@
     function setMode(m) {
       if (S.mode === m) return;
       S.mode = m;
+      setCmError(false);
       updateModeToggle();
       const isCm = m === 'cm';
       $('brand-steps').hidden = isCm;
@@ -992,7 +1005,8 @@
           track('selection-marque', { marque: key });
           S.sourceBrand = key;
           S.sourceSize = null;
-          renderSourceBrands();
+          // Mettre à jour l'état plutôt que recréer les boutons : le focus clavier reste sur la marque
+          c.querySelectorAll('.brand').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
           renderSizes();
           $('step2').hidden = false;
           computeAllResults();
@@ -1015,7 +1029,8 @@
         btn.setAttribute('aria-pressed', S.sourceSize === label ? 'true' : 'false');
         btn.addEventListener('click', () => {
           S.sourceSize = label;
-          renderSizes();
+          // Idem : le focus clavier reste sur la pointure choisie
+          c.querySelectorAll('.size').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
           computeAllResults();
           updateGauge(true);
           saveState();
@@ -1066,12 +1081,20 @@
           </tr>`;
       }).join('');
 
+      const found = rows.filter(r => r.best).length;
+      const status = empty ? '' : S.mode === 'cm'
+        ? `Pied de ${fr(srcCm)} cm : ${found} équivalences affichées.`
+        : `${BRANDS[S.sourceBrand].name} ${fr(S.sourceSize)} ${S.gender}, soit ${fr(srcCm)} cm : ${found} équivalences affichées.`;
+      if ($('result-status').textContent !== status) $('result-status').textContent = status;
+
       let sub;
-      if (empty) sub = 'Elles s\'affichent ici dès que tu as choisi ta pointure.';
+      if (empty) sub = S.mode === 'cm'
+        ? 'Elles s\'affichent ici dès que tu as indiqué la longueur de ton pied.'
+        : 'Elles s\'affichent ici dès que tu as choisi ta pointure.';
       else if (S.mode === 'cm') sub = `Pour un pied de ${fr(srcCm)} cm, rayon ${S.gender}.`;
       else sub = `${BRANDS[S.sourceBrand].name} ${fr(S.sourceSize)} ${S.gender}, soit ${fr(srcCm)} cm de pied.`;
 
-      const tipsRows = empty ? [] : rows.filter(r => r.b.tip);
+      const tipsRows = empty ? [] : rows.filter(r => r.b.tip && (!r.b.tipGender || r.b.tipGender === S.gender));
       const tipsHTML = tipsRows.length ? `
         <div class="fits">
           <h3>Bon à savoir</h3>
@@ -1123,19 +1146,38 @@
     $('btn-mode-brand').addEventListener('click', () => { track('changement-mode', { mode: 'brand' }); setMode('brand'); });
     $('btn-mode-cm').addEventListener('click', () => { track('changement-mode', { mode: 'cm' }); setMode('cm'); });
 
+    /* Saisie refusée : le dire, plutôt que de vider le résultat sans explication.
+       Pendant la frappe, « 2 » (vers 26) n'est pas une erreur ; « 15 », « 40 » ou « abc » en sont. */
+    function setCmError(on) {
+      const msg = on ? `Entre une longueur entre ${TAPE_MIN} et ${TAPE_MAX} cm, par exemple 26,5.` : '';
+      if ($('cm-error').textContent !== msg) $('cm-error').textContent = msg;
+      if (on) cmInput.setAttribute('aria-invalid', 'true'); else cmInput.removeAttribute('aria-invalid');
+    }
+    function cmLooksWrong(text, v, committed) {
+      if (text.trim() === '') return false;
+      if (isNaN(v) || v > TAPE_MAX) return true;
+      return v < TAPE_MIN && (committed || v >= 10);
+    }
+
     cmInput.addEventListener('input', () => {
       const v = parseFloat(String(cmInput.value).replace(',', '.'));
       if (isValidCm(v)) {
+        setCmError(false);
         setFootCm(v, 'input');
         saveState();
         updateURL();
       } else {
+        setCmError(cmLooksWrong(cmInput.value, v, false));
         S.footCm = null;
         tape.classList.add('is-empty');
         computeAllResults();
       }
     });
-    cmInput.addEventListener('change', () => { if (activeCm() !== null) bringIntoView(); });
+    cmInput.addEventListener('change', () => {
+      const v = parseFloat(String(cmInput.value).replace(',', '.'));
+      if (activeCm() !== null) bringIntoView();
+      else setCmError(cmLooksWrong(cmInput.value, v, true));
+    });
 
     buildTape();
     updateGenderToggle();
