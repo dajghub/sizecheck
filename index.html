@@ -397,9 +397,10 @@
     /* L'emplacement d'attente des pointures n'existe que sur desktop */
     .size-wait { display: none; }
 
-    /* ---------- Desktop : la page se lit comme le calcul, de haut en bas ----------
-       ta chaussure (rayon, marque, pointure) → le mètre en pleine largeur → l'étiquette
-       étalée en largeur, toutes les marques côte à côte comme sur une boîte à chaussures. */
+    /* ---------- Desktop : le formulaire à gauche, l'étiquette verticale à droite ----------
+       On choisit à gauche (rayon, marque, pointure, mètre) ; l'étiquette reste visible à droite,
+       une marque par ligne : elle s'allonge d'une ligne par marque ajoutée. Les conseils passent
+       dessous, sur toute la largeur. */
     @media (min-width: 900px) {
       .page { max-width: 1200px; padding: 0 32px 56px; }
       .top { padding-top: 26px; }
@@ -411,64 +412,76 @@
       .intro p { margin: 0; font-size: 17px; max-width: 72ch; }
 
       .app {
-        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        grid-template-rows: auto auto auto auto 1fr auto;   /* la ligne vide absorbe la hauteur de l'étiquette */
         grid-template-areas:
-          "controls controls"
-          "brand    size"
-          "gauge    gauge"
-          "result   result";
-        column-gap: 40px; row-gap: 22px;
+          "controls result"
+          "brand    result"
+          "size     result"
+          "gauge    result"
+          ".        result"
+          "tips     tips";
+        column-gap: 48px; row-gap: 22px;
       }
-      .form-col, #brand-steps { display: contents; }
-      .controls { grid-area: controls; display: flex; align-items: flex-end; gap: 40px; }
-      .controls .seg { flex: 0 0 300px; }
-      .controls .modes { margin: 0; flex: 1 1 auto; }
+      /* Mode cm : pas de lignes marque / pointure, donc pas de trou entre la méthode et le mètre */
+      .app:has(#brand-steps[hidden]) {
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-areas:
+          "controls result"
+          "gauge    result"
+          ".        result"
+          "tips     tips";
+      }
+      .form-col, #brand-steps, .result-col, #result, .label { display: contents; }
+      .controls { grid-area: controls; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 32px; }
+      .controls .seg { flex: 0 0 240px; }
+      .controls .modes { margin: 0; flex: 1 1 260px; }
+      .controls .modes button { white-space: nowrap; }
       .pick-brand { grid-area: brand; }
       #step2, .size-wait { grid-area: size; }
       .step { margin-top: 0; }
-      .brand { min-height: 64px; }
-      .sizes { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
+      .brand { min-height: 62px; }
+      .sizes { grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); }
       .size-wait { display: block; }
       #step2:not([hidden]) + .size-wait { display: none; }
       .size-wait p:not(.step) {
-        margin: 0; min-height: 110px; padding: 16px;
+        margin: 0; min-height: 104px; padding: 16px;
         border: 1.5px dashed var(--alu-deep); border-radius: 4px;
         color: var(--muted); font-size: 15px;
       }
+      .gauge { grid-area: gauge; margin-top: 0; }
+      .gauge-value { font-size: 52px; }
+      .tape { height: 68px; }
 
-      /* Le mètre : libellé et valeur à gauche, ruban sur toute la largeur restante */
-      .gauge {
-        grid-area: gauge; margin-top: 0;
-        display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: 40px; align-items: center;
+      /* L'étiquette : colonne de droite, reste visible pendant qu'on choisit */
+      .label-main {
+        grid-area: result; align-self: start; position: sticky; top: 24px;
+        background: var(--paper); border: 2px solid var(--ink); border-radius: 4px;
       }
-      .gauge-head { grid-column: 1; grid-row: 1; flex-direction: column; align-items: flex-start; gap: 8px; margin: 0; }
-      .gauge-label { padding: 0; }
-      .gauge-value { font-size: 56px; }
-      .tape { grid-column: 2; grid-row: 1; height: 72px; }
-      .gauge > .hint, .gauge > .measure { grid-column: 2; }
-      .measure ol { columns: 2; column-gap: 32px; }
-
-      /* L'étiquette : une colonne par marque */
-      .result-col { grid-area: result; }
+      .label.is-empty .label-main { border-color: var(--alu-deep); }
       .label-head { padding: 16px 20px 14px; }
       .label-head h2 { font-size: 26px; }
-      .eq thead {
-        position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
-      }
-      /* Sous-grille : nom, pointure et longueur restent alignés d'une colonne à l'autre,
-         même quand un nom (« New Balance ») passe sur deux lignes */
-      .eq tbody {
-        display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
-        grid-template-rows: auto auto auto;
-      }
-      .eq tbody tr { display: grid; grid-row: 1 / span 3; grid-template-rows: subgrid; min-width: 0; }
-      .eq tbody tr + tr { border-left: 1px solid var(--rule); }
-      .eq tbody th, .eq tbody td { border-top: 0; padding: 0 16px; text-align: left; }
-      .eq tbody th { padding-top: 16px; font-size: 18px; align-self: end; }
-      .eq tbody .eq-size { padding-top: 8px; font-size: 44px; }
-      .eq tbody .eq-len { padding-top: 10px; padding-bottom: 16px; align-self: end; }
+      .eq thead th { padding: 10px 20px 6px; }
+      .eq tbody th, .eq tbody td { padding: 7px 20px; }
+      /* Lignes compactes : l'alternative et l'écart passent à côté de la valeur,
+         pour qu'une marque ajoutée ne coûte qu'une ligne d'environ 48 px */
+      .eq-alt { display: inline; margin: 0 0 0 6px; }
+      .eq-gap { display: inline; margin-left: 8px; }
+    }
+    /* Écrans moyens : la colonne de l'étiquette est plus étroite, l'écart repasse sous la longueur */
+    @media (min-width: 900px) and (max-width: 1199px) {
+      .eq-gap { display: block; margin: 2px 0 0; }
+      .eq tbody th, .eq tbody td { padding-inline: 14px; }
+    }
+    @media (min-width: 900px) {
       .label-note { padding: 12px 20px 14px; }
-      .fits { padding: 6px 20px 18px; columns: 2; column-gap: 40px; }
+
+      /* Les conseils : sous le formulaire et l'étiquette, sur toute la largeur */
+      .fits {
+        grid-area: tips;
+        background: var(--paper); border: 2px solid var(--ink); border-radius: 4px;
+        padding: 6px 20px 18px; columns: 2; column-gap: 40px;
+      }
       .fits h3 { column-span: all; }
       .fits p { break-inside: avoid; }
 
@@ -889,9 +902,10 @@
        Sur mobile, le mètre (juste au-dessus) reste entier s'il tient avec le tableau, sinon il
        sort proprement de l'écran : jamais coupé à moitié. */
     function bringIntoView() {
-      const card = $('result').querySelector('.label');
+      const label = $('result').querySelector('.label');
+      const card = label && label.querySelector('.label-main');
       const table = card && card.querySelector('table');
-      if (!table || card.classList.contains('is-empty')) return;
+      if (!table || label.classList.contains('is-empty')) return;
       const GAP = 16;
       const top = card.getBoundingClientRect().top;
       const gauge = $('gauge').getBoundingClientRect();
@@ -1179,6 +1193,7 @@
 
       el.innerHTML = `
         <div class="label${empty ? ' is-empty' : ''}">
+          <div class="label-main">
           <div class="label-head">
             <div>
               <h2>Tes pointures équivalentes</h2>
@@ -1191,6 +1206,7 @@
             <tbody role="rowgroup">${rowsHTML}</tbody>
           </table>
           ${empty ? '' : `<p class="label-note">L'écart compare la longueur prévue par chaque marque à ton pied : « +3 mm » veut dire une chaussure prévue pour un pied un peu plus long.</p>`}
+          </div>
           ${tipsHTML}
         </div>`;
 
