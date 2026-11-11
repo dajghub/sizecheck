@@ -474,18 +474,19 @@
         display: inline-block; width: 4.4em; margin: 0 0 0 6px; text-align: left;
       }
       .eq-gap { display: inline-block; width: 4.2em; margin-left: 8px; text-align: left; }
-      /* En-têtes au-dessus des chiffres, pas au-dessus des emplacements réservés
-         (en-têtes en 13 px : 4.9em ≈ alternative 4.4em de 13 px + 6 px ; 4.8em ≈ écart + 8 px) */
-      .eq thead th:nth-child(2) { padding-right: calc(20px + 4.9em); }
-      .eq thead th:nth-child(3) { padding-right: calc(20px + 4.8em); }
+      /* En-têtes au-dessus des chiffres, pas au-dessus des emplacements réservés.
+         Décalage visuel (position relative) : il ne change pas la largeur des colonnes.
+         En-têtes en 13 px : 4.9em ≈ alternative (4.4em de 13 px) + 6 px ; 4.8em ≈ écart + 8 px. */
+      .eq thead th { white-space: nowrap; }
+      .eq thead th:nth-child(2) { position: relative; left: -4.9em; }
+      .eq thead th:nth-child(3) { position: relative; left: -4.8em; }
     }
     /* Écrans moyens : la colonne de l'étiquette est plus étroite, l'écart repasse sous la longueur */
     @media (min-width: 900px) and (max-width: 1199px) {
       .eq-gap { display: block; width: auto; margin: 2px 0 0; text-align: right; }
-      .eq thead th { padding-inline: 14px; }
-      .eq thead th:nth-child(2) { padding-right: calc(14px + 4.9em); }
-      .eq thead th:nth-child(3) { padding-right: 14px; }
-      .eq tbody th, .eq tbody td { padding-inline: 14px; }
+      .eq thead th { padding-inline: 12px; }
+      .eq thead th:nth-child(3) { left: 0; }
+      .eq tbody th, .eq tbody td { padding-inline: 12px; }
     }
     @media (min-width: 900px) {
       .label-note { padding: 12px 20px 14px; }
