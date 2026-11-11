@@ -311,6 +311,7 @@
       font-weight: 850; font-stretch: 66%; font-size: 32px; line-height: 1;
       font-variant-numeric: tabular-nums;
     }
+    .eq-alt:empty { display: none; }
     .eq-alt { display: block; margin-top: 3px; font-size: 13px; font-weight: 600; font-stretch: 100%; color: var(--muted); }
     .eq-len { text-align: right; white-space: nowrap; font-size: 14px; font-variant-numeric: tabular-nums; }
     .eq-gap { display: block; margin-top: 2px; font-size: 13px; color: var(--muted); }
@@ -467,12 +468,16 @@
       .eq tbody th, .eq tbody td { padding: 7px 20px; }
       /* Lignes compactes : l'alternative et l'écart passent à côté de la valeur,
          pour qu'une marque ajoutée ne coûte qu'une ligne d'environ 48 px */
-      .eq-alt { display: inline; margin: 0 0 0 6px; }
-      .eq-gap { display: inline; margin-left: 8px; }
+      /* Largeurs réservées : chiffre principal, alternative et écart restent alignés
+         d'une ligne à l'autre, qu'il y ait une alternative ou non, « pile » ou « −12 mm » */
+      .eq tbody .eq-alt, .eq tbody .eq-alt:empty {
+        display: inline-block; width: 4.4em; margin: 0 0 0 6px; text-align: left;
+      }
+      .eq-gap { display: inline-block; width: 4.2em; margin-left: 8px; text-align: left; }
     }
     /* Écrans moyens : la colonne de l'étiquette est plus étroite, l'écart repasse sous la longueur */
     @media (min-width: 900px) and (max-width: 1199px) {
-      .eq-gap { display: block; margin: 2px 0 0; }
+      .eq-gap { display: block; width: auto; margin: 2px 0 0; text-align: right; }
       .eq tbody th, .eq tbody td { padding-inline: 14px; }
     }
     @media (min-width: 900px) {
@@ -1166,7 +1171,7 @@
         return `
           <tr role="row">
             <th scope="row" role="rowheader">${b.name}</th>
-            <td role="cell" class="eq-size">${fr(best.label)}${second ? `<span class="eq-alt">ou ${fr(second.label)}</span>` : ''}</td>
+            <td role="cell" class="eq-size">${fr(best.label)}<span class="eq-alt">${second ? `ou ${fr(second.label)}` : ''}</span></td>
             <td role="cell" class="eq-len">${fr(best.cm)} cm<span class="eq-gap${mm === 0 ? ' is-exact' : ''}">${gapText(mm)}</span></td>
           </tr>`;
       }).join('');
