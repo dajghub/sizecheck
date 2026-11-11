@@ -394,18 +394,84 @@
     @media (min-width: 768px) {
       .ext { display: flex; }
     }
+    /* L'emplacement d'attente des pointures n'existe que sur desktop */
+    .size-wait { display: none; }
+
+    /* ---------- Desktop : la page se lit comme le calcul, de haut en bas ----------
+       ta chaussure (rayon, marque, pointure) → le mètre en pleine largeur → l'étiquette
+       étalée en largeur, toutes les marques côte à côte comme sur une boîte à chaussures. */
     @media (min-width: 900px) {
-      .page { padding: 0 32px 56px; }
+      .page { max-width: 1200px; padding: 0 32px 56px; }
       .top { padding-top: 26px; }
-      .intro {
-        display: grid; grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
-        column-gap: 48px; align-items: end;
-        margin: 44px 0 40px;
+      .intro { margin: 28px 0 24px; }
+      .intro h1 {
+        font-size: clamp(3rem, 5vw, 4.4rem);
+        max-width: none; margin: 0 0 12px;
       }
-      .intro h1 { margin: 0; }
-      .intro p { margin: 0; padding-bottom: 4px; font-size: 17px; }
-      .app { grid-template-columns: minmax(0, 460px) minmax(0, 1fr); gap: 48px; align-items: start; }
-      .result-col { position: sticky; top: 24px; }
+      .intro p { margin: 0; font-size: 17px; max-width: 72ch; }
+
+      .app {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        grid-template-areas:
+          "controls controls"
+          "brand    size"
+          "gauge    gauge"
+          "result   result";
+        column-gap: 40px; row-gap: 22px;
+      }
+      .form-col, #brand-steps { display: contents; }
+      .controls { grid-area: controls; display: flex; align-items: flex-end; gap: 40px; }
+      .controls .seg { flex: 0 0 300px; }
+      .controls .modes { margin: 0; flex: 1 1 auto; }
+      .pick-brand { grid-area: brand; }
+      #step2, .size-wait { grid-area: size; }
+      .step { margin-top: 0; }
+      .brand { min-height: 64px; }
+      .sizes { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
+      .size-wait { display: block; }
+      #step2:not([hidden]) + .size-wait { display: none; }
+      .size-wait p:not(.step) {
+        margin: 0; min-height: 110px; padding: 16px;
+        border: 1.5px dashed var(--alu-deep); border-radius: 4px;
+        color: var(--muted); font-size: 15px;
+      }
+
+      /* Le mètre : libellé et valeur à gauche, ruban sur toute la largeur restante */
+      .gauge {
+        grid-area: gauge; margin-top: 0;
+        display: grid; grid-template-columns: 220px minmax(0, 1fr); column-gap: 40px; align-items: center;
+      }
+      .gauge-head { grid-column: 1; grid-row: 1; flex-direction: column; align-items: flex-start; gap: 8px; margin: 0; }
+      .gauge-label { padding: 0; }
+      .gauge-value { font-size: 56px; }
+      .tape { grid-column: 2; grid-row: 1; height: 72px; }
+      .gauge > .hint, .gauge > .measure { grid-column: 2; }
+      .measure ol { columns: 2; column-gap: 32px; }
+
+      /* L'étiquette : une colonne par marque */
+      .result-col { grid-area: result; }
+      .label-head { padding: 16px 20px 14px; }
+      .label-head h2 { font-size: 26px; }
+      .eq thead {
+        position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+      }
+      /* Sous-grille : nom, pointure et longueur restent alignés d'une colonne à l'autre,
+         même quand un nom (« New Balance ») passe sur deux lignes */
+      .eq tbody {
+        display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+      }
+      .eq tbody tr { display: grid; grid-row: 1 / span 3; grid-template-rows: subgrid; min-width: 0; }
+      .eq tbody tr + tr { border-left: 1px solid var(--rule); }
+      .eq tbody th, .eq tbody td { border-top: 0; padding: 0 16px; text-align: left; }
+      .eq tbody th { padding-top: 16px; font-size: 18px; align-self: end; }
+      .eq tbody .eq-size { padding-top: 8px; font-size: 44px; }
+      .eq tbody .eq-len { padding-top: 10px; padding-bottom: 16px; align-self: end; }
+      .label-note { padding: 12px 20px 14px; }
+      .fits { padding: 6px 20px 18px; columns: 2; column-gap: 40px; }
+      .fits h3 { column-span: all; }
+      .fits p { break-inside: avoid; }
+
       .more { grid-template-columns: 1fr 1fr; column-gap: 56px; margin-top: 96px; }
       .more .how { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px; }
       .more .how > h2 { grid-column: 1; }
@@ -433,22 +499,30 @@
 
       <div class="app" id="app">
         <div class="form-col">
-          <div class="seg" role="group" aria-label="Rayon">
-            <button id="btn-homme" type="button">Homme</button>
-            <button id="btn-femme" type="button">Femme</button>
-          </div>
+          <div class="controls">
+            <div class="seg" role="group" aria-label="Rayon">
+              <button id="btn-homme" type="button">Homme</button>
+              <button id="btn-femme" type="button">Femme</button>
+            </div>
 
-          <div class="modes" role="group" aria-label="Point de départ">
-            <button id="btn-mode-brand" type="button">Avec ma pointure</button>
-            <button id="btn-mode-cm" type="button">Avec mon pied en cm</button>
+            <div class="modes" role="group" aria-label="Point de départ">
+              <button id="btn-mode-brand" type="button">Avec ma pointure</button>
+              <button id="btn-mode-cm" type="button">Avec mon pied en cm</button>
+            </div>
           </div>
 
           <div id="brand-steps">
-            <h2 class="step">Ta marque habituelle</h2>
-            <div id="brands-source" class="brands"></div>
+            <div class="pick-brand">
+              <h2 class="step">Ta marque habituelle</h2>
+              <div id="brands-source" class="brands"></div>
+            </div>
             <div id="step2" hidden>
               <h2 class="step" id="step2-label">Ta pointure</h2>
               <div id="sizes-container" class="sizes"></div>
+            </div>
+            <div class="size-wait" aria-hidden="true">
+              <p class="step">Ta pointure</p>
+              <p>Choisis d'abord ta marque : ses pointures s'affichent ici.</p>
             </div>
           </div>
 
@@ -1070,14 +1144,14 @@
 
       const rowsHTML = rows.map(({ b, best, second }) => {
         if (!best) {
-          return `<tr><th scope="row">${b.name}</th><td class="eq-size">–</td><td class="eq-len">– cm</td></tr>`;
+          return `<tr role="row"><th scope="row" role="rowheader">${b.name}</th><td role="cell" class="eq-size">–</td><td role="cell" class="eq-len">– cm</td></tr>`;
         }
         const mm = Math.round((best.cm - srcCm) * 10);
         return `
-          <tr>
-            <th scope="row">${b.name}</th>
-            <td class="eq-size">${fr(best.label)}${second ? `<span class="eq-alt">ou ${fr(second.label)}</span>` : ''}</td>
-            <td class="eq-len">${fr(best.cm)} cm<span class="eq-gap${mm === 0 ? ' is-exact' : ''}">${gapText(mm)}</span></td>
+          <tr role="row">
+            <th scope="row" role="rowheader">${b.name}</th>
+            <td role="cell" class="eq-size">${fr(best.label)}${second ? `<span class="eq-alt">ou ${fr(second.label)}</span>` : ''}</td>
+            <td role="cell" class="eq-len">${fr(best.cm)} cm<span class="eq-gap${mm === 0 ? ' is-exact' : ''}">${gapText(mm)}</span></td>
           </tr>`;
       }).join('');
 
@@ -1112,9 +1186,9 @@
             </div>
             ${empty ? '' : `<button id="share-btn" type="button" class="share">${shareLabel}</button>`}
           </div>
-          <table class="eq">
-            <thead><tr><th scope="col">Marque</th><th scope="col" class="r">Pointure EU</th><th scope="col" class="r">Longueur</th></tr></thead>
-            <tbody>${rowsHTML}</tbody>
+          <table class="eq" role="table">
+            <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Marque</th><th scope="col" role="columnheader" class="r">Pointure EU</th><th scope="col" role="columnheader" class="r">Longueur</th></tr></thead>
+            <tbody role="rowgroup">${rowsHTML}</tbody>
           </table>
           ${empty ? '' : `<p class="label-note">L'écart compare la longueur prévue par chaque marque à ton pied : « +3 mm » veut dire une chaussure prévue pour un pied un peu plus long.</p>`}
           ${tipsHTML}

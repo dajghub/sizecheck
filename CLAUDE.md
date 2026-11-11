@@ -14,7 +14,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 ### Site web (`index.html`)
 - Single-file HTML — CSS écrit à la main dans un `<style>` + JavaScript Vanilla (Tailwind retiré lors de la refonte du 8 nov. 2026)
 - Aucun framework, aucun bundler, aucun backend
-- Mobile-first ; sur desktop (≥ 900 px) deux colonnes : formulaire à gauche, étiquette de résultat collante à droite
+- Mobile-first ; sur desktop (≥ 900 px) la page se lit de haut en bas comme le calcul : rayon + méthode sur une ligne, marque | pointure côte à côte, mètre en pleine largeur, puis l'étiquette étalée en largeur (une colonne par marque, sous-grille CSS ; le `<table>` garde des rôles ARIA explicites). Le mobile est inchangé ; l'extension garde l'étiquette verticale.
 - **Analytics : Umami Cloud** (cookieless, RGPD, sans bandeau de consentement) — `data-website-id` `c924201e-94a1-4c34-ad5a-83154e3cc4f7`, sur le site, la page légale et les 28 pages SEO. (Remplace l'ancien duo Google Analytics + tarteaucitron, retirés le 05/07/2026.)
 - Deux modes de conversion : depuis une marque, ou depuis la longueur de pied en cm
 
