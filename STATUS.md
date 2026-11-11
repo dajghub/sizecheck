@@ -5,7 +5,7 @@ _Dernière mise à jour : 11 novembre 2026_
 ## ⏸️ Projet en pause depuis le 11 nov. 2026
 
 Pour reprendre, dans l'ordre :
-1. **Pousser les commits locaux** (`git push`) : les correctifs rapides de l'audit UX/UI (conseil HOKA par rayon, erreur en mode cm, focus clavier, annonce lecteurs d'écran, petits liens) ne sont **pas encore en ligne**. Vérifier ensuite avec `gh run list --workflow=deploy.yml`.
+1. ~~Pousser les commits locaux~~ : fait le 11 nov., tout est en ligne (correctifs de l'audit UX/UI compris).
 2. **Publier l'extension v1.2.0** : le zip a été reconstruit le 10 nov. (voir Backlog).
 3. **Nouvelles marques** : décider de l'ajout d'UGG, Puma et Birkenstock (+ Crocs en option) — voir « Nouvelles marques — analyse Google Trends » plus bas. UGG culmine en nov.–déc.
 4. **Pieds hors grille** (audit, critique) : choisir le seuil (10 mm proposé) et le libellé « Hors grille ».
