@@ -106,6 +106,24 @@ _Dernière mise à jour : 10 novembre 2026_
 
 ---
 
+## 🔎 Nouvelles marques — analyse Google Trends (11 nov. 2026)
+
+Refaite le 11 nov. (une première analyse, menée hors de ce dépôt, n'avait laissé aucune trace). France, 12 derniers mois, recherche Web. Méthode : mots-clés tels qu'on les tape (les « sujets » et le filtre catégorie Chaussures donnaient des résultats incohérents, ex. Salomon 0,06 × New Balance, UGG 0). Google Trends fusionne « X taille » et « taille X » ; « pointure X » est quasi nul hors Nike (47 contre 0–1), donc l'intention de taille se lit sur « taille ».
+
+| Marque | Intérêt marque (New Balance = 1) | Recherches « taille » (« nike taille » = 1) | Requêtes associées | Saison |
+|---|---|---|---|---|
+| *Repères déjà sur le site* | Vans 0,41 · HOKA 0,29 · Converse 0,24 | Vans 0,37 · Salomon 0,35 · Converse 0,21 · HOKA 0,15 | | |
+| **Puma** | 0,57 | 0,34 | « puma taille grand ou petit » | stable (−7 % sur 5 ans) |
+| **UGG** | 0,46 | 0,20 | « ugg taille 38 / 39 / 35… », « grand ou petit » | **pic nov.–déc. ×2,9** (+34 % sur 5 ans) |
+| **Birkenstock** | 0,41 | 0,18 | « taille grand », « petit ou grand » | pic juin ×2,7 (+19 %) |
+| Crocs | 0,52 | 0,54 | surtout tailles enfant (« crocs taille 22 / 23 ») ; double numérotation M/W | pic juin ×1,7 (+198 %) |
+| Saucony | 0,31 | 0,15 | aucune | |
+| Écartées | Jordan 1,13 (grille Nike ; « taille » = taille de l'acteur Michael B. Jordan) · Lacoste 0,99 (vêtements : aucune requête associée chaussure) · Timberland 0,19 · On running 0,11 · Dr. Martens 0,10 · Reebok 0,09 · Veja 0,07 | | | |
+
+**Recommandation** : ajouter **UGG** (en pleine saison), **Puma** et **Birkenstock** ; Crocs en option (fort et en croissance, mais public surtout enfant et grille M/W). 8 → 11 marques = 28 → 55 pages de comparaison (n(n−1)/2) : à décider si on génère toutes les paires ou seulement les paires utiles.
+
+---
+
 ## 📋 Backlog
 
 - [ ] **Publier l'extension v1.2.0 (à faire par Jade)** : envoyer `marketing/chrome-store/sizecheck-extension.zip` (reconstruit le 10 nov.) sur le Chrome Web Store, remplacer `promo-small.png` / `promo-large.png` (déjà refaites), et **refaire les 2 captures 1280×800** (encore l'ancien widget bleu) : installer la v1.2 en « non empaquetée », ouvrir une page produit (ex. nike.fr), capturer le widget fermé puis ouvert.
