@@ -983,7 +983,9 @@
           : `${fr(cm)}<small>cm</small>`;
         $('tape-hint').textContent = cm === null
           ? 'Choisis ta marque et ta pointure : le mètre se cale sur la longueur de pied correspondante.'
-          : `Longueur indiquée par le guide ${BRANDS[S.sourceBrand].name} ${S.gender} pour le ${fr(S.sourceSize)}.`;
+          // Court pour tenir sur une ligne même sur un écran de 320 px (pire cas « New Balance » : 266 px) ;
+          // espace insécable : la pointure ne se retrouve jamais seule sur une ligne
+          : `Guide ${BRANDS[S.sourceBrand].name} ${S.gender}, pointure ${fr(S.sourceSize)}.`;
       }
       if (cm !== null) tapeTo(cm, animate);
     }
