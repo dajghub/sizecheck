@@ -453,9 +453,11 @@
       .gauge-value { font-size: 52px; }
       .tape { height: 68px; }
 
-      /* L'étiquette : colonne de droite, reste visible pendant qu'on choisit */
+      /* L'étiquette : colonne de droite, à hauteur du formulaire. Pas de position collante :
+         le formulaire tient dans l'écran, et une étiquette qui suit le défilement glissait
+         par-dessus les conseils. */
       .label-main {
-        grid-area: result; align-self: start; position: sticky; top: 24px;
+        grid-area: result; align-self: start;
         background: var(--paper); border: 2px solid var(--ink); border-radius: 4px;
       }
       .label.is-empty .label-main { border-color: var(--alu-deep); }
