@@ -99,8 +99,7 @@ def extension_cta_html(a, b):
           <p>Sur {na} comme sur {nb}, l'extension Chrome SizeCheck affiche ta taille sur la page produit — sans revenir ici.</p>
         </div>
       </div>
-      <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener"
-         data-umami-event="cta-extension" data-umami-event-paire="{a}-{b}">Installer l'extension</a>
+      <a class="ext-cta-btn" href="{EXT_STORE_URL}" target="_blank" rel="noopener">Installer l'extension</a>
     </div>'''
 
 
@@ -438,7 +437,6 @@ def page_html(a, b):
   <meta property="og:locale" content="fr_FR">
   <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/pages.css">
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
   <script type="application/ld+json">{faq_ld}</script>
 </head>
 <body>
@@ -451,8 +449,7 @@ def page_html(a, b):
   à un EU 42 {nb}. Les tableaux ci-dessous croisent les longueurs de pied en centimètres publiées dans les
   guides officiels des deux marques — y compris les demi-pointures et tiers réellement vendus.</p>
   <p class="updated">Données relevées une à une sur les guides des tailles officiels des deux marques.</p>
-  <p><a class="convert-link" href="/?from={a}&size=42&g=homme"
-        data-umami-event="lien-convertisseur" data-umami-event-paire="{a}-{b}">Convertir une autre pointure ou marque</a></p>
+  <p><a class="convert-link" href="/?from={a}&size=42&g=homme">Convertir une autre pointure ou marque</a></p>
 
   {''.join(sections)}
 
@@ -509,7 +506,6 @@ def index_html(pairs):
   <meta property="og:locale" content="fr_FR">
   <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/pages.css">
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
 </head>
 <body>
 <div class="wrap">

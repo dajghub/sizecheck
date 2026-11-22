@@ -656,8 +656,7 @@
           <p>L'extension Chrome SizeCheck affiche ton équivalent sur les sites des marques, Zalando, JD Sports, Foot Locker et Courir.</p>
         </div>
         <a href="https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/bbbpmlgmpekohknipogacpohfldeieha?hl=fr&utm_source=sizecheck_site"
-           target="_blank" rel="noopener"
-           data-umami-event="cta-extension" data-umami-event-paire="accueil">Installer l'extension</a>
+           target="_blank" rel="noopener">Installer l'extension</a>
       </aside>
     </main>
 
@@ -895,11 +894,6 @@
     const $ = id => document.getElementById(id);
     const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* Envoi d'un custom event à Umami (silencieux si Umami absent/bloqué) */
-    function track(name, data) {
-      try { if (window.umami) window.umami.track(name, data); } catch (e) {}
-    }
-
     function setPressed(id, on) { $(id).setAttribute('aria-pressed', on ? 'true' : 'false'); }
 
     function updateGenderToggle() {
@@ -1107,7 +1101,6 @@
         btn.textContent = BRANDS[key].name;
         btn.setAttribute('aria-pressed', S.sourceBrand === key ? 'true' : 'false');
         btn.addEventListener('click', () => {
-          track('selection-marque', { marque: key });
           S.sourceBrand = key;
           S.sourceSize = null;
           // Mettre à jour l'état plutôt que recréer les boutons : le focus clavier reste sur la marque
@@ -1248,10 +1241,10 @@
     /* ============================================================
        INIT
     ============================================================ */
-    $('btn-homme').addEventListener('click', () => { track('changement-genre', { genre: 'homme' }); setGender('homme'); });
-    $('btn-femme').addEventListener('click', () => { track('changement-genre', { genre: 'femme' }); setGender('femme'); });
-    $('btn-mode-brand').addEventListener('click', () => { track('changement-mode', { mode: 'brand' }); setMode('brand'); });
-    $('btn-mode-cm').addEventListener('click', () => { track('changement-mode', { mode: 'cm' }); setMode('cm'); });
+    $('btn-homme').addEventListener('click', () => { setGender('homme'); });
+    $('btn-femme').addEventListener('click', () => { setGender('femme'); });
+    $('btn-mode-brand').addEventListener('click', () => { setMode('brand'); });
+    $('btn-mode-cm').addEventListener('click', () => { setMode('cm'); });
 
     /* Saisie refusée : le dire, plutôt que de vider le résultat sans explication.
        Pendant la frappe, « 2 » (vers 26) n'est pas une erreur ; « 15 », « 40 » ou « abc » en sont. */
@@ -1315,7 +1308,5 @@
     }
   </script>
 
-  <!-- Umami — analytics respectueux de la vie privée (cookieless, sans consentement) -->
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="c924201e-94a1-4c34-ad5a-83154e3cc4f7"></script>
 </body>
 </html>
