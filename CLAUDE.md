@@ -45,7 +45,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 ## Hébergement & domaine
 - **Hébergement :** Vercel (projet `sizecheck`, équipe « DAJ »), relié au dépôt GitHub `dajghub/sizecheck`. **Projet loisir depuis le 22 nov. 2026** (monétisation abandonnée ; l'offre gratuite de Vercel interdit l'usage commercial).
 - **Adresse :** https://sizecheck-fr.vercel.app (sizecheck.vercel.app était déjà pris).
-- **Ancien domaine :** `sizecheck.fr` (Infomaniak, renouvellement automatique coupé, expire le 25/06/2027) redirigé vers la nouvelle adresse jusqu'à son expiration. Adresse de contact `contact@sizecheck.fr` (kSuite, expire le 26/06/2027) : à remplacer avant cette date.
+- **Ancien domaine :** `sizecheck.fr` (Infomaniak, renouvellement automatique coupé, expire le 25/06/2027) redirigé vers la nouvelle adresse jusqu'à son expiration. Plus aucune adresse email publiée (contact@sizecheck.fr retiré le 22 nov. 2026 : aucune donnée personnelle conservée) ; demandes d'autorisation via le profil GitHub.
 - **Déploiement :** push sur `main` → Vercel. `vercel.json` copie une **whitelist** du site dans `_site/` (`index.html`, `politique-de-confidentialite.html`, `favicon.ico`, `sitemap.xml`, `robots.txt`, `assets/`, `comparaisons/`) : les fichiers internes (`STATUS.md`, `CLAUDE.md`, `tools/`, `marketing/`, `extension/`) restent versionnés mais **ne sont pas servis**.
 - **Ajouter un fichier/dossier au site déployé** = l'ajouter à la whitelist de `buildCommand` dans `vercel.json` (sinon il ne sera pas publié).
 - Historique : GitHub Pages (Actions) jusqu'au 22 nov. 2026 ; `deploy.yml`, `CNAME` et `.nojekyll` retirés à la migration.
