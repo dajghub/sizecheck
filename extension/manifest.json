@@ -3,7 +3,7 @@
   "name": "SizeCheck — Convertisseur de pointures",
   "short_name": "SizeCheck",
   "description": "Trouvez votre pointure dans n'importe quelle marque de chaussures. Détection automatique sur les pages produit.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

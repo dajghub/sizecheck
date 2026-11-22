@@ -26,7 +26,7 @@ Le temps passé là-dessus est mieux investi ailleurs. On vise **peu de liens, m
 
 ### 1. Vérifier que la fiche Chrome Web Store pointe bien vers le site
 
-C'est déjà le meilleur actif : domaine Google, forte autorité, et l'extension est publiée. Vérifier que le champ **« Site web »** de la fiche contient `https://www.sizecheck.fr` — s'il est vide, c'est le gain le plus rapide du plan.
+C'est déjà le meilleur actif : domaine Google, forte autorité, et l'extension est publiée. Vérifier que le champ **« Site web »** de la fiche contient `https://sizecheck-fr.vercel.app` — s'il est vide, c'est le gain le plus rapide du plan.
 
 ### 2. Plateformes de lancement (backlink dofollow + durée de vie longue)
 

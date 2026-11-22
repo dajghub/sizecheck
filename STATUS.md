@@ -11,6 +11,8 @@ Pour reprendre, dans l'ordre :
 4. **Pieds hors grille** (audit, critique) : choisir le seuil (10 mm proposé) et le libellé « Hors grille ».
 5. Backlinks et relevé Search Console (voir « En cours »).
 
+> **22 nov. 2026 — projet loisir, migré sur Vercel** : https://sizecheck-fr.vercel.app. Monétisation abandonnée (affiliation, SEO) ; le reste de ce fichier est l'historique. `sizecheck.fr` redirige vers la nouvelle adresse jusqu'à son expiration (25/06/2027). À faire : publier l'extension 1.2.1 (liens vers la nouvelle adresse) et remplacer `contact@sizecheck.fr` avant fin juin 2027.
+
 ---
 
 ## ✅ En ligne / opérationnel

@@ -14,7 +14,7 @@ from datetime import date
 
 from sizedata import ROOT, BRAND_NAMES, load_reference
 
-SITE = 'https://www.sizecheck.fr'
+SITE = 'https://sizecheck-fr.vercel.app'
 OUT = ROOT / 'comparaisons'
 TIE = 0.15  # seuil de quasi-égalité (identique au site/extension)
 EXT_STORE_URL = ('https://chromewebstore.google.com/detail/sizecheck-%E2%80%94-convertisseur/'
@@ -413,7 +413,7 @@ def page_html(a, b):
     ]
 
     return f'''<!DOCTYPE html>
-<!-- © 2026 Jade Saradesst — SizeCheck. Tous droits réservés / All rights reserved. Reproduction ou réutilisation interdite. https://www.sizecheck.fr -->
+<!-- © 2026 Jade Saradesst — SizeCheck. Tous droits réservés / All rights reserved. Reproduction ou réutilisation interdite. https://sizecheck-fr.vercel.app -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -484,7 +484,7 @@ def index_html(pairs):
     desc = ('Tableaux de correspondance des pointures entre Nike, Adidas, New Balance, Converse, Vans, '
             'Salomon, ASICS et HOKA — données officielles en centimètres, homme et femme.')
     return f'''<!DOCTYPE html>
-<!-- © 2026 Jade Saradesst — SizeCheck. Tous droits réservés / All rights reserved. Reproduction ou réutilisation interdite. https://www.sizecheck.fr -->
+<!-- © 2026 Jade Saradesst — SizeCheck. Tous droits réservés / All rights reserved. Reproduction ou réutilisation interdite. https://sizecheck-fr.vercel.app -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">

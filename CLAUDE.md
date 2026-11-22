@@ -5,7 +5,7 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 
 **8 marques supportées :** Nike, Adidas, New Balance, Converse, Vans, Salomon, ASICS, HOKA.
 
-**URL de production :** https://www.sizecheck.fr
+**URL de production :** https://sizecheck-fr.vercel.app
 
 ---
 
@@ -43,13 +43,12 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 - **À éviter** pour rester dans l'identité : cartes arrondies avec ombre, dégradés, emojis, étiquettes en majuscules, « → » ajouté aux boutons, animations d'apparition sur chaque bloc.
 
 ## Hébergement & domaine
-- **Hébergement :** GitHub Pages (dépôt `jadesaradesst/sizecheck`)
-- **Domaine :** Infomaniak (registrar + DNS)
-- **CNAME :** `www.sizecheck.fr`
-- **Déploiement :** push sur `main` → **GitHub Actions** (`.github/workflows/deploy.yml`) publie une **whitelist** du site uniquement (`index.html`, `politique-de-confidentialite.html`, `favicon.ico`, `assets/`, `comparaisons/`, `sitemap.xml`, `robots.txt`, `CNAME`). Les fichiers internes (`STATUS.md`, `CLAUDE.md`, `tools/`, `marketing/`, `extension/`) restent versionnés mais **ne sont pas servis** sur le domaine.
-- **Ajouter un fichier/dossier au site déployé** = l'ajouter à la whitelist dans `deploy.yml` (sinon il ne sera pas publié).
-- **`.nojekyll` : NE PAS retirer.** Testé le 6 juil. 2026 : son retrait a fait échouer le déploiement Actions (« Deployment failed ») deux fois de suite ; sa restauration a redéployé au vert immédiatement. Il reste nécessaire même sous Actions (le workflow le copie dans l'artefact).
-- Vérifier un déploiement : `gh run list --workflow=deploy.yml`. (Historique : l'ancien build Jekyll « legacy » était capricieux — remplacé par Actions le 6 juil. 2026.)
+- **Hébergement :** Vercel (projet `sizecheck`, équipe « DAJ »), relié au dépôt GitHub `dajghub/sizecheck`. **Projet loisir depuis le 22 nov. 2026** (monétisation abandonnée ; l'offre gratuite de Vercel interdit l'usage commercial).
+- **Adresse :** https://sizecheck-fr.vercel.app (sizecheck.vercel.app était déjà pris).
+- **Ancien domaine :** `sizecheck.fr` (Infomaniak, renouvellement automatique coupé, expire le 25/06/2027) redirigé vers la nouvelle adresse jusqu'à son expiration. Adresse de contact `contact@sizecheck.fr` (kSuite, expire le 26/06/2027) : à remplacer avant cette date.
+- **Déploiement :** push sur `main` → Vercel. `vercel.json` copie une **whitelist** du site dans `_site/` (`index.html`, `politique-de-confidentialite.html`, `favicon.ico`, `sitemap.xml`, `robots.txt`, `assets/`, `comparaisons/`) : les fichiers internes (`STATUS.md`, `CLAUDE.md`, `tools/`, `marketing/`, `extension/`) restent versionnés mais **ne sont pas servis**.
+- **Ajouter un fichier/dossier au site déployé** = l'ajouter à la whitelist de `buildCommand` dans `vercel.json` (sinon il ne sera pas publié).
+- Historique : GitHub Pages (Actions) jusqu'au 22 nov. 2026 ; `deploy.yml`, `CNAME` et `.nojekyll` retirés à la migration.
 
 ---
 
@@ -60,7 +59,6 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 | `index.html` | App web complète (V3) |
 | `politique-de-confidentialite.html` | Page légale RGPD |
 | `sitemap.xml` | Sitemap (régénéré par `tools/generate_pages.py`) |
-| `CNAME` | Domaine custom GitHub Pages |
 | `favicon.ico` | Favicon racine (16/32/48), demandé par défaut par navigateurs et services — généré par `tools/render_brand_assets.py` |
 | `comparaisons/` | Pages SEO générées par paire de marques (ne pas éditer à la main) |
 | `assets/pages.css` | CSS des pages de comparaison |
@@ -99,7 +97,6 @@ SizeCheck est un outil gratuit de conversion de pointures de chaussures entre ma
 ## Ce qu'il ne faut jamais toucher sans instruction explicite
 - Les tables de correspondance CM dans `extension/sizes.js` et `index.html`
 - Le `data-website-id` Umami (`c924201e-94a1-4c34-ad5a-83154e3cc4f7`)
-- Le fichier `CNAME`
 
 ---
 

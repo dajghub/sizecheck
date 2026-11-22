@@ -330,7 +330,7 @@
 
           <div id="sc-results-section">${renderResultsSection()}</div>
 
-          <p class="sc-foot"><a href="https://www.sizecheck.fr" target="_blank" rel="noopener">sizecheck.fr</a></p>
+          <p class="sc-foot"><a href="https://sizecheck-fr.vercel.app" target="_blank" rel="noopener">sizecheck.fr</a></p>
         </div>
       </div>
 

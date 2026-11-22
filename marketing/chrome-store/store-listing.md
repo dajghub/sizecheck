@@ -16,7 +16,7 @@ Deux points de départ au choix : votre pointure habituelle dans une marque, ou 
 
 Aucune donnée personnelle collectée. Vos préférences (marque, pointure, longueur de pied) sont sauvegardées uniquement en local sur votre appareil.
 
-Disponible aussi sur sizecheck.fr
+Disponible aussi sur sizecheck-fr.vercel.app
 
 ## Catégorie
 Outils
